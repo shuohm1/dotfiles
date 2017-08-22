@@ -1,0 +1,45 @@
+### .screen.d/defaults ###
+
+# Encoding
+defencoding UTF-8
+encoding UTF-8
+
+# $TERM
+term screen-256color
+
+# キー設定
+## エスケープキーを Meta+Ctrl+[ or Meta+Esc に設定
+### 要するに普通は押せないキーに設定する
+escape \233\233
+## No Zombie: ウィンドウのプロセスが終了したら即座に終了する
+zombie
+
+# 諸機能の停止
+## シングルユーザーモード
+multiuser off
+## アイドル時コマンドの無効化
+idle off
+## ベルメッセージ
+bell_msg ""
+## ビジュアルベル
+vbell off
+## 自動デタッチの無効化
+autodetach off
+## スタートアップメッセージ
+startup_message off
+## ログイン情報を utmp に吐かない
+deflogin off
+## 画面クリアの際にまだ端末に書き出されていない出力を破棄する
+autonuke on
+## スクロールバックしない
+defscrollback 0
+
+# ウィンドウ強制リサイズの回避
+## (see: /etc/screenrc)
+## Change the xterm initialization string from is2=\E[!p\E[?3;4l\E[4l\E>
+## (This fixes the "Aborted because of window size change" konsole symptoms found in bug #134198)
+termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+termcapinfo xterm-256color 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+
+# 設定ファイルディレクトリに移動
+chdir ${HOME}/.screen.d/

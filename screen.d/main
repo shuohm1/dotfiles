@@ -1,0 +1,143 @@
+### .screen.d/main ###
+source ${HOME}/.screen.d/defaults
+
+# キー設定
+## エスケープキーを Ctrl+T に設定
+escape ^T^T
+## プロセスが終了したウィンドウを明示的に閉じるキーを設定
+## デフォルトではキーを押さなくてもウィンドウは閉じる
+## 2つめはコマンド再実行キー (e.g.: zombie qr)
+zombie ^[^?
+
+# キーバインド
+## ウィンドウ生成 (^T^C は押しにくいため追加)
+bind ^J screen
+## ウィンドウ選択画面を表示
+## (-b オプションを指定すると現在の画面も選択肢に入る)
+bind w windowlist -b
+## 貼り付け
+bind ^] paste [.]
+## 文字コード変更
+bind u eval "encoding UTF-8"
+bind e eval "encoding eucJP"
+bind s eval "encoding SJIS"
+bind j eval "encoding jis"
+## ウィンドウ分割
+bind S split
+bind V split -v
+bind X remove
+bind Q only
+bind ^I focus
+## リージョンリサイズ
+bind R eval "command -c resize" "echo 'Resize region'"
+bind -c resize h eval "command -c resize" "resize -h -1"
+bind -c resize l eval "command -c resize" "resize -h +1"
+bind -c resize j eval "command -c resize" "resize -v +1"
+bind -c resize k eval "command -c resize" "resize -v -1"
+
+# スクロールバッファ行数
+defscrollback 4096
+
+# メッセージをハードステータスに表示する最大/最小秒数
+msgwait 3
+msgminwait 2
+
+# ハードステータス
+setenv a ""
+setenv a "$a%{= Wk}"  # 背景色 bright White, 前景色 blacK
+setenv a "$a["        # "["
+setenv a "$a%0`"      # backtick: ユーザ名
+setenv a "$a@"        # "@"
+setenv a "$a%H"       # ホスト名
+setenv a "$a] "       # "] "
+setenv a "$a%0L="     # 左端から 0% の位置までパディング
+#                     # - 左端から 0% の位置は既に過ぎているので何も起こらない
+#                     # - 実態は切り詰め区間の左端を設定するためのもの
+#                     # - L : 切り詰めはせずにパディングのみを行う
+setenv a "$a%-Lw"     # 現在のウィンドウより左のウィンドウ一覧
+setenv a "$a%40L>"    # 切り詰め発生時にはこの位置を左端から 40% にする
+#                     # - L : 切り詰められた箇所に "..." を配置
+setenv a "$a%{= Ck}"  # 背景色 bright Cyan, 前景色 blacK
+setenv a "$a%n"       # ウィンドウ番号
+setenv a "$a*%f"      # ウィンドウのフラグ
+setenv a "$a "        # space
+setenv a "$a%t"       # ウィンドウ名
+setenv a "$a%{-}"     # 直前の色/属性指定を元に戻す
+setenv a "$a%+Lw"     # 現在のウィンドウより右のウィンドウ一覧
+setenv a "$a%-027="   # 右端から27文字目の直前までパディング
+#                     # - 同時に切り詰め区間の右端を設定したことにもなる
+setenv a "$a ["       # " ["
+setenv a "$a%Y/%m/%d" # 日付 YYYY/MM/DD
+setenv a "$a("        # "("
+setenv a "$a%1`"      # backtick: 曜日名略称 (ロケール非依存)
+setenv a "$a) "       # ") "
+setenv a "$a%0c:%s"   # 現在時刻 HH:MM:SS (24時間表記)
+setenv a "$a]"        # "]"
+hardstatus alwayslastline "$a"
+unsetenv a
+
+# Backtick
+# backtick id lifespan autorefresh cmd args...
+#   id          : %id` に代入する際の ID
+#   lifespan    : 出力の有効秒数
+#   autorefresh : 自動リフレッシュ秒数
+#   lifespan も autorefresh も 0 の場合はコマンドの出力が逐次出力される
+## ユーザ名
+backtick 0 0 0 whoami
+## 曜日名略称 (一時的にロケールを C にして date)
+backtick 1 60 60 sh -c 'LC_ALL=C date +"%a"'
+
+# キャプション
+setenv a ""
+setenv a "$a%0L>"    # 切り詰め発生時にはこの位置を左端にする
+#                    # - L : 切り詰められた箇所に "..." を配置
+setenv a "$a%{= Yk}" # 背景色 bright Yellow, 前景色 blacK
+setenv a "$a%?%P"    # if copy/paste-mode then
+setenv a "$a%{= Bk}" #   背景色 bright Blue, 前景色 blacK
+setenv a "$a%?"      # fi
+setenv a "$a%?%F"    # if focus then
+#                    #
+setenv a "$a%:"      # else
+setenv a "$a%{= Kw}" #   背景色 bright blacK, 前景色 White
+setenv a "$a%?"      # fi
+setenv a "$a%n"      # ウィンドウ番号
+setenv a "$a%?%F"    # if focus then
+setenv a "$a*"       #   "*": 現在のウィンドウを表すフラグ
+setenv a "$a%?"      # fi
+setenv a "$a%f"      # ウィンドウのフラグ
+setenv a "$a "       # space
+setenv a "$a%t"      # ウィンドウ名
+setenv a "$a%?"      # if len(next-escape) > 0 then
+setenv a "$a "       #   space
+setenv a "$a%h"      #   ウィンドウから発せられたハードステータス
+#                    #   - echo -e "\e_メッセージ\e\\" で出力可能
+setenv a "$a%?"      # fi
+setenv a "$a%-19="   # 右端から19文字目の直前までパディング
+#                    # - 同時に切り詰め区間の右端を設定
+setenv a "$a%?%P"    # if copy/paste-mode then
+setenv a "$a%{= BW}" #   背景色 bright Blue, 前景色 bright White
+setenv a "$a *Copy/Paste Mode* "
+setenv a "$a%:"      # else
+setenv a "$a%-0="    #   右端までパディング
+setenv a "$a%?"      # fi
+caption always "$a"
+unsetenv a
+
+# イベント発生ウィンドウの装飾
+rendition bell "= Rk"
+rendition monitor "=u Bk"
+rendition silence "=u wk"
+rendition so "= yk"
+
+# Alternate Screen を使用する
+## less 等の全画面コマンド終了後に元の画面に戻る
+altscreen on
+
+# 自動デタッチ
+autodetach on
+
+# ログイン情報を utmp に吐く
+deflogin on
+
+# ホームディレクトリに移動
+chdir $HOME

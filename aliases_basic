@@ -14,7 +14,7 @@ else
 fi
 
 # ls 拡張
-alias l="ls -C"   # 強制カラム表示
+alias lc="ls -C"  # 強制カラム表示
 alias lx="ls -x"  # 横に並べて表示
 alias la="ls -a"
 alias ll="ls -l"
@@ -41,6 +41,7 @@ fi
 #alias less="less -R" # 着色エスケープ文字を解釈
 alias sless="less -S" # 画面右端で改行しない
 alias xless="less -X" # 終了後に表示内容を残す
+alias l="sless"
 
 # grep 拡張
 for xgrep in grep egrep fgrep zgrep zegrep zfgrep; do

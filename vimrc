@@ -82,7 +82,7 @@ exe "set listchars=tab:\<Char-0xBB>\\ ,trail:.,nbsp:%,eol:\<Char-0xAC>,extends:>
 " precedes: 表示しきれていない行の先頭
 
 " カラーテーマ
-colorscheme desert
+colorscheme elflord
 
 " キーバインド
 "" 保存/終了

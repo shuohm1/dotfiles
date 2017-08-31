@@ -1,0 +1,14 @@
+### .funcs_gmacs ###
+# GUI版 Emacs 起動用のシェル関数
+
+emacsapp=/Applications/Emacs.app
+if [ -e ${emacsapp} ]; then
+	gmacs() {
+		if [ $# -eq 0 ]; then
+			eval "open ${emacsapp} --args -r"
+		else
+			eval "open ${emacsapp} --args $*"
+		fi
+		return $?
+	}
+fi

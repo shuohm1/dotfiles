@@ -78,8 +78,8 @@ exe "set listchars=tab:\<Char-0xBB>\\ ,trail:.,nbsp:%,eol:\<Char-0xAC>,extends:>
 " <Char-0xBB>: ≫
 " <Char-0xAC>: ￢
 " trail: 行末の空白
-" extends: 折り返した行の終わり
-" precedes: 表示しきれていない行の先頭
+" extends: nowrap のとき右側の続きを示す
+" precedes: nowrap のとき左側の続きを示す
 
 " カラーテーマ
 colorscheme elflord

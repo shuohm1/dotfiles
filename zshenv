@@ -19,6 +19,8 @@ keybin="${HOME}/.less"
 keysrc="${HOME}/.lesskey"
 keycompiler="$(which lesskey 2>/dev/null)"
 if [ ! -f "${keybin}" -a -x "${keycompiler}" -a -f "${keysrc}" ]; then
+	# キーバインドファイルが存在しなければ生成
+	# Note: 出力はバイナリファイル
 	${keycompiler} --output "${keybin}" "${keysrc}"
 fi
 [ -f "${keybin}" ] && export LESSKEY="${keybin}"

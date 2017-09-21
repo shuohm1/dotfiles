@@ -35,8 +35,6 @@ export LESS="--LONG-PROMPT --RAW-CONTROL-CHARS --tabs=4"
 srchighlight=$(which src-hilite-lesspipe.sh 2>&1)
 if [ -x "${srchighlight}" ]; then
 	export LESSOPEN="| ${srchighlight} %s"
-	# ハイライト無効 less
-	alias fless="LESSOPEN='' less"
 fi
 #alias less="less -R" # 着色エスケープ文字を解釈
 alias sless="less -S" # 画面右端で改行しない

@@ -14,6 +14,9 @@ export HOSTNAME=$(hostname)
 # TERMINFO
 [ -d  "${HOME}/.terminfo" ] && export TERMINFO="${HOME}/.terminfo"
 
+# LESSKEY
+[ -f "${HOME}/.lesskey" ] && export LESSKEY="${HOME}/.lesskey"
+
 # PATH and MANPATH
 for bin in /usr/local/bin /usr/local/sbin; do
 	[ -d ${bin} ] && PATH="${bin}:${PATH}"

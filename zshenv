@@ -15,7 +15,13 @@ export HOSTNAME=$(hostname)
 [ -d  "${HOME}/.terminfo" ] && export TERMINFO="${HOME}/.terminfo"
 
 # LESSKEY
-[ -f "${HOME}/.lesskey" ] && export LESSKEY="${HOME}/.lesskey"
+keybin="${HOME}/.less"
+keysrc="${HOME}/.lesskey"
+keycompiler="$(which lesskey 2>/dev/null)"
+if [ ! -f "${keybin}" -a -x "${keycompiler}" -a -f "${keysrc}" ]; then
+	${keycompiler} --output "${keybin}" "${keysrc}"
+fi
+[ -f "${keybin}" ] && export LESSKEY="${keybin}"
 
 # PATH and MANPATH
 for bin in /usr/local/bin /usr/local/sbin; do

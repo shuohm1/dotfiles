@@ -52,6 +52,9 @@ set nowrapscan
 "set incsearch
 set noincsearch
 
+" バッファの hidden モードを有効にする
+set hidden
+
 " スワップファイルを作る/作らない (foobar.txt.swp)
 set swapfile
 "set noswapfile

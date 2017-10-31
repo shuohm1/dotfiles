@@ -68,15 +68,15 @@ fi
 
 # エイリアス
 ## 基本エイリアス
-[ -f .aliases_basic ] && . ~/.aliases_basic
+[ -f ~/.aliases_basic ] && . ~/.aliases_basic
 ## aptitude
-[ -f .aliases_apt ] && . ~/.aliases_apt
+[ -f ~/.aliases_apt ] && . ~/.aliases_apt
 ## Homebrew
-[ -f .aliases_brew ] && . ~/.aliases_brew
+[ -f ~/.aliases_brew ] && . ~/.aliases_brew
 
 # シェル関数
 ## GUI版 Emacs
-[ -f .funcs_gmacs ] && . ~/.funcs_gmacs
+[ -f ~/.funcs_gmacs ] && . ~/.funcs_gmacs
 
 case $TERM in
 	# - screen のウィンドウ名を変更する

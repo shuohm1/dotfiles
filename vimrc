@@ -4,6 +4,8 @@ scriptencoding utf-8
 
 " シンタックスハイライト
 syntax enable
+" フォーマットオプション
+set formatoptions=tcq
 
 " ステータス行を常に表示
 set laststatus=2

@@ -19,15 +19,15 @@ set wrap
 "set nowrap
 
 " タブを空白に展開する/しない
-"set expandtab " abbr: et
-set noexpandtab
+set expandtab " abbr: et
+"set noexpandtab
 " 表示上のタブ幅
 set tabstop=4
 " vim が自動的に挿入する空白量
-set shiftwidth=4
+set shiftwidth=2
 " tab キーで挿入される空白量
-"" 0 にすると tabstop の値が使われる
-set softtabstop=0
+" (0 にすると tabstop の値が使われる)
+set softtabstop=2
 
 " 括弧の対応関係を一瞬表示する/しない
 " (閉じ括弧を入力時に開き括弧に一瞬カーソルが移動する)

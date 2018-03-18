@@ -62,7 +62,7 @@ set swapfile
 "set noswapfile
 " スワップファイルディレクトリ
 if isdirectory("/tmp")
-	set directory=/tmp
+  set directory=/tmp
 endif
 
 " バックアップをとる/とらない (foobar.txt~)

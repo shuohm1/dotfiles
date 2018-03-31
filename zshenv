@@ -19,22 +19,22 @@ keybin="${HOME}/.less"
 keysrc="${HOME}/.lesskey"
 keycompiler="$(which lesskey 2>/dev/null)"
 if [ ! -f "${keybin}" -a -x "${keycompiler}" -a -f "${keysrc}" ]; then
-	# キーバインドファイルが存在しなければ生成
-	# Note: 出力はバイナリファイル
-	${keycompiler} --output "${keybin}" "${keysrc}"
+  # キーバインドファイルが存在しなければ生成
+  # Note: 出力はバイナリファイル
+  ${keycompiler} --output "${keybin}" "${keysrc}"
 fi
 [ -f "${keybin}" ] && export LESSKEY="${keybin}"
 
 # SCREENDIR (ソケットディレクトリ)
 if [ -d "${HOME}/.screens" ]; then
-	if [ "$(stat --format="%a" "${HOME}/.screens")" = "700" ]; then
-		export SCREENDIR="${HOME}/.screens"
-	fi
+  if [ "$(stat --format="%a" "${HOME}/.screens")" = "700" ]; then
+    export SCREENDIR="${HOME}/.screens"
+  fi
 fi
 
 # PATH and MANPATH
 for bin in /usr/local/bin /usr/local/sbin; do
-	[ -d ${bin} ] && PATH="${bin}:${PATH}"
+  [ -d ${bin} ] && PATH="${bin}:${PATH}"
 done
 ## 自作コマンド
 [ -d ${HOME}/bin ] && PATH="${HOME}/bin:${PATH}"

@@ -55,13 +55,13 @@
 (setq linum-format "%4d ")
 (custom-set-faces
  '(linum ((((class color)
-			(background light))
-		   (:background nil :foreground nil))
-		  (((class color)
-			(background dark))
-		   (:background nil :foreground "yellow"))
-		  (t ())
-		  )))
+            (background light))
+           (:background nil :foreground nil))
+          (((class color)
+            (background dark))
+           (:background nil :foreground "yellow"))
+          (t ())
+          )))
 (global-linum-mode t)
 ;; 行番号表示に遅延を入れる
 ;; (http://d.hatena.ne.jp/daimatz/20120215/1329248780)
@@ -79,34 +79,34 @@
 (custom-set-faces
  ; デフォルト文字
  '(default ((((class color)
-			  (background light))
-			 (:background "brightwhite" :foreground "black"))
-			(((class color)
-			  (background dark)); emacs -rv で起動したときなど
-			 (:background nil :foreground "white"))
-			(t ())
-			))
+              (background light))
+             (:background "brightwhite" :foreground "black"))
+            (((class color)
+              (background dark)); emacs -rv で起動したときなど
+             (:background nil :foreground "white"))
+            (t ())
+            ))
  ; カーソル
  '(cursor ((((class color)
-			 (background light))
-			(:background nil))
-		   (((class color)
-			 (background dark))
-			(:background nil))
-		   (t ())
-		   )))
+             (background light))
+            (:background nil))
+           (((class color)
+             (background dark))
+            (:background nil))
+           (t ())
+           )))
 
 ;; 現在行をハイライト (重いからやめた)
 ;(global-hl-line-mode t)
 ;(custom-set-faces
 ; '(highlight ((((class color)
-;				(background light))
-;			   (:background "gray90"))
-;			  (((class color)
-;				(background dark))
-;			   (:background "gray10"))
-;			  (t ())
-;			  )))
+;                (background light))
+;               (:background "gray90"))
+;              (((class color)
+;                (background dark))
+;               (:background "gray10"))
+;              (t ())
+;              )))
 
 ;; 括弧の強調表示
 (show-paren-mode t)
@@ -114,20 +114,20 @@
 (setq show-paren-style 'expression)
 (custom-set-faces
  '(show-paren-match ((((class color)
-					   (background light))
-					  (:background "#98FB98")) ; palegreen: #98FB98
-					 (((class color)
-					   (background dark))
-					  (:background "#006400")) ; darkgreen: #006400
-					 (t ())
-					 )))
+                       (background light))
+                      (:background "#98FB98")) ; palegreen: #98FB98
+                     (((class color)
+                       (background dark))
+                      (:background "#006400")) ; darkgreen: #006400
+                     (t ())
+                     )))
 
 ;; 選択範囲をハイライト
 (transient-mark-mode t)
 (custom-set-faces
  '(region ((t
-			(:background "#1E90FF" :foreground "brightwhite") ; dodgerblue: #1E90FF
-			))))
+            (:background "#1E90FF" :foreground "brightwhite") ; dodgerblue: #1E90FF
+            ))))
 
 ;; ビープ音の代わりに画面をフラッシュさせる
 ;(setq visible-bell t)
@@ -147,11 +147,11 @@
 (setq-default tab-width 4)
 ;; Python Mode の tab 幅を 4 に設定
 (add-hook 'python-mode-hook
-		  '(lambda()
-			 (setq indent-tabs-mode t)
-			 (setq indent-level 4)
-			 (setq python-indent 4)
-			 (setq tab-width 4)))
+          '(lambda()
+             (setq indent-tabs-mode t)
+             (setq indent-level 4)
+             (setq python-indent 4)
+             (setq tab-width 4)))
 
 ; 行移動を論理行にする
 (setq line-move-visual nil)
@@ -258,18 +258,18 @@
 ;; 阿伊宇江於加機久介己散之須世曽多千川天止奈仁奴祢乃八比不部保末三牟女毛也由與良利流礼呂和井恵乎尓
 ;(when (eq window-system 'w32)
 ;  (set-face-attribute 'default nil
-;;					  :family "Consolas"
-;					  :family "MeiryoKe_Gothic"
-;					  :height 110)
+;;                     :family "Consolas"
+;                      :family "MeiryoKe_Gothic"
+;                      :height 110)
 ;  (dolist (target '(japanese-jisx0212
-;					japanese-jisx0213-2
-;					japanese-jisx0213.2004-1
-;					katakana-jisx0201
-;					))
-;	(set-fontset-font (frame-parameter nil 'font)
-;					  target
-;					  (font-spec :family "MeiryoKe_Gothic" :size 16
-;								 :registry "unicode-bmp" :lang 'ja))))
+;                    japanese-jisx0213-2
+;                    japanese-jisx0213.2004-1
+;                    katakana-jisx0201
+;                    ))
+;    (set-fontset-font (frame-parameter nil 'font)
+;                      target
+;                      (font-spec :family "MeiryoKe_Gothic" :size 16
+;                                 :registry "unicode-bmp" :lang 'ja))))
 ;; 行間の大きさ
 (setq-default line-spacing 0.1)
 
@@ -277,13 +277,13 @@
 (require 'whitespace)
 ;; 可視化する空白文字の指定
 (setq whitespace-style '(face                 ; 可視化を有効化
-						 spaces space-mark    ; 空白
-						 tabs tab-mark        ; タブ
-						 space-before-tab     ; タブの前の空白
-;						 space-after-tab      ; タブの後の空白
-						 trailing             ; 行末の空白
-						 newline newline-mark ; 改行
-						 ))
+                         spaces space-mark    ; 空白
+                         tabs tab-mark        ; タブ
+                         space-before-tab     ; タブの前の空白
+;                        space-after-tab      ; タブの後の空白
+                         trailing             ; 行末の空白
+                         newline newline-mark ; 改行
+                         ))
 ;; whitespace-space の定義を変更 (半角・全角スペース)
 (setq whitespace-space-regexp "\\([\u0020\u3000]+\\)") ; 元の定義は "\\( +\\)"
 ;; whitespace-space-after-tab の定義を変更 (タブの後ろにある1つ以上の半角スペース)
@@ -291,65 +291,65 @@
 (setq whitespace-space-after-tab-regexp '("\\(?:^\\|\t+\\)\\(\u0020+\\)."))
 ;; 可視化文字の指定
 (setq whitespace-display-mappings
-	  '(;(space-mark ?\u0020 [?\uffee] [?\_])
-		(space-mark ?\u3000 [?\u25a1] [?\_ ?\_])   ; 全角スペース
-;		(newline-mark ?\n [?\u21b5 ?\n] [?\$ ?\n]) ; 改行
-		(newline-mark ?\n [?\u00ac ?\n] [?\$ ?\n]) ; 改行
-		;; WARNING: the mapping of tab-mark has a problem.
-		;; When a TAB occupies exactly one column, it will display the
-		;; character ?\xBB at that column followed by a TAB which goes to
-		;; the next TAB column.
-		(tab-mark ?\t [?\u00bb ?\t] [?\\ ?\t]) ; タブ
-		))
+      '(;(space-mark ?\u0020 [?\uffee] [?\_])
+        (space-mark ?\u3000 [?\u25a1] [?\_ ?\_])   ; 全角スペース
+;       (newline-mark ?\n [?\u21b5 ?\n] [?\$ ?\n]) ; 改行
+        (newline-mark ?\n [?\u00ac ?\n] [?\$ ?\n]) ; 改行
+        ;; WARNING: the mapping of tab-mark has a problem.
+        ;; When a TAB occupies exactly one column, it will display the
+        ;; character ?\xBB at that column followed by a TAB which goes to
+        ;; the next TAB column.
+        (tab-mark ?\t [?\u00bb ?\t] [?\\ ?\t]) ; タブ
+        ))
 ;; 可視化フェイスの指定;
 (custom-set-faces
  ; 全角スペース "　　　"
  '(whitespace-space ((((class color)
-					   (background light))
-					  (:background nil :foreground "#8FBC8F")) ; darkseagreen: #8FBC8F
-					 (((class color)
-					   (background dark))
-					  (:background nil :foreground "#808000")) ; olive: #808000
-					 (t ())
-					 ))
+                       (background light))
+                      (:background nil :foreground "#8FBC8F")) ; darkseagreen: #8FBC8F
+                     (((class color)
+                       (background dark))
+                      (:background nil :foreground "#808000")) ; olive: #808000
+                     (t ())
+                     ))
  ; タブ
  '(whitespace-tab ((((class color)
-					 (background light))
-					(:background nil :foreground "#8FBC8F")) ; darkseagreen: #8FBC8F
-				   (((class color)
-					 (background dark))
-					(:background nil :foreground "#808000")) ; olive: #808000
-				   (t ())
-				   ))
+                     (background light))
+                    (:background nil :foreground "#8FBC8F")) ; darkseagreen: #8FBC8F
+                   (((class color)
+                     (background dark))
+                    (:background nil :foreground "#808000")) ; olive: #808000
+                   (t ())
+                   ))
  ; タブの前の空白
  '(whitespace-space-before-tab ((((class color)
- 								  (background light))
-  								 (:background "#ffcccc" :foreground nil))
- 								(((class color)
-  								  (background dark))
- 								 (:background "#800000" :foregrouond nil)) ; maroon: #800000
-  								(t ())
- 								))
+                                   (background light))
+                                   (:background "#ffcccc" :foreground nil))
+                                 (((class color)
+                                    (background dark))
+                                  (:background "#800000" :foregrouond nil)) ; maroon: #800000
+                                  (t ())
+                                 ))
  ; タブの後の空白
 ; '(whitespace-space-after-tab ((t (:background "#101000" :foreground nil))))
  ; 行末の空白
  '(whitespace-trailing ((((class color) 
-						  (background light)) 
-						 (:background "#cc0000" :foreground nil)) 
-						(((class color) 
-						  (background dark)) 
-						 (:background "#B22222" :foreground nil)) ; firebrick: #B22222
-						(t ()) 
-						)) 
+                          (background light)) 
+                         (:background "#cc0000" :foreground nil)) 
+                        (((class color) 
+                          (background dark)) 
+                         (:background "#B22222" :foreground nil)) ; firebrick: #B22222
+                        (t ()) 
+                        )) 
  ; 改行
  '(whitespace-newline ((((class color)
-						 (background light))
-						(:background nil :foreground "#2E8B57")) ; seagreen: #2E8B57
-					   (((class color)
-						 (background dark))
-						(:background nil :foreground "#808000")) ; olive: #808000
-					   (t ())
-					   ))
+                         (background light))
+                        (:background nil :foreground "#2E8B57")) ; seagreen: #2E8B57
+                       (((class color)
+                         (background dark))
+                        (:background nil :foreground "#808000")) ; olive: #808000
+                       (t ())
+                       ))
  )
 ;; 空白文字の可視化オン
 (global-whitespace-mode t)

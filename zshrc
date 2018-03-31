@@ -62,8 +62,8 @@ bindkey '^[^]' vi-find-prev-char # <Meta> <C-]>
 # ただし scp 時にエラーが出る可能性があるので $SSH_TTY をチェック
 # see: http://linux.just4fun.biz/逆引きUNIXコマンド/Ctrl%2BSによる端末ロックを無効にする方法.html
 if [ "$SSH_TTY" != "" ]; then
-	# 再定義する場合は stty stop ^S
-	stty stop undef
+  # 再定義する場合は stty stop ^S
+  stty stop undef
 fi
 
 # エイリアス
@@ -79,69 +79,69 @@ fi
 [ -f ~/.funcs_gmacs ] && . ~/.funcs_gmacs
 
 case $TERM in
-	# - screen のウィンドウ名を変更する
-	#   "<esc>kウィンドウ名<esc>\" を出力することで変更できる
-	# - ハードステータスにメッセージを出力する
-	#   "<esc>_メッセージ<esc>\" でハードステータスに出力できる
-	# - echo -e : バックスラッシュエスケープを有効化
-	screen*)
-		# 文字化け対策
-		## 制御文字の除去
-		del_ctrlchar() {
-			echo -n "$*" | tr -d "[:cntrl:]"
-		}
-		## 256 バイトまでに制限
-		rst_upto256b() {
-			echo -n "$*" | cut --bytes=-256
-		}
-		## 色反転
-		rev_nonascii() {
-			# %{+r} : 背景色と前景色を入れ替える
-			# %{-}  : 元に戻す
-			#                           's/ ([:non-ascii:]+)/   %{+r}()   %{-}/g'
-			echo -n "$*" | LC_ALL=C sed 's/\([\x80-\xFF]\+\)/\x05{+r}\1\x05{-}/g'
-		}
-		## `?' に置換
-		sub_nonascii() {
-			#                           's/[non-ascii]/?/g'
-			echo -n "$*" | LC_ALL=C sed 's/[\x80-\xFF]/?/g'
-		}
-		# コマンド実行直前
-		preexec() {
-			# ウィンドウ名
-			## コマンド名のみを抽出
-			## ${X%% *} で " *" にマッチする最長接尾部を除去
-			windowtitle=${1%% *}
-			## 文字化け対策
-			windowtitle=$(del_ctrlchar "${windowtitle}")
-			windowtitle=$(sub_nonascii "${windowtitle}")
-			## 出力
-			echo -ne "\ek${windowtitle}\e\\"
-			# ハードステータス
-			## コマンドの引数を抽出
-			## ${X#* } で "* " にマッチする最短接頭部を除去
-			hardstatus=${1#* }
-			## 引数がある場合のみ出力
-			if [ "$1" != "${hardstatus}" ]; then
-				## 文字化け対策
-				hardstatus=$(del_ctrlchar "${hardstatus}")
-				hardstatus=$(rst_upto256b "${hardstatus}")
-				hardstatus=$(rev_nonascii "${hardstatus}")
-				hardstatus=$(sub_nonascii "${hardstatus}")
-				## 出力
-				echo -ne "\e_${hardstatus}\e\\"
-			fi
-		}
-		# コマンド実行直後
-		precmd() {
-			# $SHELL のファイル名のみを抽出
-			# ${X##*/} で "*/" にマッチする最長接頭部を除去
-			windowtitle=${SHELL##*/}
-			echo -ne "\ek${windowtitle}\e\\"
-			# ハードステータスを空にする
-			echo -ne "\e_\e\\"
-		}
-		;;
+  # - screen のウィンドウ名を変更する
+  #   "<esc>kウィンドウ名<esc>\" を出力することで変更できる
+  # - ハードステータスにメッセージを出力する
+  #   "<esc>_メッセージ<esc>\" でハードステータスに出力できる
+  # - echo -e : バックスラッシュエスケープを有効化
+  screen*)
+    # 文字化け対策
+    ## 制御文字の除去
+    del_ctrlchar() {
+      echo -n "$*" | tr -d "[:cntrl:]"
+    }
+    ## 256 バイトまでに制限
+    rst_upto256b() {
+      echo -n "$*" | cut --bytes=-256
+    }
+    ## 色反転
+    rev_nonascii() {
+      # %{+r} : 背景色と前景色を入れ替える
+      # %{-}  : 元に戻す
+      #                           's/ ([:non-ascii:]+)/   %{+r}()   %{-}/g'
+      echo -n "$*" | LC_ALL=C sed 's/\([\x80-\xFF]\+\)/\x05{+r}\1\x05{-}/g'
+    }
+    ## `?' に置換
+    sub_nonascii() {
+      #                           's/[non-ascii]/?/g'
+      echo -n "$*" | LC_ALL=C sed 's/[\x80-\xFF]/?/g'
+    }
+    # コマンド実行直前
+    preexec() {
+      # ウィンドウ名
+      ## コマンド名のみを抽出
+      ## ${X%% *} で " *" にマッチする最長接尾部を除去
+      windowtitle=${1%% *}
+      ## 文字化け対策
+      windowtitle=$(del_ctrlchar "${windowtitle}")
+      windowtitle=$(sub_nonascii "${windowtitle}")
+      ## 出力
+      echo -ne "\ek${windowtitle}\e\\"
+      # ハードステータス
+      ## コマンドの引数を抽出
+      ## ${X#* } で "* " にマッチする最短接頭部を除去
+      hardstatus=${1#* }
+      ## 引数がある場合のみ出力
+      if [ "$1" != "${hardstatus}" ]; then
+        ## 文字化け対策
+        hardstatus=$(del_ctrlchar "${hardstatus}")
+        hardstatus=$(rst_upto256b "${hardstatus}")
+        hardstatus=$(rev_nonascii "${hardstatus}")
+        hardstatus=$(sub_nonascii "${hardstatus}")
+        ## 出力
+        echo -ne "\e_${hardstatus}\e\\"
+      fi
+    }
+    # コマンド実行直後
+    precmd() {
+      # $SHELL のファイル名のみを抽出
+      # ${X##*/} で "*/" にマッチする最長接頭部を除去
+      windowtitle=${SHELL##*/}
+      echo -ne "\ek${windowtitle}\e\\"
+      # ハードステータスを空にする
+      echo -ne "\e_\e\\"
+    }
+    ;;
 esac
 
 # プロンプト

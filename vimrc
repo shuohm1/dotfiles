@@ -54,6 +54,8 @@ set nowrapscan
 "set incsearch
 set noincsearch
 
+" ファイル名補完
+set wildmode=longest,list
 " バッファの hidden モードを有効にする
 set hidden
 

@@ -40,7 +40,7 @@ defscrollback 4096
 
 # メッセージをハードステータスに表示する最大/最小秒数
 msgwait 3
-msgminwait 2
+msgminwait 0
 
 # ハードステータス
 setenv a ""

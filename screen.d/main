@@ -12,9 +12,8 @@ zombie ^[^?
 # キーバインド
 ## ウィンドウ生成 (^T^C は押しにくいため追加)
 bind ^J screen
-## ウィンドウ選択画面を表示
-## (-b オプションを指定すると現在の画面も選択肢に入る)
-bind w windowlist -b
+## ウィンドウ選択
+bind - select
 ## 貼り付け
 bind ^] paste [.]
 ## 文字コード変更

@@ -29,7 +29,8 @@ bind X remove
 bind Q only
 bind ^I focus
 ## リージョンリサイズ
-bind R eval "command -c resize" "echo 'Resize region'"
+bind r resize
+bind R eval "command -c resize" "echo 'Region resizing mode'"
 bind -c resize h eval "command -c resize" "resize -h -1"
 bind -c resize l eval "command -c resize" "resize -h +1"
 bind -c resize j eval "command -c resize" "resize -v +1"

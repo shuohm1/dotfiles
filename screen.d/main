@@ -18,6 +18,7 @@ bind - select
 bind ^] paste [.]
 ## 文字コード変更
 bind u eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
+bind w eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
 bind e eval "encoding eucJP" "echo 'Set encoding to EUC-JP'"
 bind s eval "encoding SJIS"  "echo 'Set encoding to SHIFT-JIS'"
 bind j eval "encoding jis"   "echo 'Set encoding to JIS'"

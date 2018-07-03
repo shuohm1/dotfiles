@@ -22,12 +22,14 @@ bind w eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
 bind e eval "encoding eucJP" "echo 'Set encoding to EUC-JP'"
 bind s eval "encoding SJIS"  "echo 'Set encoding to SHIFT-JIS'"
 bind j eval "encoding jis"   "echo 'Set encoding to JIS'"
-## ウィンドウ分割
+## リージョン分割
 bind S split
 bind V split -v
 bind X remove
 bind Q only
+## リージョン移動
 bind ^I focus
+bind ^U focus up
 ## リージョンリサイズ
 bind r resize
 bind R eval "command -c resize" "echo 'Region resizing mode'"

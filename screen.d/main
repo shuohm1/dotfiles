@@ -12,6 +12,8 @@ zombie ^[^?
 # キーバインド
 ## ウィンドウ生成 (^T^C は押しにくいため追加)
 bind ^J screen
+## 直前に表示していたウィンドウに戻る
+bind @ other
 ## ウィンドウ選択
 bind - select
 ## 貼り付け

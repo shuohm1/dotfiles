@@ -31,7 +31,7 @@ bind X remove
 bind Q only
 ## リージョン移動
 bind ^I focus
-bind ^U focus up
+bind ^U focus prev
 ## リージョンリサイズ
 bind r resize
 bind R eval "command -c resize" "echo 'Region resizing mode'"

@@ -12,24 +12,35 @@ zombie ^[^?
 # キーバインド
 ## ウィンドウ生成 (^T^C は押しにくいため追加)
 bind ^J screen
-## ウィンドウ選択画面を表示
-## (-b オプションを指定すると現在の画面も選択肢に入る)
-bind w windowlist -b
+## 直前に表示していたウィンドウに戻る
+bind o other
+## ウィンドウ選択
+bind - select
+## ウィンドウ連続移動
+bind @ eval "command -c switch" "echo 'Switch windows'"
+bind -c switch h eval "command -c switch" "prev"
+bind -c switch l eval "command -c switch" "next"
+bind -c switch H eval "command -c switch" "number -1"
+bind -c switch L eval "command -c switch" "number +1"
 ## 貼り付け
 bind ^] paste [.]
 ## 文字コード変更
 bind u eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
+bind w eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
 bind e eval "encoding eucJP" "echo 'Set encoding to EUC-JP'"
 bind s eval "encoding SJIS"  "echo 'Set encoding to SHIFT-JIS'"
 bind j eval "encoding jis"   "echo 'Set encoding to JIS'"
-## ウィンドウ分割
+## リージョン分割
 bind S split
 bind V split -v
 bind X remove
 bind Q only
+## リージョン移動
 bind ^I focus
+bind ^U focus prev
 ## リージョンリサイズ
-bind R eval "command -c resize" "echo 'Resize region'"
+bind r resize
+bind R eval "command -c resize" "echo 'Region resizing mode'"
 bind -c resize h eval "command -c resize" "resize -h -1"
 bind -c resize l eval "command -c resize" "resize -h +1"
 bind -c resize j eval "command -c resize" "resize -v +1"
@@ -40,7 +51,7 @@ defscrollback 4096
 
 # メッセージをハードステータスに表示する最大/最小秒数
 msgwait 3
-msgminwait 2
+msgminwait 0
 
 # ハードステータス
 setenv a ""

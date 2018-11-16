@@ -32,8 +32,14 @@ if [ -d "${HOME}/.screens" ]; then
   fi
 fi
 
+# PYTHON
+# cf: http://liosk.blog103.fc2.com/blog-entry-217.html
+pylocal="${HOME}/usr/pylocal"
+pybin="${pylocal}/bin"
+[ -d ${pybin} ] && export PYTHONUSERBASE="${pylocal}"
+
 # PATH and MANPATH
-for bin in /usr/local/bin /usr/local/sbin; do
+for bin in /usr/local/bin /usr/local/sbin ${pybin}; do
   [ -d ${bin} ] && PATH="${bin}:${PATH}"
 done
 ## 自作コマンド

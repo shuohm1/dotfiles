@@ -4,8 +4,14 @@ scriptencoding utf-8
 
 " シンタックスハイライト
 syntax enable
-" フォーマットオプション
-set formatoptions=tcq
+" フォーマットオプションを無効化
+set formatoptions=
+if has("autocmd")
+  augroup disable_formatoptions
+  autocmd!
+  autocmd FileType * setlocal formatoptions=
+  augroup END
+endif
 
 " ステータス行を常に表示
 set laststatus=2

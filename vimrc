@@ -91,6 +91,13 @@ exe "set listchars=tab:\<Char-0xBB>\\ ,trail:.,nbsp:%,eol:\<Char-0xAC>,extends:>
 " カラーテーマ
 colorscheme elflord
 
+" augroup redhat の autocmd を無効化する
+if has("autocmd")
+  augroup redhat
+  autocmd!
+  augroup END
+endif
+
 " キーバインド
 "" 保存/終了
 nnoremap <Space>w :<C-u>w<CR>

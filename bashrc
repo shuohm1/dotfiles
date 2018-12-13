@@ -102,6 +102,19 @@ function set_prompt() {
 }
 set_prompt
 
+# for screen
+function set_hostname2wintitle() {
+  # window title: \ek WINDOWTITLE \e\\
+  echo -en "\ek${HOSTNAME%%.*}\e\\"
+  # hardstatus: \e_ HARDSTATUS \e\\
+  echo -en "\e_\e\\"
+}
+case $TERM in
+  screen* )
+    export PROMPT_COMMAND_HOST2TITLE="set_hostname2wintitle"
+    ;;
+esac
+
 if [ -f ~/.bashrc.local ]; then
   source ~/.bashrc.local
 fi

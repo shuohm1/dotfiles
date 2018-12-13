@@ -50,14 +50,6 @@ shopt -s histappend
 # save a history to HISTFILE before the prompt is shown
 export PROMPT_COMMAND_HISTSAVE="history -a"
 
-# disable ctrl+s (stop the terminal output temporarily)
-# note: an error may occur if scp, check SSH_TTY
-# see: https://linux.just4fun.biz/?逆引きUNIXコマンド/Ctrl+Sによる端末ロックを無効にする方法
-if [ "${SSH_TTY}" ]; then
-  # if you want to re-enable ctrl+s, run 'stty stop ^S'
-  stty stop undef
-fi
-
 # renditions of the prompt
 function set_psrend() {
   local pscolor
@@ -109,6 +101,14 @@ case $TERM in
     export PROMPT_COMMAND_HOST2TITLE="set_hostname2wintitle"
     ;;
 esac
+
+# disable ctrl+s (stop the terminal output temporarily)
+# note: an error may occur if scp, check SSH_TTY
+# see: https://linux.just4fun.biz/?逆引きUNIXコマンド/Ctrl+Sによる端末ロックを無効にする方法
+if [ "${SSH_TTY}" ]; then
+  # if you want to re-enable ctrl+s, run 'stty stop ^S'
+  stty stop undef
+fi
 
 # aliases
 if [ -f ~/.aliases_basic ]; then

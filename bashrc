@@ -101,3 +101,7 @@ function set_prompt() {
   unset p
 }
 set_prompt
+
+if [ -f ~/.bashrc.local ]; then
+  source ~/.bashrc.local
+fi

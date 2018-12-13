@@ -58,11 +58,6 @@ if [ "${SSH_TTY}" ]; then
   stty stop undef
 fi
 
-# aliases
-if [ -f ~/.aliases_basic ]; then
-  source ~/.aliases_basic
-fi
-
 # renditions of the prompt
 function set_psrend() {
   local pscolor
@@ -114,6 +109,11 @@ case $TERM in
     export PROMPT_COMMAND_HOST2TITLE="set_hostname2wintitle"
     ;;
 esac
+
+# aliases
+if [ -f ~/.aliases_basic ]; then
+  source ~/.aliases_basic
+fi
 
 if [ -f ~/.bashrc.local ]; then
   source ~/.bashrc.local

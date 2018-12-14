@@ -14,7 +14,7 @@ if [ -z "${PS1}" ]; then
 fi
 
 # show startup message
-RCDATE=$(date +"%Y/%m/%d %H:%M:%S")
+RCDATE="$(date +"%Y/%m/%d %H:%M:%S")"
 # note: 1 is bold
 # note: 30-37 are [black, red, green, yellow, blue, magenta, cyan, white]
 echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
@@ -53,12 +53,12 @@ export PROMPT_COMMAND_HISTSAVE="history -a"
 # renditions of the prompt
 function set_psrend() {
   local pscolor
-  if [ ${EXIT_STATUS:-0} -eq 0 ]; then
+  if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
     # success: cyan
-    pscolor="36"
+    pscolor=36
   else
     # failed: magenta
-    pscolor="35"
+    pscolor=35
   fi
   export PS_RENDITION="\e[${pscolor}m"
   unset pscolor

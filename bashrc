@@ -90,15 +90,21 @@ function set_prompt() {
 set_prompt
 
 # for screen
-function set_hostname2wintitle() {
+function set_title4screen() {
+  local wintitle
+  wintitle="${HOSTNAME%%.*}"
+  if [ "${wintitle:-localhost}" = "localhost" ]; then
+    wintitle="${SHELL##*/}"
+  fi
+
   # window title: \ek WINDOWTITLE \e\\
-  echo -en "\ek${HOSTNAME%%.*}\e\\"
+  echo -en "\ek${wintitle}\e\\"
   # hardstatus: \e_ HARDSTATUS \e\\
   echo -en "\e_\e\\"
 }
 case $TERM in
   screen* )
-    export PROMPT_COMMAND_HOST2TITLE="set_hostname2wintitle"
+    export PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"
     ;;
 esac
 

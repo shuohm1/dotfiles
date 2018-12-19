@@ -81,7 +81,7 @@ function set_prompt() {
   p="$p\h"             # host name
   p="$p:"              # :
   p="$p\w"             # current directory
-  p="$p\$"             # '#' if root, otherwise '$'
+  p="$p\\$"            # '#' if root, otherwise '$'
   p="$p "              # space
   p="$p\[\e[m\]"       # unset renditions
   export PS1="$p"

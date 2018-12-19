@@ -65,17 +65,14 @@ function set_psrend() {
 }
 export PROMPT_COMMAND_PSRENDITION="set_psrend"
 
-# prompt
-function get_psrend() {
-  # \[ and \] not work in command substitutions,
-  # so use \001 and \002 instead
-  echo -en "\001${PS_RENDITION}\002"
-}
 function set_prompt() {
+  # - escape $ symbols to set renditions every time
+  # - \[ and \] cannot work in command substitutions,
+  #   so use \001 and \002 instead
+  local rend="\$(echo -en "\\001\${PS_RENDITION:-}\\002")"
+
   local p=""
-  p="$p\$(get_psrend)" # renditions
-  #                    #   escape $(...) to run get_psrend every time
-  #                    #   because PS1 is set only once
+  p="$p$rend"          # renditions
   p="$p\u"             # user name
   p="$p@"              # @
   p="$p\h"             # host name

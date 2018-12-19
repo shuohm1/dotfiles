@@ -65,6 +65,7 @@ function set_psrend() {
 }
 export PROMPT_COMMAND_PSRENDITION="set_psrend"
 
+# prompt
 function set_prompt() {
   # - escape $ symbols to set renditions every time
   # - \[ and \] cannot work in command substitutions,

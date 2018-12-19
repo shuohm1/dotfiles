@@ -72,15 +72,15 @@ function set_prompt() {
   local rend="\$(echo -en "\\001\${PS_RENDITION:-}\\002")"
 
   local p=""
-  p="$p$rend"          # renditions
-  p="$p\u"             # user name
-  p="$p@"              # @
-  p="$p\h"             # host name
-  p="$p:"              # :
-  p="$p\w"             # current directory
-  p="$p\\$"            # '#' if root, otherwise '$'
-  p="$p "              # space
-  p="$p\[\e[m\]"       # unset renditions
+  p="$p$rend"       # renditions
+  p="$p\u"          # user name
+  p="$p@"           # @
+  p="$p\h"          # host name
+  p="$p:"           # :
+  p="$p\w"          # current directory
+  p="$p\\$"         # '#' if root, otherwise '$'
+  p="$p "           # space
+  p="$p\[\e[m\]"    # unset renditions
   export PS1="$p"
   unset p
 }

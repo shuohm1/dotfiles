@@ -1,5 +1,5 @@
 # .zprofile
 
-if [ -f ~/.zprofile.msg ]; then
-  source ~/.zprofile.msg
+if [ -f ~/.zprofile.local ]; then
+  source ~/.zprofile.local
 fi

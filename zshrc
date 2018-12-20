@@ -103,7 +103,7 @@ case $TERM in
       fi
       echo -ne "\ek${wintitle}\e\\"
 
-      if [ -z "${WINTITLE}" -a "$1" != "${args#* }" ]; then
+      if [ -z "${WINTITLE}" -a "${args}" != "${args#* }" ]; then
         # get arguments
         local hardst="${args#* }"
 

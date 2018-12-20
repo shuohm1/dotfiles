@@ -95,7 +95,10 @@ case $TERM in
   screen*)
     # just before the command is executed
     preexec() {
-      local args="$(echo "$1" | sed 's/^ *//')"
+      local args="$1"
+      args="$(echo "${args}" | sed 's/^ *//')"
+      args="$(echo "${args}" | sed 's/^\([^ ]\+=[^ ]\+ \+\)*//')"
+
       local wintitle="${WINTITLE}"
       if [ -z "${wintitle}" ]; then
         # get the first token

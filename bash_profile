@@ -7,6 +7,3 @@ fi
 if [ -f ~/.bashrc ]; then
   source ~/.bashrc
 fi
-
-# terminal title
-printf "\033]0;${USER}@${HOSTNAME}\007"

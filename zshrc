@@ -99,6 +99,7 @@ case $TERM in
     preexec() {
       local args="$1"
       args="$(echo "${args}" | sed 's/^ *//')"
+      args="$(echo "${args}" | sed 's/^(\(.*\))$/\1/')"
       args="$(echo "${args}" | sed 's/^\([^ ]\+=[^ ]\+ \+\)*//')"
 
       local wintitle="${WINTITLE}"

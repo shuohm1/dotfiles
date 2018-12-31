@@ -1,11 +1,19 @@
 " encoding
 set encoding=utf-8
 scriptencoding utf-8
+" cjkwidth
+set ambiwidth=double
 
 " シンタックスハイライト
 syntax enable
-" フォーマットオプション
-set formatoptions=tcq
+" フォーマットオプションを無効化
+set formatoptions=
+if has("autocmd")
+  augroup disable_formatoptions
+  autocmd!
+  autocmd FileType * setlocal formatoptions=
+  augroup END
+endif
 
 " ステータス行を常に表示
 set laststatus=2
@@ -90,6 +98,13 @@ exe "set listchars=tab:\<Char-0xBB>\\ ,trail:.,nbsp:%,eol:\<Char-0xAC>,extends:>
 
 " カラーテーマ
 colorscheme elflord
+
+" augroup redhat の autocmd を無効化する
+if has("autocmd")
+  augroup redhat
+  autocmd!
+  augroup END
+endif
 
 " キーバインド
 "" 保存/終了

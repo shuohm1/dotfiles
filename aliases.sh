@@ -32,12 +32,16 @@ alias sless="less -S" # 画面右端で改行しない
 alias xless="less -X" # 終了後に表示内容を残す
 
 # grep 拡張
-for xgrep in grep egrep fgrep zgrep zegrep zfgrep; do
-  # 色をつける
-  alias ${xgrep}="${xgrep} --color=auto"
-  # リダイレクトやパイプでも強制的に色をつける
-  alias c${xgrep}="${xgrep} --color=always"
-done
+function aliases_for_grep() {
+  local g
+  for g in "grep" "egrep" "fgrep" "zgrep" "zegrep" "zfgrep"; do
+    # display matches in color
+    eval "alias ${g}='${g} --color=auto'"
+    # force display matches in color even if redirection or pipes
+    eval "alias color${g}='${g} --color=always'"
+  done
+}
+aliases_for_grep
 
 # diff 拡張
 if [ -x "$(which colordiff 2> /dev/null)" ]; then

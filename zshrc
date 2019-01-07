@@ -153,8 +153,8 @@ if [ "${SSH_TTY}" ]; then
 fi
 
 # aliases
-if [ -f ~/.aliases_basic ]; then
-  source ~/.aliases_basic
+if [ -f ~/.aliases.sh ]; then
+  source ~/.aliases.sh
 fi
 
 if [ -f ~/.zshrc.local ]; then

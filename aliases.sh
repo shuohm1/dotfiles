@@ -1,5 +1,4 @@
-### .aliases_basic ###
-# 基本的なエイリアス設定
+# .aliases.sh
 
 # sudo でエイリアスを引き継ぐ
 alias sudo="sudo "
@@ -41,7 +40,6 @@ fi
 #alias less="less -R" # 着色エスケープ文字を解釈
 alias sless="less -S" # 画面右端で改行しない
 alias xless="less -X" # 終了後に表示内容を残す
-alias l="sless"
 
 # grep 拡張
 for xgrep in grep egrep fgrep zgrep zegrep zfgrep; do
@@ -50,7 +48,6 @@ for xgrep in grep egrep fgrep zgrep zegrep zfgrep; do
   # リダイレクトやパイプでも強制的に色をつける
   alias c${xgrep}="${xgrep} --color=always"
 done
-alias g="cgrep"
 
 # diff 拡張
 if [ $(which colordiff 1>/dev/null 2>&1; echo $?) -eq 0 ]; then
@@ -65,11 +62,5 @@ if [ $(which screen 1>/dev/null 2>&1; echo $?) -eq 0 ]; then
   alias ss="screen -S"  # セッション名を指定して起動
 fi
 
-# rsync
-alias nrsync="rsync -n" # dry-run
-
 # ベルを鳴らす
 alias bell="echo -ne '\a'"
-
-# Ubuntu MOTD (message of the day)
-#[ -d /etc/update-motd.d ] && alias motd="run-parts --lsbsysinit /etc/update-motd.d"

@@ -1,37 +1,38 @@
 # .aliases.sh
 
-# sudo でエイリアスを引き継ぐ
+# expand aliases for sudo
+# see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
 
-# ls に色をつける
+# ls in color
 if ls --version 2> /dev/null | grep "GNU" 1> /dev/null 2>&1; then
-  # GNU ls
+  # GNU
   alias ls="ls --color=auto"
 else
-  # BSD ls
+  # BSD
   alias ls="ls -G"
 fi
 
-# ls 拡張
-alias lc="ls -C"  # 強制カラム表示
-alias lx="ls -x"  # 横に並べて表示
+# ls extentions
+alias lc="ls -C"  # list by columns
+alias lx="ls -x"  # list by lines
 alias la="ls -a"
 alias ll="ls -l"
 alias lh="ls -lh"
-alias lz="ls -la" # ll + la
-alias lg="ls -lG" # -G : 所属グループを表示しない
+alias lz="ls -la" # list all files in long format
+alias lg="ls -lG" # do not show groups
 
-# mv, cp, rm で確認を取る
+# always interactive mode for mv/cp/rm
 alias mv="mv -i"
 alias cp="cp -i"
 alias rm="rm -i"
 
-# less 拡張
-#alias less="less -R" # 着色エスケープ文字を解釈
-alias sless="less -S" # 画面右端で改行しない
-alias xless="less -X" # 終了後に表示内容を残す
+# less extentions
+#alias less="less -R" # display control characters except color escapes
+alias sless="less -S" # do not wrap on the right edge
+alias xless="less -X" # leave displayed contents
 
-# grep 拡張
+# grep in color
 function aliases_for_grep() {
   local g
   for g in "grep" "egrep" "fgrep" "zgrep" "zegrep" "zfgrep"; do
@@ -43,7 +44,7 @@ function aliases_for_grep() {
 }
 aliases_for_grep
 
-# diff 拡張
+# colordiff
 if [ -x "$(which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff"
 fi
@@ -51,10 +52,10 @@ fi
 # screen
 if [ -x "$(which screen 2> /dev/null)" ]; then
   alias s="screen"
-  alias sl="screen -ls" # セッション一覧
-  alias sr="screen -R"  # レジューム
-  alias ss="screen -S"  # セッション名を指定して起動
+  alias sl="screen -ls" # list sessions
+  alias sr="screen -R"  # resume a session
+  alias ss="screen -S"  # specify a session name
 fi
 
-# ベルを鳴らす
+# ring a bell
 alias bell="echo -ne '\a'"

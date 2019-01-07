@@ -4,7 +4,7 @@
 alias sudo="sudo "
 
 # ls に色をつける
-if ls --version 2>/dev/null | grep GNU 1>/dev/null 2>&1; then
+if ls --version 2> /dev/null | grep "GNU" 1> /dev/null 2>&1; then
   # GNU ls
   alias ls="ls --color=auto"
 else
@@ -50,12 +50,12 @@ for xgrep in grep egrep fgrep zgrep zegrep zfgrep; do
 done
 
 # diff 拡張
-if [ $(which colordiff 1>/dev/null 2>&1; echo $?) -eq 0 ]; then
+if [ -x "$(which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff"
 fi
 
 # screen
-if [ $(which screen 1>/dev/null 2>&1; echo $?) -eq 0 ]; then
+if [ -x "$(which screen 2> /dev/null)" ]; then
   alias s="screen"
   alias sl="screen -ls" # セッション一覧
   alias sr="screen -R"  # レジューム

@@ -27,16 +27,6 @@ alias cp="cp -i"
 alias rm="rm -i"
 
 # less 拡張
-## 最下行に情報表示, 着色エスケープ文字を解釈, タブ幅4
-export LESS="--LONG-PROMPT --RAW-CONTROL-CHARS --tabs=4"
-## シンタックスハイライト (要: GNU Source Highlight)
-srchighlight=$(which src-hilite-lesspipe.sh 2>&1)
-if [ ! -x "${srchighlight}" ]; then
-  srchighlight=/usr/share/source-highlight/src-hilite-lesspipe.sh
-fi
-if [ -x "${srchighlight}" ]; then
-  export LESSOPEN="| ${srchighlight} %s"
-fi
 #alias less="less -R" # 着色エスケープ文字を解釈
 alias sless="less -S" # 画面右端で改行しない
 alias xless="less -X" # 終了後に表示内容を残す

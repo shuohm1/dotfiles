@@ -19,7 +19,13 @@ RCDATE="$(date +"%Y/%m/%d %H:%M:%S")"
 # note: 30-37 are [black, red, green, yellow, blue, magenta, cyan, white]
 echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
-echo -en "\033]0;${USER}@${HOSTNAME}\007"
+case $TERM in
+  screen* )
+    ;;
+  * )
+    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    ;;
+esac
 
 # dipatch PROMPT_COMMAND
 # see: http://qiita.com/tay07212/items/9509aef6dc3bffa7dd0c

@@ -20,9 +20,9 @@ RCDATE="$(date +"%Y/%m/%d %H:%M:%S")"
 echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
 case $TERM in
-  screen* )
+  screen*)
     ;;
-  * )
+  *)
     echo -en "\033]0;${USER}@${HOSTNAME}\007"
     ;;
 esac
@@ -111,7 +111,7 @@ function set_title4screen() {
   echo -en "\e_\e\\"
 }
 case $TERM in
-  screen* )
+  screen*)
     export PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"
     ;;
 esac

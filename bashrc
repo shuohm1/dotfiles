@@ -20,9 +20,7 @@ RCDATE="$(date +"%Y/%m/%d %H:%M:%S")"
 echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
 case $TERM in
-  screen*)
-    ;;
-  *)
+  xterm*)
     echo -en "\033]0;${USER}@${HOSTNAME}\007"
     ;;
 esac

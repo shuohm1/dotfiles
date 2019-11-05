@@ -51,10 +51,10 @@ fi
 
 # screen
 if [ -x "$(which screen 2> /dev/null)" ]; then
-  alias s="screen"
+  alias sc="screen"
   alias sl="screen -ls" # list sessions
   alias sr="screen -R"  # resume a session
-  alias ss="screen -S"  # specify a session name
+  alias sn="screen -S"  # specify a session name
 fi
 
 # ring a bell

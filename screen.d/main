@@ -147,8 +147,8 @@ altscreen on
 # 自動デタッチ
 autodetach on
 
-# ログイン情報を utmp に吐く
-deflogin on
+# ログイン情報を utmp に吐かない
+deflogin off
 
 # ホームディレクトリに移動
 chdir $HOME

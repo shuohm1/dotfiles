@@ -27,6 +27,9 @@ alias mv="mv -i"
 alias cp="cp -i"
 alias rm="rm -i"
 
+# always print the directory stack with one entry per line
+alias dirs="dirs -p"
+
 # less extentions
 #alias less="less -R" # display control characters except color escapes
 alias sless="less -S" # do not wrap on the right edge

@@ -1,0 +1,7 @@
+# .zshenv.local
+
+if [ -d "${HOME}/tmp" ]; then
+  ZCOMPDUMP="${HOME}/tmp/.zcompdump"
+else
+  ZCOMPDUMP="/tmp/${USER}.zcompdump"
+fi

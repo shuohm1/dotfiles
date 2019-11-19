@@ -124,8 +124,8 @@ if [ "${SSH_TTY}" ]; then
 fi
 
 # aliases
-if [ -f ~/.aliases.sh ]; then
-  source ~/.aliases.sh
+if [ -f ~/.aliasrc ]; then
+  source ~/.aliasrc
 fi
 
 if [ -f ~/.bashrc.local ]; then

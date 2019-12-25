@@ -139,3 +139,8 @@ nnoremap <Space>O :<C-u>for i in range(v:count1) \| call append(line('.')-1, '')
 nnoremap ZZ <Nop>
 """ 保存せずに終了
 nnoremap ZQ <Nop>
+
+" ローカル設定
+if filereadable($HOME."/.vimrc.local")
+  source ${HOME}/.vimrc.local
+endif

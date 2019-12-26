@@ -18,6 +18,10 @@ case $TERM in
     ;;
 esac
 
+# set some environment variables again
+set_shpath "$0"
+set_hostname
+
 # completion settings
 # -U: do not expand aliases during autoload
 # -z: force zsh format

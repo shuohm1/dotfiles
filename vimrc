@@ -15,6 +15,9 @@ if has("autocmd")
   augroup END
 endif
 
+" Markdown のシンタックスハイライトを有効化
+autocmd BufNewFile,BufRead *.md set filetype=markdown
+
 " ステータス行を常に表示
 set laststatus=2
 

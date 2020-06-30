@@ -15,6 +15,9 @@ if has("autocmd")
   augroup END
 endif
 
+" Markdown のシンタックスハイライトを有効化
+autocmd BufNewFile,BufRead *.md set filetype=markdown
+
 " ステータス行を常に表示
 set laststatus=2
 
@@ -90,11 +93,12 @@ set backspace=indent,eol,start
 set list
 "set listchars=tab:>\ ,trail:.,nbsp:%,eol:$,extends:>,precedes:<
 exe "set listchars=tab:\<Char-0xBB>\\ ,trail:.,nbsp:%,eol:\<Char-0xAC>,extends:>,precedes:<"
-" <Char-0xBB>: ≫
-" <Char-0xAC>: ￢
-" trail: 行末の空白
-" extends: nowrap のとき右側の続きを示す
-" precedes: nowrap のとき左側の続きを示す
+" - 補足
+" - * <Char-0xBB>: ≫
+" - * <Char-0xAC>: ￢
+" - * trail: 行末の空白
+" - * extends: nowrap のとき右側の続きを示す
+" - * precedes: nowrap のとき左側の続きを示す
 
 " カラーテーマ
 colorscheme elflord
@@ -107,22 +111,22 @@ if has("autocmd")
 endif
 
 " キーバインド
-"" 保存/終了
+" - 保存/終了
 nnoremap <Space>w :<C-u>w<CR>
 nnoremap <Space>q :<C-u>q<CR>
 nnoremap <Space>Q :<C-u>q!<CR>
-"" : と ; を入れ替える
+" - コロンとセミコロンを入れ替える
 "nnoremap ; :
 "nnoremap : ;
 "vnoremap ; :
 "vnoremap : ;
-"" 行頭/行末へ移動
+" - 行頭/行末へ移動
 nnoremap <Space>h ^
 nnoremap <Space>l $
-"" ファイル先頭/末尾へ移動
+" - ファイル先頭/末尾へ移動
 nnoremap <Space>k gg
 nnoremap <Space>j G
-"" 物理行移動と論理行 (表示行) 移動を入れ替える
+" - 物理行移動と論理行 (表示行) 移動を入れ替える
 "nnoremap k  gk
 "nnoremap j  gj
 "vnoremap k  gk
@@ -134,10 +138,10 @@ nnoremap <Space>j G
 " 空行挿入
 nnoremap <Space>o :<C-u>for i in range(v:count1) \| call append(line('.'), '') \| endfor<CR>
 nnoremap <Space>O :<C-u>for i in range(v:count1) \| call append(line('.')-1, '') \| endfor<CR>
-"" 危険キーの無効化
-""" 保存して終了
+" - 危険キーの無効化
+" - * 保存して終了
 nnoremap ZZ <Nop>
-""" 保存せずに終了
+" - * 保存せずに終了
 nnoremap ZQ <Nop>
 
 " ローカル設定

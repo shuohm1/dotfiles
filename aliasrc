@@ -20,7 +20,7 @@ alias la="ls -a"
 alias ll="ls -l"
 alias lh="ls -lh"
 alias lz="ls -la" # list all files in long format
-alias lg="ls -lG" # do not show groups
+alias lg="ls -go" # show neither owner nor group
 
 # always interactive mode for mv/cp/rm
 alias mv="mv -i"

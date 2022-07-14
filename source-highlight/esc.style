@@ -1,0 +1,92 @@
+// https://www.gnu.org/software/src-highlite/source-highlight.html#Output-format-style
+// https://www.gnu.org/software/src-highlite/examples.html
+
+// * general
+normal gray;
+//bgcolor;
+//context;
+linenum yellow b;
+
+// * syntax
+cbracket gray;
+classname green b;
+comment cyan;
+function gray b;
+keyword yellow b;
+label yellow b;
+number purple b;
+preproc blue b;
+specialchar purple;
+string purple b;
+symbol gray;
+type green b;
+usertype green;
+// fg: black (30), bg: yellow (43)
+todo "30;43";
+
+// * perl, ruby, etc.
+regexp red;
+variable green;
+// * glsl
+//predef_var;
+//predef_func;
+// * oz
+//atom;
+//meta;
+
+// * json
+key purple b;
+keyquote purple b;
+valquote purple b;
+colon gray;
+
+// * code snippets
+//code;
+
+// * file system
+//path;
+// * url <http://www.example.com/>
+url blue b;
+
+// * diff
+oldfile red;
+newfile green;
+difflines cyan;
+
+// * log
+date gray b;
+time gray b;
+ip green;
+//port green;
+file gray;
+name gray;
+webmethod yellow;
+//twonumbers;
+
+// * error
+//error;
+//warning;
+
+// * css
+selector gray b;
+property green b;
+value purple b;
+
+// * latex
+//bold b;
+//fixed f;
+//underline u;
+//italics i;
+//argument;
+//bibtex;
+//optionalargument;
+//math;
+
+// * feature (cucumber) files
+cuketag green;
+gherken blue;
+given red;
+when cyan;
+then yellow;
+and_but pink;
+table gray;

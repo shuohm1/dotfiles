@@ -61,5 +61,8 @@ if [ -x "$(which screen 2> /dev/null)" ]; then
   alias sn="screen -S"  # specify a session name
 fi
 
+# vim
+alias vi="vim"
+
 # ring a bell
 alias bell="echo -ne '\a'"

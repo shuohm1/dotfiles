@@ -10,23 +10,22 @@ linenum yellow b;
 // * syntax
 cbracket gray;
 classname green b;
-comment cyan;
-function gray b;
+comment teal;
+function white b;
 keyword yellow b;
 label yellow b;
-number purple b;
+number pink b;
 preproc blue b;
 specialchar purple;
-string purple b;
+string pink b;
 symbol gray;
 type green b;
 usertype green;
-// fg: black (30), bg: yellow (43)
-todo "30;43";
+todo "30;43";   // fg: black (30), bg: yellow (43)
 
 // * perl, ruby, etc.
-regexp red;
-variable green;
+regexp brightorange b;
+variable cyan b;
 // * glsl
 //predef_var;
 //predef_func;
@@ -35,9 +34,9 @@ variable green;
 //meta;
 
 // * json
-key purple b;
-keyquote purple b;
-valquote purple b;
+key pink b;
+keyquote pink b;
+valquote pink b;
 colon gray;
 
 // * code snippets
@@ -46,21 +45,21 @@ colon gray;
 // * file system
 //path;
 // * url <http://www.example.com/>
-url blue b;
+url darkblue b, u;
 
 // * diff
-oldfile red;
-newfile green;
-difflines cyan;
+oldfile darkred;
+newfile darkgreen;
+difflines teal;
 
 // * log
-date gray b;
-time gray b;
-ip green;
-//port green;
+date white b;
+time white b;
+ip darkgreen;
+//port darkgreen;
 file gray;
 name gray;
-webmethod yellow;
+webmethod brown;
 //twonumbers;
 
 // * error
@@ -68,9 +67,9 @@ webmethod yellow;
 //warning;
 
 // * css
-selector gray b;
+selector white b;
 property green b;
-value purple b;
+value pink b;
 
 // * latex
 //bold b;
@@ -89,4 +88,4 @@ given red;
 when cyan;
 then yellow;
 and_but pink;
-table gray;
+table white;

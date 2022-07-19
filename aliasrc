@@ -34,6 +34,7 @@ alias dirs="dirs -p"
 #alias less="less -R" # display control characters except color escapes
 alias sless="less -S" # do not wrap on the right edge
 alias xless="less -X" # leave displayed contents
+alias rless="LESS= LESSOPEN= less" # raw less
 
 # grep in color
 function aliases_for_grep() {

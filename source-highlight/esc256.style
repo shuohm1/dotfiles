@@ -1,40 +1,31 @@
 // https://www.gnu.org/software/src-highlite/source-highlight.html#Output-format-style
 // https://www.gnu.org/software/src-highlite/examples.html
 
-//          K,  R,  G,  Y,  B,  M,  C,  W
-//   Dark:  0,  1,  2,  3,  4,  5,  6,  7
-// Bright:  8,  9, 10, 11, 12, 13, 14, 15
-//  81: SteelBlue1
-// 108: DarkSeaGreen
-// 114: PaleGreen3
-// 121: PaleGreen1
-
 // * general
-normal "7";
+normal gray;
 //bgcolor;
 //context;
-linenum "11";
+linenum yellow;
 
 // * syntax
-cbracket "7";
-classname "114";
-comment "6";
-function "15";
-keyword "11";
-label "11";
-number "13";
-preproc "81";
-specialchar "5";
-string "13";
-symbol "7";
-type "121";
-usertype "108";
-// 48;05;bg
-todo "0;48;05;11";
+cbracket gray;
+comment teal;
+function white;
+keyword yellow;
+label yellow;
+number pink;
+preproc blue;
+specialchar purple;
+string pink;
+symbol gray;
+type brightgreen;
+classname "38;05;115";        // 115: DarkSeaGreen3
+usertype "38;05;114";         // 114: PaleGreen3
+todo "38;05;000;48;05;011";   // fg: black (0), bg: yellow (11)
 
 // * perl, ruby, etc.
-regexp "9";
-variable "10";
+regexp brightorange;
+variable cyan;
 // * glsl
 //predef_var;
 //predef_func;
@@ -43,10 +34,10 @@ variable "10";
 //meta;
 
 // * json
-key "13";
-keyquote "13";
-valquote "13";
-colon "7";
+key pink;
+keyquote pink;
+valquote pink;
+colon gray;
 
 // * code snippets
 //code;
@@ -54,21 +45,21 @@ colon "7";
 // * file system
 //path;
 // * url <http://www.example.com/>
-url "12";
+url darkblue u;
 
 // * diff
-oldfile "1";
-newfile "2";
-difflines "6";
+oldfile darkred;
+newfile darkgreen;
+difflines teal;
 
 // * log
-date "15";
-time "15";
-ip "2";
-//port "2";
-file "7";
-name "7";
-webmethod "3";
+date white;
+time white;
+ip darkgreen;
+//port darkgreen;
+file gray;
+name gray;
+webmethod brown;
 //twonumbers;
 
 // * error
@@ -76,9 +67,9 @@ webmethod "3";
 //warning;
 
 // * css
-selector "15";
-property "10";
-value "13";
+selector white;
+property brightgreen;
+value pink;
 
 // * latex
 //bold b;
@@ -91,10 +82,10 @@ value "13";
 //math;
 
 // * feature (cucumber) files
-cuketag "2";
-gherken "4";
-given "1";
-when "6";
-then "3";
-and_but "5";
-table "7";
+cuketag green;
+gherken blue;
+given red;
+when cyan;
+then yellow;
+and_but pink;
+table white;

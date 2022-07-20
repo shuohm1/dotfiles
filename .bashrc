@@ -98,7 +98,7 @@ set_prompt
 function set_title4screen() {
   local wintitle="${WINTITLE}"
   if [ -z "${wintitle}" ]; then
-    wintitle="${SHORTHOSTNAME}"
+    wintitle="${HOSTNAME}"
     if [ "${wintitle:-localhost}" = "localhost" ]; then
       wintitle="${SHELL##*/}"
     fi

@@ -164,7 +164,7 @@ case $TERM in
     precmd() {
       local wintitle="${WINTITLE}"
       if [ -z "${wintitle}" ]; then
-        wintitle="${HOSTNAME}"
+        wintitle="${SHORTHOSTNAME}"
         if [ "${wintitle:-localhost}" = "localhost" ]; then
           wintitle="${SHELL##*/}"
         fi

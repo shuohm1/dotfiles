@@ -8,6 +8,6 @@ if [ -f /etc/redhat-release ]; then
   fi
 fi
 
-if [ -f ~/.zprofile.local ]; then
-  source ~/.zprofile.local
+if [ -f "${HOME}/.zprofile.local" ]; then
+  source "${HOME}/.zprofile.local"
 fi

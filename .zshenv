@@ -1,9 +1,9 @@
 # .zshenv
 
-if [ -f ~/.bashrc.env ]; then
-  source ~/.bashrc.env
+if [ -f "${HOME}/.bashrc.env" ]; then
+  source "${HOME}/.bashrc.env"
 fi
 
-if [ -f ~/.zshenv.local ]; then
-  source ~/.zshenv.local
+if [ -f "${HOME}/.zshenv.local" ]; then
+  source "${HOME}/.zshenv.local"
 fi

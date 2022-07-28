@@ -4,8 +4,8 @@ if [ -f /etc/bashrc ]; then
   source /etc/bashrc
 fi
 
-if [ -f ~/.bashrc.env ]; then
-  source ~/.bashrc.env
+if [ -f "${HOME}/.bashrc.env" ]; then
+  source "${HOME}/.bashrc.env"
 fi
 
 # return if non-interactive shells
@@ -40,7 +40,7 @@ function dispatch_prcmd() {
 export PROMPT_COMMAND="dispatch_prcmd"
 
 # command histories
-export HISTFILE=~/.bash_history
+export HISTFILE="${HOME}/.bash_history"
 # the number of histories on RAM
 export HISTSIZE=100000
 # the number of histories on HISTFILE
@@ -124,10 +124,10 @@ if [ "${SSH_TTY}" ]; then
 fi
 
 # aliases
-if [ -f ~/.aliasrc ]; then
-  source ~/.aliasrc
+if [ -f "${HOME}/.aliasrc" ]; then
+  source "${HOME}/.aliasrc"
 fi
 
-if [ -f ~/.bashrc.local ]; then
-  source ~/.bashrc.local
+if [ -f "${HOME}/.bashrc.local" ]; then
+  source "${HOME}/.bashrc.local"
 fi

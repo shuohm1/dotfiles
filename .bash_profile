@@ -8,10 +8,10 @@ if [ -f /etc/redhat-release ]; then
   fi
 fi
 
-if [ -f ~/.bash_profile.local ]; then
-  source ~/.bash_profile.local
+if [ -f "${HOME}/.bash_profile.local" ]; then
+  source "${HOME}/.bash_profile.local"
 fi
 
-if [ -f ~/.bashrc ]; then
-  source ~/.bashrc
+if [ -f "${HOME}/.bashrc" ]; then
+  source "${HOME}/.bashrc"
 fi

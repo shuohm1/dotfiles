@@ -1,24 +1,24 @@
-### .colordiff ###
+# .colordiffrc
 
-# 著者情報を表示する場合は yes に設定する
+# show a splash screen: yes/no
 banner=no
 
-# リダイレクトした場合も色をつける場合は yes に設定する
+# set colors even if output is redirected: yes/no
 color_patches=no
 
-# diff に使うコマンド
+# a diff command
 diff_cmd=diff
 
-# 使用可能な色設定: white, yellow, green, blue,
-#                   cyan, red, magenta, black,
-#                   darkwhite, darkyellow, darkgreen,
-#                   darkblue, darkcyan, darkred,
-#                   darkmagenta, darkblack
-# 色をつけない設定: none, normal, off
-#                   (どれを指定しても同じ)
-# *** git diff --color と同じ色使いに設定 ***
+# `git-diff`-like color settings
 plain=off
-newtext=darkgreen
 oldtext=darkred
+newtext=darkgreen
 diffstuff=darkcyan
 cvsstuff=white
+
+# * available colors:
+#   black, red, green, yellow, blue, magenta, cyan, white,
+#   darkblack, darkred, darkgreen, darkyellow,
+#   darkblue, darkmagenta, darkcyan, darkwhite
+# * no color (any of these are the same):
+#   none, normal, off

@@ -64,7 +64,7 @@ unsetopt auto_menu
 
 # command histories
 # share the history file with bash
-export HISTFILE=~/.bash_history
+export HISTFILE="${HOME}/.bash_history"
 # the number of histories on RAM
 export HISTSIZE=100000
 # the number of histories on HISTFILE
@@ -184,10 +184,10 @@ if [ "${SSH_TTY}" ]; then
 fi
 
 # aliases
-if [ -f ~/.aliasrc ]; then
-  source ~/.aliasrc
+if [ -f "${HOME}/.aliasrc" ]; then
+  source "${HOME}/.aliasrc"
 fi
 
-if [ -f ~/.zshrc.local ]; then
-  source ~/.zshrc.local
+if [ -f "${HOME}/.zshrc.local" ]; then
+  source "${HOME}/.zshrc.local"
 fi

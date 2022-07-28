@@ -1,5 +1,5 @@
 # .zshrc.local
 
-#export HISTFILE=~/.bash_history
+#export HISTFILE="${HOME}/.bash_history"
 #export HISTSIZE=100000
 #export SAVEHIST=100000

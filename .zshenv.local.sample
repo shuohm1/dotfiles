@@ -1,7 +1,7 @@
 # .zshenv.local
 
 if [ -d "$(readlink -e "${HOME}/tmp" 2> /dev/null)" ]; then
-  ZCOMPDUMP="$(readlink -e "${HOME}/tmp")/.zcompdump"
+  export ZCOMPDUMP="$(readlink -e "${HOME}/tmp")/.zcompdump"
 else
-  ZCOMPDUMP="/tmp/${USER}.zcompdump"
+  export ZCOMPDUMP="/tmp/${USER}.zcompdump"
 fi

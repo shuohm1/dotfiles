@@ -136,8 +136,8 @@ nnoremap <Space>j G
 "vnoremap gk k
 "vnoremap gj j
 " 空行挿入
-nnoremap <Space>o :<C-u>for i in range(v:count1) \| call append(line('.'), '') \| endfor<CR>
-nnoremap <Space>O :<C-u>for i in range(v:count1) \| call append(line('.')-1, '') \| endfor<CR>
+nnoremap <Space>o :<C-u>for i in range(v:count1) <bar> call append(line('.'), '') <bar> endfor<CR>
+nnoremap <Space>O :<C-u>for i in range(v:count1) <bar> call append(line('.')-1, '') <bar> endfor<CR>
 " - 危険キーの無効化
 " - * 保存して終了
 nnoremap ZZ <Nop>

@@ -30,7 +30,7 @@ autoload -Uz compinit
 if [ -z "${ZCOMPDUMP}" ]; then
   compinit
 else
-  compinit -d ${ZCOMPDUMP}
+  compinit -d "${ZCOMPDUMP}"
 fi
 
 # complementor for sudo.vim

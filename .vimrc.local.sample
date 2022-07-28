@@ -5,3 +5,5 @@
 
 " .viminfo を作らない
 "set viminfo=
+" .viminfo の場所を変更
+"set viminfo+=n${HOME}/.anotherviminfo

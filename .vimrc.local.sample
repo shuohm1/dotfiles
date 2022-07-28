@@ -1,9 +1,13 @@
 " .vimrc.local
 
-" やや強い色味
+" slightly loud colors
 "colorscheme koehler
 
-" .viminfo を作らない
+" do not make a viminfo file
 "set viminfo=
-" .viminfo の場所を変更
-"set viminfo+=n${HOME}/.anotherviminfo
+" change a location for a viminfo file
+"set viminfo+=n/path/to/viminfo
+
+" add a new runtimepath after/before existing runtimepaths
+" -  after: runtimepath+=/path/to/foo
+" - before: runtimepath^=/path/to/bar

@@ -145,6 +145,8 @@ nnoremap ZZ <Nop>
 nnoremap ZQ <Nop>
 
 " ローカル設定
-if filereadable($HOME."/.vimrc.local")
-  source ${HOME}/.vimrc.local
+if filereadable(expand("$MYVIMRC.local"))
+  source $MYVIMRC.local
+elseif filereadable(expand("$HOME/.vimrc.local"))
+  source $HOME/.vimrc.local
 endif

@@ -4,129 +4,111 @@ scriptencoding utf-8
 " cjkwidth
 set ambiwidth=double
 
-" シンタックスハイライト
+" colors
+colorscheme elflord
+" syntax highlight
 syntax enable
-" フォーマットオプションを無効化
-set formatoptions=
-if has("autocmd")
-  augroup disable_formatoptions
-  autocmd!
-  autocmd FileType * setlocal formatoptions=
-  augroup END
-endif
-
-" Markdown のシンタックスハイライトを有効化
+" syntax highlight for markdown files
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 
-" ステータス行を常に表示
+" status line
+" - 0: do not show
+" - 1: show if there are two or more windows
+" - 2: show always
 set laststatus=2
 
-" 行番号表示/非表示
-set number " abbr: nu
+" show line numbers
+set number
+" show a position of the cursor on a status line (the lower right)
 set ruler
 
-" 行頭/行末間移動
-"set whichwrap=h,l
-" 行末で折り返す/折り返さない
+" wrap long lines
 set wrap
-"set nowrap
+" move the cursor between the head/tail of lines
+" * see: https://vim-jp.org/vimdoc-ja/options.html#'whichwrap'
+set whichwrap=b,s
 
-" タブを空白に展開する/しない
-set expandtab " abbr: et
-"set noexpandtab
-" 表示上のタブ幅
+" # indent
+" expand a tab-key into whitespaces
+set expandtab
+" appearance of tab-character width
 set tabstop=4
-" vim が自動的に挿入する空白量
-set shiftwidth=2
-" tab キーで挿入される空白量
-" (0 にすると tabstop の値が使われる)
+" the number of whitespaces when a tab-key is input
 set softtabstop=2
+" the number of whitespaces with auto indent
+set shiftwidth=2
 
-" 括弧の対応関係を一瞬表示する/しない
-" (閉じ括弧を入力時に開き括弧に一瞬カーソルが移動する)
-"set showmatch
+" do not show the matching parenthesis
+" (the cursor moves the left parenthesis for an instant when
+"  the right parenthesis is input; disable this function)
 set noshowmatch
 
-" 入力中のコマンドを表示する
+" show a command under typing
 set showcmd
 
-" 検索語句をハイライトする/しない
-"set hlsearch " abbr: hls
+" # search
+" do not highlight a word under searching
 set nohlsearch
-" 検索時に英大小文字を区別しない
+" ignore upper/lower-case letters when searching
 set ignorecase
-" すべて英小文字で入力した場合のみ区別しない
+" ignore case only if all letters in the searching word are lowercase
 set smartcase
-" 検索をループする/しない
-"set wrapscan
+" do not loop searching
 set nowrapscan
-" 語句の入力途中で検索を始める/始めない
-" (incremental search)
-"set incsearch
+" disable incremental search
+" (do not begin to search in the middle of typing)
 set noincsearch
 
-" ファイル名補完
+" a completion mode for a name of a file
+" * see: https://vim-jp.org/vimdoc-ja/options.html#'wildmode'
 set wildmode=longest,list
-" バッファの hidden モードを有効にする
+" enable hidden (inactive) buffers
 set hidden
 
-" スワップファイルを作る/作らない (foobar.txt.swp)
+" # swap/backup
+" make swap files (foobar.txt.swp)
 set swapfile
-"set noswapfile
-" スワップファイルディレクトリ
+" a directory for swap files
 if isdirectory("/tmp")
   set directory=/tmp
 endif
-
-" バックアップをとる/とらない (foobar.txt~)
-"set backup
+" do not make backup files (foobar.txt~)
 set nobackup
-" バックアップディレクトリ
+" a directory for backup files
 "set backupdir=
 
-" backspace キーの挙動設定
-" (手前の文字を消しつつ1文字分左に移動する)
-" see: http://www.atmarkit.co.jp/ait/articles/1107/21/news115.html
+" a setting for the backspace key
+" * see: https://vim-jp.org/vimdoc-ja/options.html#'backspace'
+" * see: http://www.atmarkit.co.jp/ait/articles/1107/21/news115.html
 set backspace=indent,eol,start
 
-" 空白文字等の可視化
+" visualize whitespace, tab, etc.
 set list
 "set listchars=tab:>\ ,trail:.,nbsp:%,eol:$,extends:>,precedes:<
 exe "set listchars=tab:\<Char-0xBB>\\ ,trail:.,nbsp:%,eol:\<Char-0xAC>,extends:>,precedes:<"
-" - 補足
-" - * <Char-0xBB>: ≫
-" - * <Char-0xAC>: ￢
-" - * trail: 行末の空白
-" - * extends: nowrap のとき右側の続きを示す
-" - * precedes: nowrap のとき左側の続きを示す
+" - <Char-0xBB>: half-width version of ≫
+" - <Char-0xAC>: half-width version of ￢
+" -       trail: whitespaces on the tail of a line
+" -     extends: continuation on the right (with nowrap mode)
+" -    precedes: continuation on the left (with nowrap mode)
 
-" カラーテーマ
-colorscheme elflord
-
-" augroup redhat の autocmd を無効化する
-if has("autocmd")
-  augroup redhat
-  autocmd!
-  augroup END
-endif
-
-" キーバインド
-" - 保存/終了
+" # key bindings
+" save/exit
 nnoremap <Space>w :<C-u>w<CR>
 nnoremap <Space>q :<C-u>q<CR>
 nnoremap <Space>Q :<C-u>q!<CR>
-" - コロンとセミコロンを入れ替える
+" swap colon and semicolon
 "nnoremap ; :
 "nnoremap : ;
 "vnoremap ; :
 "vnoremap : ;
-" - 行頭/行末へ移動
+" move the cursor to the head/tail of the line
 nnoremap <Space>h ^
 nnoremap <Space>l $
-" - ファイル先頭/末尾へ移動
+" move the cursor to the top/bottom of the file
 nnoremap <Space>k gg
 nnoremap <Space>j G
-" - 物理行移動と論理行 (表示行) 移動を入れ替える
+" swap moving physical lines and moving logical lines
 "nnoremap k  gk
 "nnoremap j  gj
 "vnoremap k  gk
@@ -135,16 +117,31 @@ nnoremap <Space>j G
 "nnoremap gj j
 "vnoremap gk k
 "vnoremap gj j
-" 空行挿入
+" insert empty lines
 nnoremap <Space>o :<C-u>for i in range(v:count1) <bar> call append(line('.'), '') <bar> endfor<CR>
 nnoremap <Space>O :<C-u>for i in range(v:count1) <bar> call append(line('.')-1, '') <bar> endfor<CR>
-" - 危険キーの無効化
-" - * 保存して終了
+" disable dangerous key bindings
+" - save and exit
 nnoremap ZZ <Nop>
-" - * 保存せずに終了
+" - exit without saving
 nnoremap ZQ <Nop>
 
-" ローカル設定
+" disable format options
+set formatoptions=
+if has("autocmd")
+  augroup disable_formatoptions
+  autocmd!
+  autocmd FileType * setlocal formatoptions=
+  augroup END
+endif
+" disable autocmd with RHEL
+if has("autocmd")
+  augroup redhat
+  autocmd!
+  augroup END
+endif
+
+" local setting files
 if filereadable(expand("$MYVIMRC.local"))
   source $MYVIMRC.local
 elseif filereadable(expand("$HOME/.vimrc.local"))

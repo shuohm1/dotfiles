@@ -1,24 +1,33 @@
-# .colordiffrc
+# .colordiffrc (colordiff-1.0.19/colordiffrc-gitdiff)
 
-# show a splash screen: yes/no
+# Example colordiffrc file for dark backgrounds with colour
+# defaults set to match 'git diff'
+#
+# Set banner=no to suppress authorship info at top of
+# colordiff output
 banner=no
-
-# set colors even if output is redirected: yes/no
+# By default, when colordiff output is being redirected
+# to a file, it detects this and does not colour-highlight
+# To make the patch file *include* colours, change the option
+# below to 'yes'
 color_patches=no
-
-# a diff command
+# Sometimes it can be useful to specify which diff command to
+# use: that can be specified here
 diff_cmd=diff
-
-# `git-diff`-like color settings
+#
+# available colours are: white, yellow, green, blue,
+#                        cyan, red, magenta, black,
+#                        darkwhite, darkyellow, darkgreen,
+#                        darkblue, darkcyan, darkred,
+#                        darkmagenta, darkblack
+#
+# Can also specify 'none', 'normal' or 'off' which are all
+# aliases for the same thing, namely "don't colour highlight
+# this, use the default output colour"
+#
 plain=off
-oldtext=darkred
 newtext=darkgreen
+oldtext=darkred
 diffstuff=darkcyan
 cvsstuff=white
-
-# * available colors:
-#   black, red, green, yellow, blue, magenta, cyan, white,
-#   darkblack, darkred, darkgreen, darkyellow,
-#   darkblue, darkmagenta, darkcyan, darkwhite
-# * no color (any of these are the same):
-#   none, normal, off
+difffile=white

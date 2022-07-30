@@ -8,6 +8,12 @@ if [ -f /etc/redhat-release ]; then
   fi
 fi
 
+# tmp
+if [ ! -e "${HOME}/tmp" -a -d "/run/user/${EIUD}" ]; then
+  ln -s "/run/user/${EIUD}" "${HOME}/tmp" 2> /dev/null
+fi
+
+# local settings
 if [ -f "${HOME}/.zprofile.local" ]; then
   source "${HOME}/.zprofile.local"
 fi

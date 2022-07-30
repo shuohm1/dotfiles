@@ -9,8 +9,8 @@ if [ -f /etc/redhat-release ]; then
 fi
 
 # tmp
-if [ ! -e "${HOME}/tmp" -a -d "/run/user/${EIUD}" ]; then
-  ln -s "/run/user/${EIUD}" "${HOME}/tmp" 2> /dev/null
+if [ ! -e "${HOME}/tmp" -a -d "/run/user/$(id -u)" ]; then
+  ln -s "/run/user/$(id -u)" "${HOME}/tmp" 2> /dev/null
 fi
 
 # local settings

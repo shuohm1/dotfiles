@@ -2,7 +2,7 @@
 shopt -s nocasematch
 
 datadir="$(cd "$(dirname "$0")" && pwd)"
-hiliter="$(which source-highlight 2>/dev/null)"
+hiliter="$(which source-highlight 2> /dev/null)"
 
 escformat="esc"
 if [ -n "$(echo $TERM | grep '256color')" ]; then
@@ -11,7 +11,7 @@ fi
 
 lessprep=cat
 for filename in lesspipe lesspipe.sh; do
-  filepath="$(which "${filename}" 2>/dev/null)"
+  filepath="$(which "${filename}" 2> /dev/null)"
   if [ -x "${filepath}" ]; then
     lessprep="${filepath}"
     break

@@ -88,35 +88,6 @@ bindkey -e     # emacs mode
 bindkey '^]'   vi-find-next-char # <C-]>
 bindkey '^[^]' vi-find-prev-char # <Meta> <C-]>
 
-# prompt
-function set_prompt() {
-  local p=""
-  p=""
-  p="$p%("        # if
-  #               #   %(X.---.---) : if %X then --- else --- fi
-  p="$p?"         #   %?: exit status of the previous command ($?)
-  p="$p."         # then
-  p="$p%F{green}" #   color between %F{color} --- %f
-  #               #   0: black; 1: red; 2: green; 3: yellow
-  #               #   4: blue; 5: magenta; 6: cyan; 7: white
-  #               #   note: background color can be set by %K{color} --- %k
-  #               #   http://qiita.com/mollifier/items/40d57e1da1b325903659
-  p="$p."         # else
-  p="$p%F{red}"   #   %F{red}
-  p="$p)"         # fi
-  p="$p%n"        # user name
-  p="$p@"         # @
-  p="$p%m"        # host name
-  p="$p:"         # :
-  p="$p%~"        # current directory
-  p="$p%#"        # '#' if root, otherwise '%'
-  p="$p "         # space
-  p="$p%f"        # end of the color setting
-  PROMPT="$p"
-  unset p
-}
-set_prompt
-
 # for screen
 case $TERM in
   # window title: \ek WINDOWTITLE \e\\
@@ -170,6 +141,29 @@ case $TERM in
     }
     ;;
 esac
+
+# expand environment variables in the prompt
+setopt prompt_subst
+# prompt
+_p=""
+_p="$_p%("          # if
+#                   #   %(X.---.---) means if %X then---else---fi
+_p="$_p?"           #   %?: exit status of the previous command ($?)
+_p="$_p."           # then
+_p="$_p%F{green}"   #   color between %F{color}---%f
+_p="$_p."           # else
+_p="$_p%F{red}"     #   %F{red}
+_p="$_p)"           # fi
+_p="$_p%n"          # user name
+_p="$_p@"           # @
+_p="$_p\$HOSTNAME"  # hostname (instead of %m)
+_p="$_p:"           # :
+_p="$_p%~"          # current directory
+_p="$_p%#"          # '#' if root, otherwise '%'
+_p="$_p "           # space
+_p="$_p%f"          # end of the color setting
+PROMPT="$_p"
+unset _p
 
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY

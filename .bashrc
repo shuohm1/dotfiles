@@ -56,44 +56,6 @@ shopt -s histappend
 # save a history to HISTFILE before the prompt is shown
 export PROMPT_COMMAND_HISTSAVE="history -a"
 
-# renditions of the prompt
-function set_psrend() {
-  local pscolor
-  if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
-    # success: cyan
-    pscolor=36
-  else
-    # failed: magenta
-    pscolor=35
-  fi
-  export PS_RENDITION="\e[${pscolor}m"
-  unset pscolor
-}
-export PROMPT_COMMAND_PSRENDITION="set_psrend"
-
-# prompt
-function set_prompt() {
-  # - escape $ symbols to set renditions every time
-  # - \[ and \] cannot work in command substitutions,
-  #   so use \001 and \002 instead
-  local rend="\$(echo -en "\\001\${PS_RENDITION:-}\\002")"
-
-  local p=""
-  p="$p\[\e[m\]"    # reset renditions
-  p="$p$rend"       # set renditions
-  p="$p\u"          # user name
-  p="$p@"           # @
-  p="$p\h"          # host name
-  p="$p:"           # :
-  p="$p\w"          # current directory
-  p="$p\\$"         # '#' if root, otherwise '$'
-  p="$p "           # space
-  p="$p\[\e[m\]"    # reset renditions
-  export PS1="$p"
-  unset p
-}
-set_prompt
-
 # for screen
 function set_title4screen() {
   local wintitle="${WINTITLE}"
@@ -114,6 +76,42 @@ case $TERM in
     export PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"
     ;;
 esac
+
+# renditions of the prompt
+function set_psrend() {
+  local pscolor
+  if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
+    # success: cyan
+    pscolor=36
+  else
+    # failed: magenta
+    pscolor=35
+  fi
+  export PS_RENDITION="\e[${pscolor}m"
+  unset pscolor
+}
+export PROMPT_COMMAND_PSRENDITION="set_psrend"
+
+# set renditions every time
+# - a command substitution $(echo -e ...) is required
+#   to interpret escape sequences
+# - escape $ symbols to prevent expanding commands and variables
+_rend="\$(echo -en "\${PS_RENDITION:-}")"
+
+# prompt
+_p=""
+_p="$_p\[\e[m\]"    # reset renditions
+_p="$_p\[$_rend\]"  # set renditions
+_p="$_p\u"          # user name
+_p="$_p@"           # @
+_p="$_p\$HOSTNAME"  # hostname (instead of \h)
+_p="$_p:"           # :
+_p="$_p\w"          # current directory
+_p="$_p\\$"         # '#' if root, otherwise '$'
+_p="$_p "           # space
+_p="$_p\[\e[m\]"    # reset renditions
+export PS1="$_p"
+unset _p _rend
 
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY

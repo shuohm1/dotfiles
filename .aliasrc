@@ -37,16 +37,13 @@ alias xless="less -X" # leave displayed contents
 alias rless="LESS= LESSOPEN= less" # raw less
 
 # grep in color
-function aliases_for_grep() {
-  local g
-  for g in "grep" "egrep" "fgrep" "zgrep" "zegrep" "zfgrep"; do
-    # display matches in color
-    eval "alias ${g}='${g} --color=auto'"
-    # force display matches in color even if redirection or pipes
-    eval "alias color${g}='${g} --color=always'"
-  done
-}
-aliases_for_grep
+for _grep in {,z}{,e,f}grep; do
+  # display matches in color
+  eval "alias ${_grep}='${_grep} --color=auto'"
+  # force display matches in color even if redirection or pipes
+  eval "alias color${_grep}='${_grep} --color=always'"
+done
+unset _grep
 
 # colordiff
 if [ -x "$(which colordiff 2> /dev/null)" ]; then

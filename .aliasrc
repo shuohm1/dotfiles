@@ -4,6 +4,9 @@
 # see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
 
+# disable PROMPT_COMMAND for su
+alias su="PROMPT_COMMAND= su"
+
 # ls in color
 if ls --version 2> /dev/null | grep "GNU" 1> /dev/null 2>&1; then
   # GNU

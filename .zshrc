@@ -19,7 +19,6 @@ case $TERM in
 esac
 
 # set some environment variables again
-set_shpath "$0"
 set_hostname
 
 # completion settings

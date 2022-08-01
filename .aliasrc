@@ -71,6 +71,8 @@ alias glog="git log"
 alias gl="git log --abbrev-commit --all --date-order --decorate --graph --stat"
 alias glp="git log --abbrev-commit --all --date-order --decorate --graph --patch-with-stat"
 alias gist="git status"
+alias gst="git status"
+#alias gs="git status"
 
 # ring a bell
 alias bell="echo -ne '\a'"

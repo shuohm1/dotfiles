@@ -7,6 +7,10 @@ alias sudo="sudo "
 # disable PROMPT_COMMAND for su
 alias su="PROMPT_COMMAND= su"
 
+# directory stack
+alias pd="pushd"
+alias po="popd"
+
 # ls in color
 if ls --version 2> /dev/null | grep "GNU" 1> /dev/null 2>&1; then
   # GNU

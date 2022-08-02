@@ -8,8 +8,8 @@ alias sudo="sudo "
 alias su="PROMPT_COMMAND= su"
 
 # directory stack
-alias pd="pushd"
-alias po="popd"
+#alias pd="pushd"
+#alias po="popd"
 # always print the directory stack with one entry per line
 alias dirs="dirs -p"
 

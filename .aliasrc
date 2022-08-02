@@ -63,12 +63,10 @@ if [ -x "$(which colordiff 2> /dev/null)" ]; then
 fi
 
 # screen
-if [ -x "$(which screen 2> /dev/null)" ]; then
-  alias sc="screen"
-  alias sl="screen -ls" # list sessions
-  alias sr="screen -R"  # resume a session
-  alias sn="screen -S"  # specify a session name
-fi
+alias sc="screen"
+alias sl="screen -ls" # list sessions
+alias sr="screen -R"  # resume a session
+alias sn="screen -S"  # specify a session name
 
 # vim
 alias vi="vim"

@@ -1,6 +1,6 @@
 # .aliasrc
 
-# expand aliases for sudo
+# expand aliases with sudo
 # see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
 
@@ -10,6 +10,8 @@ alias su="PROMPT_COMMAND= su"
 # directory stack
 alias pd="pushd"
 alias po="popd"
+# always print the directory stack with one entry per line
+alias dirs="dirs -p"
 
 # ls in color
 if ls --version 2> /dev/null | grep "GNU" 1> /dev/null 2>&1; then
@@ -29,15 +31,12 @@ alias lh="ls -lh"
 alias lz="ls -la" # list all files in long format
 alias lg="ls -go" # show neither owner nor group
 
-# always interactive mode for mv/cp/rm
+# always prompt before overwrite with mv/cp/rm
 alias mv="mv -i"
 alias cp="cp -i"
 alias rm="rm -i"
 
-# always print the directory stack with one entry per line
-alias dirs="dirs -p"
-
-# less extentions
+# less
 alias lless="less -L" # ignore LESSOPEN
 alias sless="less -S" # do not wrap on the right edge
 alias xless="less -X" # leave displayed contents

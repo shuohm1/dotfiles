@@ -62,28 +62,20 @@ for filepath in "$@"; do
   fi
 
   # determine the highlighting language
-  case "${_LESSLANG:-auto}" in
-    auto|infer)
-      filename="$(basename "${filepath}")"
-      case "${filename}" in
-        changelog)
-          langopt="--lang-def=changelog.lang"
-          ;;
-        makefile*)
-          langopt="--lang-def=makefile.lang"
-          ;;
-        *)
-          langopt="--infer-lang"
-          ;;
-      esac
-      ;;
-    no|none|off)
-      langopt="--lang-def=nohilite.lang"
-      ;;
-    *)
-      langopt="--lang-def=${_LESSLANG}.lang"
-      ;;
-  esac
+  if [[ "${_LESSLANG:-auto}" =~ ^(auto|infer)$ ]]; then
+    filename="$(basename "${filepath}")"
+    if [[ "${filename}" == "changelog" ]]; then
+      langopt="--lang-def=changelog.lang"
+    elif [[ "${filename}" =~ ^makefile ]]; then
+      langopt="--lang-def=makefile.lang"
+    else
+      langopt="--infer-lang"
+    fi
+  elif [[ "${_LESSLANG}" =~ ^(no|none|off)$ ]]; then
+    langopt="--lang-def=nohilite.lang"
+  else
+    langopt="--lang-def=${_LESSLANG}.lang"
+  fi
 
   "${hiliter}" ${langopt} --failsafe                \
     --input="${filepath}"                           \

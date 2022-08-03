@@ -62,16 +62,26 @@ for filepath in "$@"; do
   fi
 
   # determine the highlighting language
-  filename="$(basename "${filepath}")"
-  case "${filename}" in
-    changelog)
-      langopt="--lang-def=changelog.lang"
+  case "${_LESSLANG:-auto}" in
+    auto|infer)
+      filename="$(basename "${filepath}")"
+      case "${filename}" in
+        changelog)
+          langopt="--lang-def=changelog.lang"
+          ;;
+        makefile*)
+          langopt="--lang-def=makefile.lang"
+          ;;
+        *)
+          langopt="--infer-lang"
+          ;;
+      esac
       ;;
-    makefile*)
-      langopt="--lang-def=makefile.lang"
+    no|none|off)
+      langopt="--lang-def=nohilite.lang"
       ;;
     *)
-      langopt="--infer-lang"
+      langopt="--lang-def=${_LESSLANG}.lang"
       ;;
   esac
 

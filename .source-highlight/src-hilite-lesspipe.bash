@@ -55,7 +55,7 @@ extensions="$(echo "${extensions}" |
 
 for filepath in "$@"; do
   # if file is extractable or the highlighter is not available
-  extractable="$(echo "${filepath}" | grep -E "\.(${extensions})\$")"
+  extractable="$(echo "${filepath}" | grep -i -E "\.(${extensions})\$")"
   if [ -n "${extractable}" -o ! -x "${hiliter}" ]; then
     "${lessprep}" "${filepath}"
     continue

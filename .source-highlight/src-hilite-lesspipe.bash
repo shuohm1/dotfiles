@@ -4,11 +4,13 @@ shopt -s nocasematch
 datadir="$(cd "$(dirname "$0")" && pwd)"
 hiliter="$(which source-highlight 2> /dev/null)"
 
+# check if a terminal can use more colors
 escformat="esc"
 if [ -n "$(echo $TERM | grep '256color')" ]; then
   escformat="esc256"
 fi
 
+# classical preprocessor
 lessprep=cat
 for filename in lesspipe lesspipe.sh; do
   filepath="$(which "${filename}" 2> /dev/null)"
@@ -44,6 +46,7 @@ extensions="$(cat <<EOS
          *.zoo
 EOS
 )"
+# convert extensions into a bar-separated format: foo|bar|baz
 extensions="$(echo "${extensions}" |
   tr '\n' ' ' |
   sed -E 's/ +/ /g; s/,|^ +| +$//g; s/\*[^ ]*\.//g' |
@@ -51,12 +54,14 @@ extensions="$(echo "${extensions}" |
 )"
 
 for filepath in "$@"; do
+  # if file is extractable or the highlighter is not available
   extractable="$(echo "${filepath}" | grep -E "\.(${extensions})\$")"
   if [ -n "${extractable}" -o ! -x "${hiliter}" ]; then
     "${lessprep}" "${filepath}"
     continue
   fi
 
+  # determine the highlighting language
   filename="$(basename "${filepath}")"
   case "${filename}" in
     changelog)

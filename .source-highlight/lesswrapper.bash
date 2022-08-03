@@ -47,7 +47,7 @@ elif [ -f /dev/stdin ]; then
   status=$?
 elif [ -p /dev/stdin ]; then
   # stdin is piped
-  cat /dev/stdin | "${lessargs[p]}"
+  cat /dev/stdin | "${lessargs[@]}"
   status=$?
 else
   # other

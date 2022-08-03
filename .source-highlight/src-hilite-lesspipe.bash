@@ -6,7 +6,7 @@ hiliter="$(which source-highlight 2> /dev/null)"
 
 # check if a terminal can use more colors
 escformat="esc"
-if [[ "$TERM" =~ 256color ]]; then
+if [[ "${TERM}" =~ 256color ]]; then
   escformat="esc256"
 fi
 

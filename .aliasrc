@@ -42,7 +42,7 @@ alias sless="less -S" # do not wrap on the right edge
 alias xless="less -X" # leave displayed contents
 
 # grep
-_grep="$(/usr/bin/which -a grep 2> /dev/null | grep '^/' | head -n1)"
+_grep="$(/bin/which -a grep 2> /dev/null | grep '^/' | head -n1)"
 _cgrep="${_grep} --color=auto"
 _ccgrep="${_grep} --color=always"
 if [ -x "${_grep}" ]; then
@@ -58,7 +58,7 @@ fi
 unset _grep _cgrep _ccgrep
 
 # colordiff
-if [ -x "$(which colordiff 2> /dev/null)" ]; then
+if [ -x "$(/bin/which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff"
 fi
 

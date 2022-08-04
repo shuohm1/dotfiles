@@ -9,7 +9,7 @@ if [ -f /etc/redhat-release ]; then
 fi
 
 # tmp
-if [ ! -e "${HOME}/tmp" -a -d "/run/user/$(id -u)" ]; then
+if [[ ! -e "${HOME}/tmp" && -d "/run/user/$(id -u)" ]]; then
   ln -s "/run/user/$(id -u)" "${HOME}/tmp" 2> /dev/null
 fi
 

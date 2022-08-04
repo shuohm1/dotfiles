@@ -42,20 +42,20 @@ alias sless="less -S" # do not wrap on the right edge
 alias xless="less -X" # leave displayed contents
 
 # grep
-_grep="$(/bin/which -a grep 2> /dev/null | grep '^/' | head -n1)"
+_grep="$(/bin/which grep 2> /dev/null)"
 _cgrep="${_grep} --color=auto"
-_ccgrep="${_grep} --color=always"
+_agrep="${_grep} --color=always"
 if [ -x "${_grep}" ]; then
-  eval "alias grep='${_cgrep} -E'"
-  eval "alias egrep='${_cgrep} -E'"
-  eval "alias fgrep='${_cgrep} -F'"
-  eval "alias pgrep='${_cgrep} -P'"
-  eval "alias grepc='${_ccgrep} -E'"
-  eval "alias egrepc='${_ccgrep} -E'"
-  eval "alias fgrepc='${_ccgrep} -F'"
-  eval "alias pgrepc='${_ccgrep} -P'"
+  alias grep="${_cgrep} -E"
+  alias egrep="${_cgrep} -E"
+  alias fgrep="${_cgrep} -F"
+  alias pgrep="${_cgrep} -P"
+  alias grepc="${_agrep} -E"
+  alias egrepc="${_agrep} -E"
+  alias fgrepc="${_agrep} -F"
+  alias pgrepc="${_agrep} -P"
 fi
-unset _grep _cgrep _ccgrep
+unset _grep _cgrep _agrep
 
 # colordiff
 if [ -x "$(/bin/which colordiff 2> /dev/null)" ]; then

@@ -42,20 +42,17 @@ alias sless="less -S" # do not wrap on the right edge
 alias xless="less -X" # leave displayed contents
 
 # grep
-_grep="$(/bin/which grep 2> /dev/null)"
-_cgrep="${_grep} --color=auto"
-_agrep="${_grep} --color=always"
-if [ -x "${_grep}" ]; then
-  alias grep="${_cgrep} -E"
-  alias egrep="${_cgrep} -E"
-  alias fgrep="${_cgrep} -F"
-  alias pgrep="${_cgrep} -P"
-  alias grepc="${_agrep} -E"
-  alias egrepc="${_agrep} -E"
-  alias fgrepc="${_agrep} -F"
-  alias pgrepc="${_agrep} -P"
-fi
-unset _grep _cgrep _agrep
+alias grep-command="$(/bin/which grep 2> /dev/null)"
+alias colorgrep="grep-command --color=auto"
+alias fcolorgrep="grep-command --color=always"
+alias grep="colorgrep -E"
+alias egrep="colorgrep -E"
+alias fgrep="colorgrep -F"
+alias pgrep="colorgrep -P"
+alias grepfc="fcolorgrep -E"
+alias egrepfc="fcolorgrep -E"
+alias fgrepfc="fcolorgrep -F"
+alias pgrepfc="fcolorgrep -P"
 
 # colordiff
 if [ -x "$(/bin/which colordiff 2> /dev/null)" ]; then
@@ -84,6 +81,8 @@ unset _opts
 #alias gs="git status"
 alias gi="git status"
 alias git-np="git --no-pager"
+alias grso="git remote show origin"
+alias ghead="grso | grep-command -i -o -P '(?<=head branch:\s).*$'"
 
 # ring a bell
 alias bell="echo -ne '\a'"

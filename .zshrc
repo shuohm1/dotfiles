@@ -85,8 +85,9 @@ unsetopt share_history
 # key bindings
 bindkey -d     # reset
 bindkey -e     # emacs mode
-bindkey '^]'   vi-find-next-char # <C-]>
-bindkey '^[^]' vi-find-prev-char # <Meta> <C-]>
+bindkey '^U'   backward-kill-line # <C-u>
+bindkey '^]'   vi-find-next-char  # <C-]>
+bindkey '^[^]' vi-find-prev-char  # <Meta> <C-]>
 
 # for screen
 case $TERM in

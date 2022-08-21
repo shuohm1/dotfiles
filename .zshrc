@@ -166,6 +166,36 @@ _p="$_p%f"          # end of the color setting
 PROMPT="$_p"
 unset _p
 
+# show the right prompt only on the latest command line
+setopt transient_rprompt
+# right prompt
+function right_prompt_git() {
+  if [[ ! -x "$(which git 2> /dev/null)" || ! -d ".git" ]]; then
+    return
+  fi
+
+  local _p="\u00A6" # broken vertical bar
+  local branchname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
+  local gitstatus="$(git status 2> /dev/null)"
+  if [[ -z "${branchname}" || -z "${gitstatus}" ]]; then
+    echo -n "%F{red}%B${_p}ERROR%b%f"
+    return
+  fi
+
+  _p="$_p$branchname"
+  if [[ "${gitstatus}" =~ working.tree.clean ]]; then
+    _p="%F{green}$_p"
+  elif [[ "${gitstatus}" =~ ^rebase.in.progress ]]; then
+    _p="%F{red}$_p"
+  else
+    _p="%F{yellow}$_p"
+  fi
+  _p="$_p%f"
+
+  echo -n "$_p"
+}
+RPROMPT="\$(right_prompt_git)"
+
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY
 # see: https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95

@@ -170,7 +170,9 @@ unset _p
 setopt transient_rprompt
 # right prompt
 function right_prompt_git() {
-  if [[ ! -x "$(which git 2> /dev/null)" || ! -d ".git" ]]; then
+  local _git="$(which git 2> /dev/null)"
+  local _status="$(git status 2>&1)"
+  if [[ ! -x "${_git}" || "${_status}" =~ not.a.git.repository ]]; then
     return
   fi
 

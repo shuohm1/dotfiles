@@ -176,7 +176,7 @@ function right_prompt_git() {
     return
   fi
 
-  local _p="\u00A6" # broken vertical bar
+  local _p=" \u00A6" # whitespace + broken vertical bar
   local branchname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
   local gitstatus="$(git status 2> /dev/null)"
   if [[ -z "${branchname}" || -z "${gitstatus}" ]]; then

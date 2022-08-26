@@ -176,25 +176,30 @@ function right_prompt_git() {
     return
   fi
 
-  local _p=" \u00A6" # whitespace + broken vertical bar
+  local _p="\u00A6" # broken vertical bar
   local branchname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
   local gitstatus="$(git status 2> /dev/null)"
   if [[ -z "${branchname}" || -z "${gitstatus}" ]]; then
-    echo -n "%F{red}%B${_p}ERROR%b%f"
+    echo -n "%F{black}%K{white}${_p}RPROMPTERROR%k%f"
     return
   fi
 
   _p="$_p$branchname"
-  if [[ "${gitstatus}" =~ working.tree.clean ]]; then
-    _p="%F{green}$_p"
-  elif [[ "${gitstatus}" =~ ^rebase.in.progress ]]; then
-    _p="%F{red}$_p"
+  if [[ "${gitstatus}" =~ working\ tree\ clean ]]; then
+    _p="%F{green}$_p%f"
+  elif [[ "${gitstatus}" =~ rebase\ in\ progress ]]; then
+    _p="%F{white}%K{red}$_p%k%f"
+  elif [[ "${gitstatus}" =~ [Cc]hanges\ not\ staged\ for\ commit ]]; then
+    _p="%F{red}$_p%f"
+  elif [[ "${gitstatus}" =~ [Cc]hanges\ to\ be\ committed ]]; then
+    _p="%F{yellow}$_p%f"
+  elif [[ "${gitstatus}" =~ [Uu]ntracked\ files ]]; then
+    _p="%F{cyan}$_p%f"
   else
-    _p="%F{yellow}$_p"
+    _p="%F{white}%K{blue}$_p%k%f"
   fi
-  _p="$_p%f"
 
-  echo -n "$_p"
+  echo -n " $_p"
 }
 RPROMPT="\$(right_prompt_git)"
 

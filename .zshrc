@@ -185,7 +185,7 @@ function right_prompt_git() {
   fi
 
   _p="$_p$branchname"
-  if [[ "${gitstatus}" =~ working.tree.clean ]]; then
+  if [[ "${gitstatus}" =~ working.(directory|tree).clean ]]; then
     _p="%F{green}$_p%f"
   elif [[ "${gitstatus}" =~ rebase.in.progress ]]; then
     _p="%F{white}%K{red}$_p%k%f"

@@ -172,7 +172,7 @@ setopt transient_rprompt
 function right_prompt_git() {
   local _git="$(which git 2> /dev/null)"
   local _status="$(git status 2>&1 | tr 'A-Z' 'a-z')"
-  if [[ ! -x "${_git}" || "${_status}" =~ not.a.git.repository ]]; then
+  if [[ ! -x "${_git}" || "${_status}" =~ (not a git repository) ]]; then
     return
   fi
 
@@ -185,15 +185,15 @@ function right_prompt_git() {
   fi
 
   _p="$_p$branchname"
-  if [[ "${gitstatus}" =~ working.(directory|tree).clean ]]; then
+  if [[ "${gitstatus}" =~ (working (directory|tree) clean) ]]; then
     _p="%F{green}$_p%f"
-  elif [[ "${gitstatus}" =~ rebase.in.progress ]]; then
+  elif [[ "${gitstatus}" =~ (rebase in progress) ]]; then
     _p="%F{white}%K{red}$_p%k%f"
-  elif [[ "${gitstatus}" =~ changes.not.staged.for.commit ]]; then
+  elif [[ "${gitstatus}" =~ (changes not staged for commit) ]]; then
     _p="%F{red}$_p%f"
-  elif [[ "${gitstatus}" =~ changes.to.be.committed ]]; then
+  elif [[ "${gitstatus}" =~ (changes to be committed) ]]; then
     _p="%F{yellow}$_p%f"
-  elif [[ "${gitstatus}" =~ untracked.files ]]; then
+  elif [[ "${gitstatus}" =~ (untracked files) ]]; then
     _p="%F{cyan}$_p%f"
   else
     _p="%F{white}%K{blue}$_p%k%f"

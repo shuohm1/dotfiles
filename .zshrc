@@ -171,29 +171,29 @@ setopt transient_rprompt
 # right prompt
 function right_prompt_git() {
   local _git="$(which git 2> /dev/null)"
-  local _status="$(git status 2>&1)"
+  local _status="$(git status 2>&1 | tr 'A-Z' 'a-z')"
   if [[ ! -x "${_git}" || "${_status}" =~ not.a.git.repository ]]; then
     return
   fi
 
   local _p="\u00A6" # broken vertical bar
   local branchname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
-  local gitstatus="$(git status 2> /dev/null)"
+  local gitstatus="$(git status 2> /dev/null | tr 'A-Z' 'a-z')"
   if [[ -z "${branchname}" || -z "${gitstatus}" ]]; then
     echo -n "%F{black}%K{white}${_p}RPROMPTERROR%k%f"
     return
   fi
 
   _p="$_p$branchname"
-  if [[ "${gitstatus}" =~ working\ tree\ clean ]]; then
+  if [[ "${gitstatus}" =~ working.tree.clean ]]; then
     _p="%F{green}$_p%f"
-  elif [[ "${gitstatus}" =~ rebase\ in\ progress ]]; then
+  elif [[ "${gitstatus}" =~ rebase.in.progress ]]; then
     _p="%F{white}%K{red}$_p%k%f"
-  elif [[ "${gitstatus}" =~ [Cc]hanges\ not\ staged\ for\ commit ]]; then
+  elif [[ "${gitstatus}" =~ changes.not.staged.for.commit ]]; then
     _p="%F{red}$_p%f"
-  elif [[ "${gitstatus}" =~ [Cc]hanges\ to\ be\ committed ]]; then
+  elif [[ "${gitstatus}" =~ changes.to.be.committed ]]; then
     _p="%F{yellow}$_p%f"
-  elif [[ "${gitstatus}" =~ [Uu]ntracked\ files ]]; then
+  elif [[ "${gitstatus}" =~ untracked.files ]]; then
     _p="%F{cyan}$_p%f"
   else
     _p="%F{white}%K{blue}$_p%k%f"

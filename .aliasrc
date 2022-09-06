@@ -82,7 +82,6 @@ unset _opts
 alias gi="git status"
 alias git-np="git --no-pager"
 alias grso="git remote show origin"
-alias ghead="grso | grep-command -i -o -P '(?<=head branch:\s).*$'"
 
 # ring a bell
 alias bell="echo -ne '\a'"

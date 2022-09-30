@@ -80,9 +80,9 @@ alias gp="git log ${_opts} --patch-with-stat"
 unset _opts
 #alias gs="git status"
 alias gi="git status"
+alias git-id="git show HEAD | grep-command -i -m1 -o -P '(?<=^commit )\w+'"
 alias git-np="git --no-pager"
 alias grso="git remote show origin"
-alias ghead="grso | grep-command -i -o -P '(?<=head branch:\s).*$'"
 
 # ring a bell
 alias bell="echo -ne '\a'"

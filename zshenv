@@ -25,6 +25,13 @@ if [ ! -f "${keybin}" -a -x "${keycompiler}" -a -f "${keysrc}" ]; then
 fi
 [ -f "${keybin}" ] && export LESSKEY="${keybin}"
 
+# SCREENDIR (ソケットディレクトリ)
+if [ -d "${HOME}/.screens" ]; then
+	if [ "$(stat --format="%a" "${HOME}/.screens")" = "700" ]; then
+		export SCREENDIR="${HOME}/.screens"
+	fi
+fi
+
 # PATH and MANPATH
 for bin in /usr/local/bin /usr/local/sbin; do
 	[ -d ${bin} ] && PATH="${bin}:${PATH}"

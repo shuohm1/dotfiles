@@ -65,6 +65,9 @@ if [ $(which screen 1>/dev/null 2>&1; echo $?) -eq 0 ]; then
 	alias ss="screen -S"  # セッション名を指定して起動
 fi
 
+# rsync
+alias nrsync="rsync -n" # dry-run
+
 # ベルを鳴らす
 alias bell="echo -ne '\a'"
 

@@ -1,0 +1,7 @@
+" .vimrc.local
+
+" やや強い色味
+"colorscheme koehler
+
+" .viminfo を作らない
+"set viminfo=

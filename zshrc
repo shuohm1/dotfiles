@@ -36,7 +36,7 @@ fi
 # complementor for sudo.vim
 # see: https://blog.besky-works.net/2012/04/sudovim-zsh.html
 # see: https://www.yuuan.net/item/736
-function _mycompfunc_sudovim {
+function _mycompfunc_sudovim() {
   local LAST="${words[$#words[*]]}"
   case "${LAST}" in
     sudo:*)

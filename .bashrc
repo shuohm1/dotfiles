@@ -4,8 +4,8 @@ if [ -f /etc/bashrc ]; then
   source /etc/bashrc
 fi
 
-if [ -f ~/.bashrc.env ]; then
-  source ~/.bashrc.env
+if [ -f "${HOME}/.bashrc.env" ]; then
+  source "${HOME}/.bashrc.env"
 fi
 
 # return if non-interactive shells
@@ -40,7 +40,7 @@ function dispatch_prcmd() {
 export PROMPT_COMMAND="dispatch_prcmd"
 
 # command histories
-export HISTFILE=~/.bash_history
+export HISTFILE="${HOME}/.bash_history"
 # the number of histories on RAM
 export HISTSIZE=100000
 # the number of histories on HISTFILE
@@ -55,44 +55,6 @@ export HISTCONTROL=ignoreboth
 shopt -s histappend
 # save a history to HISTFILE before the prompt is shown
 export PROMPT_COMMAND_HISTSAVE="history -a"
-
-# renditions of the prompt
-function set_psrend() {
-  local pscolor
-  if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
-    # success: cyan
-    pscolor=36
-  else
-    # failed: magenta
-    pscolor=35
-  fi
-  export PS_RENDITION="\e[${pscolor}m"
-  unset pscolor
-}
-export PROMPT_COMMAND_PSRENDITION="set_psrend"
-
-# prompt
-function set_prompt() {
-  # - escape $ symbols to set renditions every time
-  # - \[ and \] cannot work in command substitutions,
-  #   so use \001 and \002 instead
-  local rend="\$(echo -en "\\001\${PS_RENDITION:-}\\002")"
-
-  local p=""
-  p="$p\[\e[m\]"    # reset renditions
-  p="$p$rend"       # set renditions
-  p="$p\u"          # user name
-  p="$p@"           # @
-  p="$p\h"          # host name
-  p="$p:"           # :
-  p="$p\w"          # current directory
-  p="$p\\$"         # '#' if root, otherwise '$'
-  p="$p "           # space
-  p="$p\[\e[m\]"    # reset renditions
-  export PS1="$p"
-  unset p
-}
-set_prompt
 
 # for screen
 function set_title4screen() {
@@ -115,19 +77,55 @@ case $TERM in
     ;;
 esac
 
+# renditions of the prompt
+function set_psrend() {
+  local pscolor
+  if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
+    # success: cyan
+    pscolor=36
+  else
+    # failed: magenta
+    pscolor=35
+  fi
+  export PS_RENDITION="\e[${pscolor}m"
+  unset pscolor
+}
+export PROMPT_COMMAND_PSRENDITION="set_psrend"
+
+# set renditions every time
+# - a command substitution $(echo -e ...) is required
+#   to interpret escape sequences
+# - escape $ symbols to prevent expanding commands and variables
+_rend="\$(echo -en "\${PS_RENDITION:-}")"
+
+# prompt
+_p=""
+_p="$_p\[\e[m\]"    # reset renditions
+_p="$_p\[$_rend\]"  # set renditions
+_p="$_p\u"          # user name
+_p="$_p@"           # @
+_p="$_p\$HOSTNAME"  # hostname (instead of \h)
+_p="$_p:"           # :
+_p="$_p\w"          # current directory
+_p="$_p\\$"         # '#' if root, otherwise '$'
+_p="$_p "           # space
+_p="$_p\[\e[m\]"    # reset renditions
+export PS1="$_p"
+unset _p _rend
+
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY
-# see: https://linux.just4fun.biz/?逆引きUNIXコマンド/Ctrl+Sによる端末ロックを無効にする方法
+# see: https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
 if [ "${SSH_TTY}" ]; then
   # if you want to re-enable ctrl+s, run 'stty stop ^S'
   stty stop undef
 fi
 
 # aliases
-if [ -f ~/.aliasrc ]; then
-  source ~/.aliasrc
+if [ -f "${HOME}/.aliasrc" ]; then
+  source "${HOME}/.aliasrc"
 fi
 
-if [ -f ~/.bashrc.local ]; then
-  source ~/.bashrc.local
+if [ -f "${HOME}/.bashrc.local" ]; then
+  source "${HOME}/.bashrc.local"
 fi

@@ -18,10 +18,6 @@ case $TERM in
     ;;
 esac
 
-# set some environment variables again
-set_shpath "$0"
-set_hostname
-
 # completion settings
 # -U: do not expand aliases during autoload
 # -z: force zsh format
@@ -30,7 +26,7 @@ autoload -Uz compinit
 if [ -z "${ZCOMPDUMP}" ]; then
   compinit
 else
-  compinit -d ${ZCOMPDUMP}
+  compinit -d "${ZCOMPDUMP}"
 fi
 
 # complementor for sudo.vim
@@ -64,7 +60,7 @@ unsetopt auto_menu
 
 # command histories
 # share the history file with bash
-export HISTFILE=~/.bash_history
+export HISTFILE="${HOME}/.bash_history"
 # the number of histories on RAM
 export HISTSIZE=100000
 # the number of histories on HISTFILE
@@ -91,35 +87,6 @@ bindkey -d     # reset
 bindkey -e     # emacs mode
 bindkey '^]'   vi-find-next-char # <C-]>
 bindkey '^[^]' vi-find-prev-char # <Meta> <C-]>
-
-# prompt
-function set_prompt() {
-  local p=""
-  p=""
-  p="$p%("        # if
-  #               #   %(X.---.---) : if %X then --- else --- fi
-  p="$p?"         #   %?: exit status of the previous command ($?)
-  p="$p."         # then
-  p="$p%F{green}" #   color between %F{color} --- %f
-  #               #   0: black; 1: red; 2: green; 3: yellow
-  #               #   4: blue; 5: magenta; 6: cyan; 7: white
-  #               #   note: background color can be set by %K{color} --- %k
-  #               #   http://qiita.com/mollifier/items/40d57e1da1b325903659
-  p="$p."         # else
-  p="$p%F{red}"   #   %F{red}
-  p="$p)"         # fi
-  p="$p%n"        # user name
-  p="$p@"         # @
-  p="$p%m"        # host name
-  p="$p:"         # :
-  p="$p%~"        # current directory
-  p="$p%#"        # '#' if root, otherwise '%'
-  p="$p "         # space
-  p="$p%f"        # end of the color setting
-  PROMPT="$p"
-  unset p
-}
-set_prompt
 
 # for screen
 case $TERM in
@@ -175,19 +142,42 @@ case $TERM in
     ;;
 esac
 
+# expand environment variables in the prompt
+setopt prompt_subst
+# prompt
+_p=""
+_p="$_p%("          # if
+#                   #   %(X.---.---) means if %X then---else---fi
+_p="$_p?"           #   %?: exit status of the previous command ($?)
+_p="$_p."           # then
+_p="$_p%F{green}"   #   color between %F{color}---%f
+_p="$_p."           # else
+_p="$_p%F{red}"     #   %F{red}
+_p="$_p)"           # fi
+_p="$_p%n"          # user name
+_p="$_p@"           # @
+_p="$_p\$HOSTNAME"  # hostname (instead of %m)
+_p="$_p:"           # :
+_p="$_p%~"          # current directory
+_p="$_p%#"          # '#' if root, otherwise '%'
+_p="$_p "           # space
+_p="$_p%f"          # end of the color setting
+PROMPT="$_p"
+unset _p
+
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY
-# see: https://linux.just4fun.biz/?逆引きUNIXコマンド/Ctrl+Sによる端末ロックを無効にする方法
+# see: https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
 if [ "${SSH_TTY}" ]; then
   # if you want to re-enable ctrl+s, run 'stty stop ^S'
   stty stop undef
 fi
 
 # aliases
-if [ -f ~/.aliasrc ]; then
-  source ~/.aliasrc
+if [ -f "${HOME}/.aliasrc" ]; then
+  source "${HOME}/.aliasrc"
 fi
 
-if [ -f ~/.zshrc.local ]; then
-  source ~/.zshrc.local
+if [ -f "${HOME}/.zshrc.local" ]; then
+  source "${HOME}/.zshrc.local"
 fi

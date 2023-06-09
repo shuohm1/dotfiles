@@ -1,0 +1,13 @@
+" .vimrc.local
+
+" slightly loud colors
+"colorscheme koehler
+
+" do not make a viminfo file
+"set viminfo=
+" change a location for a viminfo file
+"set viminfo+=n/path/to/viminfo
+
+" add a new runtimepath after/before existing runtimepaths
+" -  after: runtimepath+=/path/to/foo
+" - before: runtimepath^=/path/to/bar

@@ -1,0 +1,30 @@
+extension "txt"
+
+styletemplate "\x1b[$stylem$text\x1b[m"
+
+bold "01;$style"
+underline "04;$style"
+italics "$style"
+color "$style"
+
+colormap
+"black"         "30"
+"darkred"       "31"
+"red"           "31"
+"darkgreen"     "32"
+"green"         "32"
+"brightgreen"   "32"
+"brown"         "33"
+"yellow"        "33"
+"darkblue"      "34"
+"blue"          "34"
+"purple"        "35"
+"pink"          "35"
+"teal"          "36"
+"cyan"          "36"
+"gray"          "37"
+"white"         "37"
+"orange"        "31"
+"brightorange"  "31"
+default         "0"
+end

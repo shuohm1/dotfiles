@@ -1,14 +1,20 @@
 # .aliasrc
 
-# expand aliases for sudo
+# expand aliases with sudo
 # see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
 
 # disable PROMPT_COMMAND for su
 alias su="PROMPT_COMMAND= su"
 
+# directory stack
+#alias pd="pushd"
+#alias po="popd"
+# always print the directory stack with one entry per line
+alias dirs="dirs -p"
+
 # ls in color
-if ls --version 2> /dev/null | grep "GNU" 1> /dev/null 2>&1; then
+if [[ "$(ls --version 2> /dev/null)" =~ GNU ]]; then
   # GNU
   alias ls="ls --color=auto"
 else
@@ -25,44 +31,58 @@ alias lh="ls -lh"
 alias lz="ls -la" # list all files in long format
 alias lg="ls -go" # show neither owner nor group
 
-# always interactive mode for mv/cp/rm
+# always prompt before overwrite with mv/cp/rm
 alias mv="mv -i"
 alias cp="cp -i"
 alias rm="rm -i"
 
-# always print the directory stack with one entry per line
-alias dirs="dirs -p"
-
-# less extentions
-#alias less="less -R" # display control characters except color escapes
+# less
+alias lless="less -L" # ignore LESSOPEN
 alias sless="less -S" # do not wrap on the right edge
 alias xless="less -X" # leave displayed contents
-alias rless="LESS= LESSOPEN= less" # raw less
 
-# grep in color
-for _grep in {,z}{,e,f}grep; do
-  # display matches in color
-  eval "alias ${_grep}='${_grep} --color=auto'"
-  # force display matches in color even if redirection or pipes
-  eval "alias color${_grep}='${_grep} --color=always'"
-done
-unset _grep
+# grep
+alias grep-command="$(/bin/which grep 2> /dev/null)"
+alias colorgrep="grep-command --color=auto"
+alias fcolorgrep="grep-command --color=always"
+alias grep="colorgrep -E"
+alias egrep="colorgrep -E"
+alias fgrep="colorgrep -F"
+alias pgrep="colorgrep -P"
+alias grepfc="fcolorgrep -E"
+alias egrepfc="fcolorgrep -E"
+alias fgrepfc="fcolorgrep -F"
+alias pgrepfc="fcolorgrep -P"
 
 # colordiff
-if [ -x "$(which colordiff 2> /dev/null)" ]; then
+if [ -x "$(/bin/which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff"
 fi
 
 # screen
-if [ -x "$(which screen 2> /dev/null)" ]; then
-  alias sc="screen"
-  alias sl="screen -ls" # list sessions
-  alias sr="screen -R"  # resume a session
-  alias sn="screen -S"  # specify a session name
-fi
+alias sc="screen"
+alias sl="screen -ls" # list sessions
+alias sr="screen -R"  # resume a session
+alias sn="screen -S"  # specify a session name
 
 # vim
 alias vi="vim"
+
+# git
+alias ga="git add"
+alias gk="git commit --verbose"
+alias gd="git diff"
+alias gf="git fetch"
+alias gl="git log"
+_opts="--abbrev-commit --all --date-order --decorate --graph"
+alias gg="git log ${_opts} --stat"
+alias gp="git log ${_opts} --patch-with-stat"
+unset _opts
+#alias gs="git status"
+alias gi="git status"
+alias git-np="git --no-pager"
+alias grso="git remote show origin"
+alias ghead="grso | grep-command -i -o -P '(?<=head branch:\s).*$'"
 
 # ring a bell
 alias bell="echo -ne '\a'"

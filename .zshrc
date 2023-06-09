@@ -85,8 +85,9 @@ unsetopt share_history
 # key bindings
 bindkey -d     # reset
 bindkey -e     # emacs mode
-bindkey '^]'   vi-find-next-char # <C-]>
-bindkey '^[^]' vi-find-prev-char # <Meta> <C-]>
+bindkey '^U'   backward-kill-line # <C-u>
+bindkey '^]'   vi-find-next-char  # <C-]>
+bindkey '^[^]' vi-find-prev-char  # <Meta> <C-]>
 
 # for screen
 case $TERM in
@@ -107,7 +108,7 @@ case $TERM in
       fi
       echo -ne "\ek${wintitle}\e\\"
 
-      if [ -z "${WINTITLE}" -a "${args}" != "${args#* }" ]; then
+      if [[ -z "${WINTITLE}" && "${args}" != "${args#* }" ]]; then
         # get arguments
         local hardst="${args#* }"
 
@@ -132,7 +133,7 @@ case $TERM in
       local wintitle="${WINTITLE}"
       if [ -z "${wintitle}" ]; then
         wintitle="${HOSTNAME}"
-        if [ "${wintitle:-localhost}" = "localhost" ]; then
+        if [[ "${wintitle:-localhost}" == "localhost" ]]; then
           wintitle="${SHELL##*/}"
         fi
       fi
@@ -165,10 +166,47 @@ _p="$_p%f"          # end of the color setting
 PROMPT="$_p"
 unset _p
 
+# show the right prompt only on the latest command line
+setopt transient_rprompt
+# right prompt
+function right_prompt_git() {
+  local _git="$(which git 2> /dev/null)"
+  local _status="$(git status 2>&1 | tr 'A-Z' 'a-z')"
+  if [[ ! -x "${_git}" || "${_status}" =~ (not a git repository) ]]; then
+    return
+  fi
+
+  local _p="\u00A6" # broken vertical bar
+  local branchname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
+  local gitstatus="$(git status 2> /dev/null | tr 'A-Z' 'a-z')"
+  if [[ -z "${branchname}" || -z "${gitstatus}" ]]; then
+    echo -n "%F{black}%K{white}${_p}RPROMPTERROR%k%f"
+    return
+  fi
+
+  _p="$_p$branchname"
+  if [[ "${gitstatus}" =~ (working (directory|tree) clean) ]]; then
+    _p="%F{green}$_p%f"
+  elif [[ "${gitstatus}" =~ (rebase in progress) ]]; then
+    _p="%F{white}%K{red}$_p%k%f"
+  elif [[ "${gitstatus}" =~ (changes not staged for commit) ]]; then
+    _p="%F{red}$_p%f"
+  elif [[ "${gitstatus}" =~ (changes to be committed) ]]; then
+    _p="%F{yellow}$_p%f"
+  elif [[ "${gitstatus}" =~ (untracked files) ]]; then
+    _p="%F{cyan}$_p%f"
+  else
+    _p="%F{white}%K{blue}$_p%k%f"
+  fi
+
+  echo -n " $_p"
+}
+RPROMPT="\$(right_prompt_git)"
+
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY
 # see: https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
-if [ "${SSH_TTY}" ]; then
+if [ -n "${SSH_TTY}" ]; then
   # if you want to re-enable ctrl+s, run 'stty stop ^S'
   stty stop undef
 fi

@@ -21,7 +21,7 @@ echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
 case $TERM in
   xterm*)
-    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    echo -en "\033]0;${USER}@${LONGHOSTNAME}\007"
     ;;
 esac
 
@@ -79,7 +79,8 @@ function set_prompt() {
   local rend="\$(echo -en "\\001\${PS_RENDITION:-}\\002")"
 
   local p=""
-  p="$p$rend"       # renditions
+  p="$p\[\e[m\]"    # reset renditions
+  p="$p$rend"       # set renditions
   p="$p\u"          # user name
   p="$p@"           # @
   p="$p\h"          # host name
@@ -87,7 +88,7 @@ function set_prompt() {
   p="$p\w"          # current directory
   p="$p\\$"         # '#' if root, otherwise '$'
   p="$p "           # space
-  p="$p\[\e[m\]"    # unset renditions
+  p="$p\[\e[m\]"    # reset renditions
   export PS1="$p"
   unset p
 }
@@ -97,7 +98,7 @@ set_prompt
 function set_title4screen() {
   local wintitle="${WINTITLE}"
   if [ -z "${wintitle}" ]; then
-    wintitle="${HOSTNAME%%.*}"
+    wintitle="${HOSTNAME}"
     if [ "${wintitle:-localhost}" = "localhost" ]; then
       wintitle="${SHELL##*/}"
     fi
@@ -123,8 +124,8 @@ if [ "${SSH_TTY}" ]; then
 fi
 
 # aliases
-if [ -f ~/.aliases.sh ]; then
-  source ~/.aliases.sh
+if [ -f ~/.aliasrc ]; then
+  source ~/.aliasrc
 fi
 
 if [ -f ~/.bashrc.local ]; then

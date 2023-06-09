@@ -10,20 +10,32 @@ escape ^T^T
 zombie ^[^?
 
 # キーバインド
-## ウィンドウ生成 (^T^C は押しにくいため追加)
+## 危険なキーバインドの無効化
+bind k  # kill
+bind ^K # kill
+bind ^\ # quit
+## ウィンドウ生成
+bind c  screen
+bind ^C screen
 bind ^J screen
 ## 直前に表示していたウィンドウに戻る
 bind o other
-## ウィンドウ選択
+## 番号を指定してウィンドウ選択
 bind - select
+## リストから指定してウィンドウ選択
+bind " windowlist -b
 ## ウィンドウ連続移動
 bind @ eval "command -c switch" "echo 'Switch windows'"
 bind -c switch h eval "command -c switch" "prev"
 bind -c switch l eval "command -c switch" "next"
 bind -c switch H eval "command -c switch" "number -1"
 bind -c switch L eval "command -c switch" "number +1"
+## ウィンドウ削除
+bind K  kill
+bind \\ quit
 ## 貼り付け
-bind ^] paste [.]
+bind ]  paste .
+bind ^] paste .
 ## 文字コード変更
 bind u eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
 bind w eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
@@ -147,8 +159,8 @@ altscreen on
 # 自動デタッチ
 autodetach on
 
-# ログイン情報を utmp に吐く
-deflogin on
+# ログイン情報を utmp に吐かない
+deflogin off
 
 # ホームディレクトリに移動
 chdir $HOME

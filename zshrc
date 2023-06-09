@@ -14,7 +14,7 @@ echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
 case $TERM in
   xterm*)
-    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    echo -en "\033]0;${USER}@${LONGHOSTNAME}\007"
     ;;
 esac
 
@@ -137,7 +137,7 @@ case $TERM in
     precmd() {
       local wintitle="${WINTITLE}"
       if [ -z "${wintitle}" ]; then
-        wintitle="${HOSTNAME%%.*}"
+        wintitle="${HOSTNAME}"
         if [ "${wintitle:-localhost}" = "localhost" ]; then
           wintitle="${SHELL##*/}"
         fi
@@ -157,8 +157,8 @@ if [ "${SSH_TTY}" ]; then
 fi
 
 # aliases
-if [ -f ~/.aliases.sh ]; then
-  source ~/.aliases.sh
+if [ -f ~/.aliasrc ]; then
+  source ~/.aliasrc
 fi
 
 if [ -f ~/.zshrc.local ]; then

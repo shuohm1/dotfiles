@@ -12,7 +12,11 @@ RCDATE="$(date +"%Y/%m/%d %H:%M:%S")"
 # note: 30-37 are [black, red, green, yellow, blue, magenta, cyan, white]
 echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
-echo -en "\033]0;${USER}@${HOSTNAME}\007"
+case $TERM in
+  xterm*)
+    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    ;;
+esac
 
 # completion settings
 # -U: do not expand aliases during autoload
@@ -153,8 +157,8 @@ if [ "${SSH_TTY}" ]; then
 fi
 
 # aliases
-if [ -f ~/.aliases_basic ]; then
-  source ~/.aliases_basic
+if [ -f ~/.aliases.sh ]; then
+  source ~/.aliases.sh
 fi
 
 if [ -f ~/.zshrc.local ]; then

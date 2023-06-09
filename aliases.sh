@@ -1,0 +1,61 @@
+# .aliases.sh
+
+# expand aliases for sudo
+# see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
+alias sudo="sudo "
+
+# ls in color
+if ls --version 2> /dev/null | grep "GNU" 1> /dev/null 2>&1; then
+  # GNU
+  alias ls="ls --color=auto"
+else
+  # BSD
+  alias ls="ls -G"
+fi
+
+# ls extentions
+alias lc="ls -C"  # list by columns
+alias lx="ls -x"  # list by lines
+alias la="ls -a"
+alias ll="ls -l"
+alias lh="ls -lh"
+alias lz="ls -la" # list all files in long format
+alias lg="ls -lG" # do not show groups
+
+# always interactive mode for mv/cp/rm
+alias mv="mv -i"
+alias cp="cp -i"
+alias rm="rm -i"
+
+# less extentions
+#alias less="less -R" # display control characters except color escapes
+alias sless="less -S" # do not wrap on the right edge
+alias xless="less -X" # leave displayed contents
+
+# grep in color
+function aliases_for_grep() {
+  local g
+  for g in "grep" "egrep" "fgrep" "zgrep" "zegrep" "zfgrep"; do
+    # display matches in color
+    eval "alias ${g}='${g} --color=auto'"
+    # force display matches in color even if redirection or pipes
+    eval "alias color${g}='${g} --color=always'"
+  done
+}
+aliases_for_grep
+
+# colordiff
+if [ -x "$(which colordiff 2> /dev/null)" ]; then
+  alias diff="colordiff"
+fi
+
+# screen
+if [ -x "$(which screen 2> /dev/null)" ]; then
+  alias s="screen"
+  alias sl="screen -ls" # list sessions
+  alias sr="screen -R"  # resume a session
+  alias ss="screen -S"  # specify a session name
+fi
+
+# ring a bell
+alias bell="echo -ne '\a'"

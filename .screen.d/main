@@ -23,7 +23,7 @@ bind o other
 ## 番号を指定してウィンドウ選択
 bind - select
 ## リストから指定してウィンドウ選択
-bind " windowlist -b
+bind \" windowlist -b
 ## ウィンドウ連続移動
 bind @ eval "command -c switch" "echo 'Switch windows'"
 bind -c switch h eval "command -c switch" "prev"

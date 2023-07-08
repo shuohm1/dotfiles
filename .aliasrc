@@ -1,5 +1,8 @@
 # .aliasrc
 
+# which
+alias unbuiltin-which="$(command which which)"
+
 # expand aliases with sudo
 # see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
@@ -42,20 +45,16 @@ alias sless="less -S" # do not wrap on the right edge
 alias xless="less -X" # leave displayed contents
 
 # grep
-alias grep-command="$(/bin/which grep 2> /dev/null)"
-alias colorgrep="grep-command --color=auto"
-alias fcolorgrep="grep-command --color=always"
-alias grep="colorgrep -E"
-alias egrep="colorgrep -E"
-alias fgrep="colorgrep -F"
-alias pgrep="colorgrep -P"
-alias grepfc="fcolorgrep -E"
-alias egrepfc="fcolorgrep -E"
-alias fgrepfc="fcolorgrep -F"
-alias pgrepfc="fcolorgrep -P"
+alias grep="grep --color=auto"
+alias egrep="grep -E"
+alias fgrep="grep -F"
+alias pgrep="grep -P"
+
+# sed
+alias esed="sed -E"
 
 # colordiff
-if [ -x "$(/bin/which colordiff 2> /dev/null)" ]; then
+if [ -x "$(unbuiltin-which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff"
 fi
 
@@ -74,15 +73,17 @@ alias gk="git commit --verbose"
 alias gd="git diff"
 alias gf="git fetch"
 alias gl="git log"
-_opts="--abbrev-commit --all --date-order --decorate --graph"
-alias gg="git log ${_opts} --stat"
-alias gp="git log ${_opts} --patch-with-stat"
-unset _opts
-#alias gs="git status"
+_opts_="--abbrev-commit --all --date-order --decorate --graph"
+alias gg="git log ${_opts_} --stat"
+alias gp="git log ${_opts_} --patch-with-stat"
+unset _opts_
+alias gm="git merge --no-ff"
+alias gy="git merge --ff-only"
+alias gr="git remote show origin"
 alias gi="git status"
-alias git-id="git show HEAD | grep-command -i -m1 -o -P '(?<=^commit )\w+'"
+alias gw="git switch"
+alias git-id="git show HEAD | grep -i -m1 -o -P '(?<=^commit )\w+'"
 alias git-np="git --no-pager"
-alias grso="git remote show origin"
 
 # ring a bell
 alias bell="echo -ne '\a'"

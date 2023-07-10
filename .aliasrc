@@ -49,6 +49,7 @@ alias grep="grep --color=auto"
 alias egrep="grep -E"
 alias fgrep="grep -F"
 alias pgrep="grep -P"
+alias unaliased-grep="$(unbuiltin-which grep)"
 
 # sed
 alias esed="sed -E"
@@ -82,7 +83,7 @@ alias gy="git merge --ff-only"
 alias gr="git remote show origin"
 alias gi="git status"
 alias gw="git switch"
-alias git-id="git show HEAD | grep -i -m1 -o -P '(?<=^commit )\w+'"
+alias git-id="git show HEAD | unaliased-grep -i -m1 -o -P '(?<=^commit )\w+'"
 alias git-np="git --no-pager"
 
 # ring a bell

@@ -5,15 +5,18 @@ set -eu
 mypath="$(readlink -e "$0")"
 myname="$(basename "${mypath}")"
 
-bareless="$(
-  $(command which which) -a less 2> /dev/null | grep '^/' |
+whichcmd="$(command which which)"
+grepcmd="$(${whichcmd} grep)"
+
+lesscmd="$(
+  ${whichcmd} -a less 2> /dev/null | ${grepcmd} '^/' |
   # canonicalize paths
   xargs readlink -e 2> /dev/null |
   # get the top command except this script itself
-  grep -F -v "${mypath}" | head -n 1
+  ${grepcmd} -F -v "${mypath}" | head -n 1
 )"
 
-if [ ! -x "${bareless}" ]; then
+if [ ! -x "${lesscmd}" ]; then
   echo "${myname}: fatal: command not found: less" 1>&2
   exit 127
 fi
@@ -24,7 +27,7 @@ export _LESSLANG=
 trap 'status=$?; export _LESSLANG=; exit $status' INT PIPE TERM
 
 # reconstruct arguments
-declare -a lessargs=("${bareless}")
+declare -a lessargs=("${lesscmd}")
 for arg in "$@"; do
   if [[ "${arg}" =~ ^--lang= ]]; then
     export _LESSLANG="${arg#*=}"

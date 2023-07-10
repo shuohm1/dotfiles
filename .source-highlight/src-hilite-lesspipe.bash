@@ -2,7 +2,10 @@
 shopt -s nocasematch
 
 datadir="$(cd "$(dirname "$0")" && pwd)"
-hiliter="$($(command which which) source-highlight 2> /dev/null)"
+
+whichcmd="$(command which which)"
+grepcmd="$(${whichcmd} grep)"
+hiliter="$(${whichcmd} source-highlight 2> /dev/null)"
 
 # check if a terminal can use more colors
 escformat="esc"
@@ -13,7 +16,7 @@ fi
 # classical preprocessor
 lessprep=cat
 for filename in lesspipe lesspipe.sh; do
-  filepath="$($(command which which) "${filename}" 2> /dev/null)"
+  filepath="$(${whichcmd} "${filename}" 2> /dev/null)"
   if [ -x "${filepath}" ]; then
     lessprep="${filepath}"
     break
@@ -55,7 +58,7 @@ extensions="$(echo "${extensions}" |
 
 for filepath in "$@"; do
   # if file is extractable or the highlighter is not available
-  extractable="$(echo "${filepath}" | grep -i -E "\.(${extensions})\$")"
+  extractable="$(echo "${filepath}" | ${grepcmd} -i -E "\.(${extensions})\$")"
   if [[ -n "${extractable}" || ! -x "${hiliter}" ]]; then
     "${lessprep}" "${filepath}"
     continue

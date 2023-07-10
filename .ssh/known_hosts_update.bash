@@ -1,5 +1,7 @@
 #!/bin/bash
-set -e
-chmod +w known_hosts
-cat hostkey_* > known_hosts
-chmod -w known_hosts
+set -eu
+
+sshdir="${HOME}/.ssh"
+chmod +w "${sshdir}"/known_hosts
+cat "${sshdir}"/hostkey_* > "${sshdir}"/known_hosts
+chmod -w "${sshdir}"/known_hosts

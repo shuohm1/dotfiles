@@ -2,7 +2,7 @@
 shopt -s nocasematch
 
 datadir="$(cd "$(dirname "$0")" && pwd)"
-hiliter="$(/bin/which source-highlight 2> /dev/null)"
+hiliter="$($(command which which) source-highlight 2> /dev/null)"
 
 # check if a terminal can use more colors
 escformat="esc"
@@ -13,7 +13,7 @@ fi
 # classical preprocessor
 lessprep=cat
 for filename in lesspipe lesspipe.sh; do
-  filepath="$(/bin/which "${filename}" 2> /dev/null)"
+  filepath="$($(command which which) "${filename}" 2> /dev/null)"
   if [ -x "${filepath}" ]; then
     lessprep="${filepath}"
     break

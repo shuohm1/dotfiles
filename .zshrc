@@ -170,15 +170,19 @@ unset _p
 setopt transient_rprompt
 # right prompt
 function right_prompt_git() {
-  local _git="$($(command which which) git 2> /dev/null)"
-  local _status="$(git status 2>&1 | tr 'A-Z' 'a-z')"
-  if [[ ! -x "${_git}" || "${_status}" =~ (not a git repository) ]]; then
+  local gitcmd="$($(command which which) git 2> /dev/null)"
+  if [ ! -x "${gitcmd}" ]; then
+    return
+  fi
+
+  local gitstatus="$(${gitcmd} status 2>&1 | tr 'A-Z' 'a-z')"
+  if [[ "${gitstatus}" =~ (not a git repository) ]]; then
     return
   fi
 
   local _p="\u00A6" # broken vertical bar
-  local branchname="$(git rev-parse --abbrev-ref HEAD 2> /dev/null)"
-  local gitstatus="$(git status 2> /dev/null | tr 'A-Z' 'a-z')"
+  local branchname="$(${gitcmd} rev-parse --abbrev-ref HEAD 2> /dev/null)"
+  local gitstatus="$(${gitcmd} status 2> /dev/null | tr 'A-Z' 'a-z')"
   if [[ -z "${branchname}" || -z "${gitstatus}" ]]; then
     echo -n "%F{black}%K{white}${_p}RPROMPTERROR%k%f"
     return

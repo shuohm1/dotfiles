@@ -6,7 +6,7 @@ mypath="$(readlink -e "$0")"
 myname="$(basename "${mypath}")"
 
 bareless="$(
-  /bin/which -a less 2> /dev/null | grep '^/' |
+  $(command which which) -a less 2> /dev/null | grep '^/' |
   # canonicalize paths
   xargs readlink -e 2> /dev/null |
   # get the top command except this script itself

@@ -96,12 +96,12 @@ export PROMPT_COMMAND_PSRENDITION="set_psrend"
 # - a command substitution $(echo -e ...) is required
 #   to interpret escape sequences
 # - escape $ symbols to prevent expanding commands and variables
-_rend="\$(echo -en "\${PS_RENDITION:-}")"
+_rend_="\$(echo -en "\${PS_RENDITION:-}")"
 
 # prompt
 _p=""
 _p="$_p\[\e[m\]"    # reset renditions
-_p="$_p\[$_rend\]"  # set renditions
+_p="$_p\[$_rend_\]" # set renditions
 _p="$_p\u"          # user name
 _p="$_p@"           # @
 _p="$_p\$HOSTNAME"  # hostname (instead of \h)
@@ -111,7 +111,7 @@ _p="$_p\\$"         # '#' if root, otherwise '$'
 _p="$_p "           # space
 _p="$_p\[\e[m\]"    # reset renditions
 export PS1="$_p"
-unset _p _rend
+unset _p _rend_
 
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY

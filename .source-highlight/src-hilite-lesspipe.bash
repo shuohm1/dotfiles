@@ -2,10 +2,7 @@
 shopt -s nocasematch
 
 datadir="$(cd "$(dirname "$0")" && pwd)"
-
-whichcmd="$(command which which)"
-grepcmd="$(${whichcmd} grep)"
-hiliter="$(${whichcmd} source-highlight 2> /dev/null)"
+hiliter="$(command which source-highlight 2> /dev/null)"
 
 # check if a terminal can use more colors
 escformat="esc"
@@ -16,7 +13,7 @@ fi
 # classical preprocessor
 lessprep=cat
 for filename in lesspipe lesspipe.sh; do
-  filepath="$(${whichcmd} "${filename}" 2> /dev/null)"
+  filepath="$(command which "${filename}" 2> /dev/null)"
   if [ -x "${filepath}" ]; then
     lessprep="${filepath}"
     break
@@ -52,13 +49,16 @@ EOS
 # convert extensions into a bar-separated format: foo|bar|baz
 extensions="$(echo "${extensions}" |
   tr '\n' ' ' |
-  sed -E 's/ +/ /g; s/,|^ +| +$//g; s/\*[^ ]*\.//g' |
+  command sed -E 's/ +/ /g; s/,|^ +| +$//g; s/\*[^ ]*\.//g' |
   tr ' ' '|'
 )"
 
 for filepath in "$@"; do
   # if file is extractable or the highlighter is not available
-  extractable="$(echo "${filepath}" | ${grepcmd} -i -E "\.(${extensions})\$")"
+  extractable="$(
+    echo "${filepath}" |
+    command grep -i -E "\.(${extensions})\$"
+  )"
   if [[ -n "${extractable}" || ! -x "${hiliter}" ]]; then
     "${lessprep}" "${filepath}"
     continue

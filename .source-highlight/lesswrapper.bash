@@ -5,15 +5,12 @@ set -eu
 mypath="$(readlink -e "$0")"
 myname="$(basename "${mypath}")"
 
-whichcmd="$(command which which)"
-grepcmd="$(${whichcmd} grep)"
-
 lesscmd="$(
-  ${whichcmd} -a less 2> /dev/null | ${grepcmd} '^/' |
+  command which -a less 2> /dev/null |
   # canonicalize paths
   xargs readlink -e 2> /dev/null |
   # get the top command except this script itself
-  ${grepcmd} -F -v "${mypath}" | head -n 1
+  command grep -F -v "${mypath}" | head -n 1
 )"
 
 if [ ! -x "${lesscmd}" ]; then

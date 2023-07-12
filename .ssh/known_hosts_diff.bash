@@ -2,7 +2,7 @@
 set -eu
 
 diffcmd=diff
-if [ -x "$($(command which which) colordiff 2> /dev/null)" ]; then
+if [ -x "$(command which colordiff 2> /dev/null)" ]; then
   diffcmd=colordiff
 fi
 

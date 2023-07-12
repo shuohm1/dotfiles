@@ -1,8 +1,5 @@
 # .aliasrc
 
-# which
-alias unbuiltin-which="$(command which which)"
-
 # expand aliases with sudo
 # see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
@@ -49,14 +46,14 @@ alias grep="grep --color=auto"
 alias egrep="grep -E"
 alias fgrep="grep -F"
 alias pgrep="grep -P"
-alias unaliased-grep="$(unbuiltin-which grep)"
+alias cgrep="command grep"
 
 # sed
 alias sed="sed -E"
 alias csed="command sed"
 
 # colordiff
-if [ -x "$(unbuiltin-which colordiff 2> /dev/null)" ]; then
+if [ -x "$(command which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff"
 fi
 
@@ -84,7 +81,7 @@ alias gy="git merge --ff-only"
 alias gr="git remote show origin"
 alias gi="git status"
 alias gw="git switch"
-alias git-id="git show HEAD | unaliased-grep -i -m1 -o -P '(?<=^commit )\w+'"
+alias git-id="git show HEAD | command grep -i -m1 -o -P '(?<=^commit )\w+'"
 alias git-np="git --no-pager"
 
 # ring a bell

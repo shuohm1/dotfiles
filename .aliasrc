@@ -52,7 +52,8 @@ alias pgrep="grep -P"
 alias unaliased-grep="$(unbuiltin-which grep)"
 
 # sed
-alias esed="sed -E"
+alias sed="sed -E"
+alias csed="command sed"
 
 # colordiff
 if [ -x "$(unbuiltin-which colordiff 2> /dev/null)" ]; then

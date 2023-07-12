@@ -32,7 +32,7 @@ fi
 # complementor for sudo.vim
 # see: https://blog.besky-works.net/2012/04/sudovim-zsh.html
 # see: https://www.yuuan.net/item/736
-function _mycompfunc_sudovim() {
+function zshcomp_sudovim() {
   local LAST="${words[$#words[*]]}"
   case "${LAST}" in
     sudo:*)
@@ -49,7 +49,7 @@ function _mycompfunc_sudovim() {
 
   return 1
 }
-compdef _mycompfunc_sudovim vim
+compdef zshcomp_sudovim vim
 
 # do not beep when completion
 setopt nolistbeep

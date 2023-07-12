@@ -1,13 +1,17 @@
 # .bash_profile.local
 
 # tmp
-tmpdir="$(readlink -m "${HOME}/tmp")"
-if [ ! -d "${tmpdir}" ]; then
-  mkdir -m 700 -p "${tmpdir}"
+if [ -h "${HOME}/tmp" ]; then
+  tmpdir="$(readlink -m "${HOME}/tmp")"
+  if [ ! -e "${tmpdir}" ]; then
+    mkdir -m 700 -p "${tmpdir}"
+  fi
 fi
 
 # cache
-cachedir="$(readlink -m "${HOME}/.cache")"
-if [ ! -d "${cachedir}" ]; then
-  mkdir -m 700 -p "${cachedir}"
+if [ -h "${HOME}/.cache" ]; then
+  cachedir="$(readlink -m "${HOME}/.cache")"
+  if [ ! -e "${cachedir}" ]; then
+    mkdir -m 700 -p "${cachedir}"
+  fi
 fi

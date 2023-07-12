@@ -49,7 +49,7 @@ EOS
 # convert extensions into a bar-separated format: foo|bar|baz
 extensions="$(echo "${extensions}" |
   tr '\n' ' ' |
-  sed -E 's/ +/ /g; s/,|^ +| +$//g; s/\*[^ ]*\.//g' |
+  command sed -E 's/ +/ /g; s/,|^ +| +$//g; s/\*[^ ]*\.//g' |
   tr ' ' '|'
 )"
 

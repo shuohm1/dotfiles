@@ -97,9 +97,10 @@ case $TERM in
     # just before the command is executed
     preexec() {
       local args="$1"
-      args="$(echo "${args}" | sed 's/^ *//')"
-      args="$(echo "${args}" | sed 's/^(\(.*\))$/\1/')"
-      args="$(echo "${args}" | sed 's/^\([^ ]\+=[^ ]\+ \+\)*//')"
+      # remove leading parentheses and spaces
+      args="$(echo "${args}" | sed -E 's/^\(? *\)?//')"
+      # remove assignments of environment variables
+      args="$(echo "${args}" | sed -E 's/^([^ ]+=[^ ]+ +)*//')"
 
       local wintitle="${WINTITLE}"
       if [ -z "${wintitle}" ]; then
@@ -120,10 +121,10 @@ case $TERM in
         # \x05  : an escape sequence
         # %{+r} : exchange foreground and background color
         # %{-}  : revert colors
-        local sedscript='s/\([\x80-\xFF]\+\)/\x05{+r}\1\x05{-}/g'
-        hardst="$(echo "${hardst}" | LC_ALL=C sed ${sedscript})"
+        local sedscript='s/([\x80-\xFF]+)/\x05{+r}\1\x05{-}/g'
+        hardst="$(echo "${hardst}" | LC_ALL=C sed -E ${sedscript})"
         # replace non-ascii characters with '?'
-        hardst="$(echo "${hardst}" | LC_ALL=C sed 's/[\x80-\xFF]/?/g')"
+        hardst="$(echo "${hardst}" | LC_ALL=C sed -E 's/[\x80-\xFF]/?/g')"
 
         echo -ne "\e_${hardst}\e\\"
       fi

@@ -35,7 +35,6 @@ function dispatch_prcmd() {
   for f in ${!PROMPT_COMMAND_*}; do
     eval "${!f}"
   done
-  unset f
 }
 export PROMPT_COMMAND="dispatch_prcmd"
 
@@ -88,30 +87,31 @@ function set_psrend() {
     pscolor=35
   fi
   export PS_RENDITION="\e[${pscolor}m"
-  unset pscolor
 }
 export PROMPT_COMMAND_PSRENDITION="set_psrend"
 
-# set renditions every time
-# - a command substitution $(echo -e ...) is required
-#   to interpret escape sequences
-# - escape $ symbols to prevent expanding commands and variables
-_rend_="\$(echo -en "\${PS_RENDITION:-}")"
-
 # prompt
-_p=""
-_p="$_p\[\e[m\]"    # reset renditions
-_p="$_p\[$_rend_\]" # set renditions
-_p="$_p\u"          # user name
-_p="$_p@"           # @
-_p="$_p\$HOSTNAME"  # hostname (instead of \h)
-_p="$_p:"           # :
-_p="$_p\w"          # current directory
-_p="$_p\\$"         # '#' if root, otherwise '$'
-_p="$_p "           # space
-_p="$_p\[\e[m\]"    # reset renditions
-export PS1="$_p"
-unset _p _rend_
+function init_prompt() {
+  # set renditions every time
+  # - a command substitution $(echo -e ...) is required
+  #   to interpret escape sequences
+  # - escape $ symbols to prevent expanding commands and variables
+  local rend="\$(echo -en "\${PS_RENDITION:-}")"
+
+  local p=""
+  p="$p\[\e[m\]"    # reset renditions
+  p="$p\[$rend\]"   # set renditions
+  p="$p\u"          # user name
+  p="$p@"           # @
+  p="$p\$HOSTNAME"  # hostname (instead of \h)
+  p="$p:"           # :
+  p="$p\w"          # current directory
+  p="$p\\$"         # '#' if root, otherwise '$'
+  p="$p "           # space
+  p="$p\[\e[m\]"    # reset renditions
+  echo "$p"
+}
+export PS1="$(init_prompt)"
 
 # disable ctrl+s (stop the terminal output temporarily)
 # note: an error may occur if scp, check SSH_TTY

@@ -147,64 +147,65 @@ esac
 # expand environment variables in the prompt
 setopt prompt_subst
 # prompt
-_p=""
-_p="$_p%("          # if
-#                   #   %(X.---.---) means if %X then---else---fi
-_p="$_p?"           #   %?: exit status of the previous command ($?)
-_p="$_p."           # then
-_p="$_p%F{green}"   #   color between %F{color}---%f
-_p="$_p."           # else
-_p="$_p%F{red}"     #   %F{red}
-_p="$_p)"           # fi
-_p="$_p%n"          # user name
-_p="$_p@"           # @
-_p="$_p\$HOSTNAME"  # hostname (instead of %m)
-_p="$_p:"           # :
-_p="$_p%~"          # current directory
-_p="$_p%#"          # '#' if root, otherwise '%'
-_p="$_p "           # space
-_p="$_p%f"          # end of the color setting
-PROMPT="$_p"
-unset _p
+function() {
+  local p=""
+  p="$p%("          # if
+  #                 #   %(X.---.---) means if %X then---else---fi
+  p="$p?"           #   %?: exit status of the previous command ($?)
+  p="$p."           # then
+  p="$p%F{green}"   #   color between %F{color}---%f
+  p="$p."           # else
+  p="$p%F{red}"     #   %F{red}
+  p="$p)"           # fi
+  p="$p%n"          # user name
+  p="$p@"           # @
+  p="$p\$HOSTNAME"  # hostname (instead of %m)
+  p="$p:"           # :
+  p="$p%~"          # current directory
+  p="$p%#"          # '#' if root, otherwise '%'
+  p="$p "           # space
+  p="$p%f"          # end of the color setting
+  PROMPT="$p"
+}
 
 # show the right prompt only on the latest command line
 setopt transient_rprompt
 # right prompt
 function right_prompt_git() {
-  local gitcmd="$($(command which which) git 2> /dev/null)"
-  if [ ! -x "${gitcmd}" ]; then
+  local g="$(command which git 2> /dev/null)"
+  if [ ! -x "$g" ]; then
     return
   fi
 
-  local gitstatus="$(${gitcmd} status 2>&1 | tr 'A-Z' 'a-z')"
-  if [[ "${gitstatus}" =~ (not a git repository) ]]; then
+  local gstatus="$($g status 2>&1 | tr 'A-Z' 'a-z')"
+  if [[ "${gstatus}" =~ (not a git repository) ]]; then
     return
   fi
 
-  local _p="\u00A6" # broken vertical bar
-  local branchname="$(${gitcmd} rev-parse --abbrev-ref HEAD 2> /dev/null)"
-  local gitstatus="$(${gitcmd} status 2> /dev/null | tr 'A-Z' 'a-z')"
-  if [[ -z "${branchname}" || -z "${gitstatus}" ]]; then
-    echo -n "%F{black}%K{white}${_p}RPROMPTERROR%k%f"
+  local p="\u00A6" # broken vertical bar
+  local branch="$($g rev-parse --abbrev-ref HEAD 2> /dev/null)"
+  local gstatus="$($g status 2> /dev/null | tr 'A-Z' 'a-z')"
+  if [[ -z "${branch}" || -z "${gstatus}" ]]; then
+    echo -n "%F{black}%K{white}${p}RPROMPTERROR%k%f"
     return
   fi
 
-  _p="$_p$branchname"
-  if [[ "${gitstatus}" =~ (working (directory|tree) clean) ]]; then
-    _p="%F{green}$_p%f"
-  elif [[ "${gitstatus}" =~ (rebase in progress) ]]; then
-    _p="%F{white}%K{red}$_p%k%f"
-  elif [[ "${gitstatus}" =~ (changes not staged for commit) ]]; then
-    _p="%F{red}$_p%f"
-  elif [[ "${gitstatus}" =~ (changes to be committed) ]]; then
-    _p="%F{yellow}$_p%f"
-  elif [[ "${gitstatus}" =~ (untracked files) ]]; then
-    _p="%F{cyan}$_p%f"
+  p="$p$branch"
+  if [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
+    p="%F{green}$p%f"
+  elif [[ "${gstatus}" =~ (rebase in progress) ]]; then
+    p="%F{white}%K{red}$p%k%f"
+  elif [[ "${gstatus}" =~ (changes not staged for commit) ]]; then
+    p="%F{red}$p%f"
+  elif [[ "${gstatus}" =~ (changes to be committed) ]]; then
+    p="%F{yellow}$p%f"
+  elif [[ "${gstatus}" =~ (untracked files) ]]; then
+    p="%F{cyan}$p%f"
   else
-    _p="%F{white}%K{blue}$_p%k%f"
+    p="%F{white}%K{blue}$p%k%f"
   fi
 
-  echo -n " $_p"
+  echo -n " $p"
 }
 RPROMPT="\$(right_prompt_git)"
 

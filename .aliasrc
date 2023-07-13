@@ -81,6 +81,8 @@ alias gy="git merge --ff-only"
 alias gr="git remote show origin"
 alias gi="git status"
 alias gw="git switch"
+alias gpull="git pull"
+alias gpush="git push"
 alias git-id="git show HEAD | command grep -i -m1 -o -P '(?<=^commit )\w+'"
 alias git-np="git --no-pager"
 

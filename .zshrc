@@ -188,14 +188,14 @@ function right_prompt_git() {
   fi
 
   local p="\u00A6" # broken vertical bar
-  local branch="$($g rev-parse --abbrev-ref HEAD 2> /dev/null)"
+  local gbranch="$($g rev-parse --abbrev-ref HEAD 2> /dev/null)"
   local gstatus="$($g status 2> /dev/null | tr 'A-Z' 'a-z')"
-  if [[ -z "${branch}" || -z "${gstatus}" ]]; then
+  if [[ -z "${gbranch}" || -z "${gstatus}" ]]; then
     echo -n "%F{black}%K{white}${p}RPROMPTERROR%k%f"
     return
   fi
 
-  p="$p$branch"
+  p="$p$gbranch"
   if [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
     p="%F{green}$p%f"
   elif [[ "${gstatus}" =~ (rebase in progress) ]]; then

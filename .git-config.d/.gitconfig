@@ -1,0 +1,43 @@
+[core]
+	editor = vim
+	excludesFile = ~/.gitignore.global
+[alias]
+	co = checkout
+	sw = switch
+	egrep = grep -E
+	fgrep = grep -F
+	pgrep = grep -P
+	fast-forward = merge --ff-only
+	irebase = rebase --interactive
+	unstage = reset HEAD --
+	hard-reset = reset --hard
+[commit]
+;	# set `git commit --verbose` as default
+	verbose = true
+[fetch]
+;	# prune deleted remote branches automatically
+;	# cf. `git remote prune origin`
+	prune = true
+[grep]
+	lineNumber = true
+	extendedRegexp = true
+[log]
+	date = format:%F(%a) %T %z
+[merge]
+;	# set `git merge --no-ff` as default
+	ff = false
+[pull]
+;	# set `git pull --ff-only` as default
+	ff = only
+[push]
+;	# set `git push origin HEAD` as default
+	default = current
+[url "https://"]
+;	# use HTTPS
+	insteadOf = git://
+[url "git@github.com:"]
+;	# use SSH
+	pushInsteadOf = git://github.com/
+	pushInsteadOf = https://github.com/
+[include]
+	path = ~/.gitconfig.local

@@ -39,12 +39,13 @@ alias xless="less -X" # leave displayed contents
 alias grep="grep --color=auto"
 alias egrep="grep -E"
 alias fgrep="grep -F"
-alias pgrep="grep -P"
-alias cgrep="command grep"
+alias rgrep="grep -r"
+alias plgrep="grep -P"
+alias comgrep="command grep"
 
 # sed
 alias sed="sed -E"
-alias csed="command sed"
+alias comsed="command sed"
 
 # colordiff
 if [ -x "$(command which colordiff 2> /dev/null)" ]; then

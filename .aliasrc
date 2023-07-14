@@ -23,7 +23,7 @@ alias lf="ls -l -L" # follow symlinks
 alias lg="ls -go"   # do not list owner/group
 alias lh="ls -hl"   # human readable
 alias ll="ls -l"    # long
-alias lt="ls -al --time-style='+%F %T.%3N %z'"
+alias lt="ls -al --time-style='+%F %T.%3N'"
 # more details
 alias laa="ls -al"
 alias lff="lf -a"

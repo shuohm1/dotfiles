@@ -14,13 +14,7 @@ alias su="PROMPT_COMMAND= su"
 alias dirs="dirs -p"
 
 # ls in color
-if [[ "$(ls --version 2> /dev/null)" =~ GNU ]]; then
-  # GNU
-  alias ls="ls --color=auto"
-else
-  # BSD
-  alias ls="ls -G"
-fi
+alias ls="ls --color=auto"
 
 # ls extentions
 alias lc="ls -C"  # list by columns

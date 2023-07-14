@@ -14,16 +14,25 @@ alias bd="popd"
 alias dirs="dirs -p"
 
 # ls in color
-alias ls="ls --color=auto"
+alias ls="ls -v --color=auto"
 
 # ls extentions
-alias lc="ls -C"  # list by columns
-alias lx="ls -x"  # list by lines
-alias la="ls -a"
-alias ll="ls -l"
-alias lh="ls -lh"
-alias lz="ls -la" # list all files in long format
-alias lg="ls -go" # show neither owner nor group
+alias la="ls -A"    # almost all
+alias le="ls -al"   # everything
+alias lf="ls -l -L" # follow symlinks
+alias lg="ls -go"   # do not list owner/group
+alias lh="ls -hl"   # human readable
+alias ll="ls -l"    # long
+alias lt="ls -al --time-style='+%F %T.%3N %z'"
+# more details
+alias laa="ls -al"
+alias lff="lf -a"
+alias lgg="lg -a"
+alias lhh="lh -a"
+alias lll="ll -a"
+alias ltt="lt -L"
+# TODO: deprecated
+alias lz="ls -al"
 
 # always prompt before overwrite with mv/cp/rm
 alias mv="mv -i"

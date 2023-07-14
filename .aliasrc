@@ -69,6 +69,7 @@ alias sn="screen -S"  # specify a session name
 
 # vim
 alias vi="vim"
+alias view="vim -R"
 
 # git
 alias ga="git add"

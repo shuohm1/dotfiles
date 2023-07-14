@@ -62,7 +62,6 @@ alias vi="vim"
 
 # git
 alias ga="git add"
-alias gq="git add --patch"
 alias gb="git --no-pager branch"
 alias gn="git checkout -b"
 alias gk="git commit --verbose"
@@ -76,6 +75,7 @@ unset _opts_
 alias gm="git merge --no-ff"
 alias gr="git remote show origin"
 alias gi="git status"
+alias gap="git add --patch"
 alias gco="git checkout"
 alias gsw="git switch"
 alias gull="git pull --ff-only"

@@ -67,7 +67,7 @@ alias comdiff="command diff"
 alias sc="screen"
 alias sl="screen -ls" # list sessions
 alias sr="screen -R"  # resume a session
-alias sn="screen -S"  # specify a session name
+alias sn="screen -S"  # set a session name
 
 # vim
 alias vi="vim"

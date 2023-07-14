@@ -57,9 +57,11 @@ alias sed="sed -E"
 alias comsed="command sed"
 
 # colordiff
+alias diff="diff -u"
 if [ -x "$(command which colordiff 2> /dev/null)" ]; then
-  alias diff="colordiff"
+  alias diff="colordiff -u"
 fi
+alias comdiff="command diff"
 
 # screen
 alias sc="screen"

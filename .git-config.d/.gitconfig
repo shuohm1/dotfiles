@@ -11,6 +11,8 @@
 	irebase = rebase --interactive
 	unstage = reset HEAD --
 	hard-reset = reset --hard
+;	# pseudo command
+	where-i-am = !bash ~/bin/git-whereiam.bash
 [commit]
 ;	# set `git commit --verbose` as default
 	verbose = true

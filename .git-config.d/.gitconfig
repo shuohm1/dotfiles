@@ -2,6 +2,7 @@
 	editor = vim
 	excludesFile = ~/.gitignore.global
 [alias]
+	np = !git --no-pager
 	ap = add --patch
 	br = !git --no-pager branch
 	co = checkout
@@ -17,6 +18,7 @@
 	unstage = reset HEAD --
 	hard-reset = reset --hard
 ;	# pseudo command
+	id = !git show HEAD | command grep -i -m1 -o -P '(?<=^commit )\\w+'
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [commit]
 ;	# set `git commit --verbose` as default

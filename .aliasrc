@@ -51,18 +51,18 @@ alias egrep="grep -E"
 alias fgrep="grep -F"
 alias pgrep="grep -P"
 alias rgrep="grep -r"
-alias ngrep="command grep"
+alias bgrep="command grep"
 
 # sed
 alias sed="sed -E"
-alias nsed="command sed"
+alias bsed="command sed"
 
 # colordiff
 alias diff="diff -u"
 if [ -x "$(command which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff -u"
 fi
-alias ndiff="command diff"
+alias cdiff="command diff"
 
 # screen
 alias sc="screen"

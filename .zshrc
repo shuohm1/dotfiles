@@ -178,36 +178,38 @@ setopt transient_rprompt
 # right prompt
 function right_prompt_git() {
   local g="$(command which git 2> /dev/null)"
-  if [ ! -x "$g" ]; then
-    return
-  fi
+  if [ ! -x "$g" ]; then return; fi
 
   local gstatus="$($g status 2>&1 | tr 'A-Z' 'a-z')"
-  if [[ "${gstatus}" =~ (not a git repository) ]]; then
-    return
-  fi
+  if [[ "${gstatus}" =~ (not a git repository) ]]; then return; fi
 
-  local p="\u00A6" # broken vertical bar
   local gbranch="$($g rev-parse --abbrev-ref HEAD 2> /dev/null)"
-  local gstatus="$($g status 2> /dev/null | tr 'A-Z' 'a-z')"
-  if [[ -z "${gbranch}" || -z "${gstatus}" ]]; then
-    echo -n "%F{black}%K{white}${p}RPROMPTERROR%k%f"
-    return
+  if [[ -z "${gstatus}" || -z "${gbranch}" ]]; then return; fi
+
+  # try to get a commit ID instead of 'HEAD'
+  if [ "${gbranch}" = "HEAD" ]; then
+    gbranch="$($g rev-parse HEAD 2> /dev/null)"
+    gbranch="$(echo "${gbranch}" | command grep -o -m1 -E '^.{,7}')"
   fi
 
-  p="$p$gbranch"
-  if [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
-    p="%F{green}$p%f"
+  local p="$gbranch"
+  local v="\u00A6"  # broken vertical bar
+  if [[ "${gstatus}" =~ (unmerged paths) ]]; then
+    p="%F{red}$v%f%F{white}%K{red}$p%k%f"
+  elif [[ "${gstatus}" =~ (still merging) ]]; then
+    p="%F{yellow}$v%f%F{black}%K{yellow}$p%k%f"
   elif [[ "${gstatus}" =~ (rebase in progress) ]]; then
-    p="%F{white}%K{red}$p%k%f"
+    p="%F{yellow}$v%f%F{black}%K{yellow}$p%k%f"
+  elif [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
+    p="%F{green}$v$p%f"
   elif [[ "${gstatus}" =~ (changes not staged for commit) ]]; then
-    p="%F{red}$p%f"
+    p="%F{red}$v$p%f"
   elif [[ "${gstatus}" =~ (changes to be committed) ]]; then
-    p="%F{yellow}$p%f"
+    p="%F{yellow}$v$p%f"
   elif [[ "${gstatus}" =~ (untracked files) ]]; then
-    p="%F{cyan}$p%f"
+    p="%F{cyan}$v$p?%f"
   else
-    p="%F{white}%K{blue}$p%k%f"
+    p="%F{blue}$v%f%F{white}%K{blue}$p?%k%f"
   fi
 
   echo -n " $p"

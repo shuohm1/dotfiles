@@ -74,7 +74,6 @@ alias view="vim -R"
 
 # git
 alias ga="git add"
-alias gb="git --no-pager branch"
 alias gn="git checkout -b"
 alias gk="git commit --verbose"
 alias gd="git diff"

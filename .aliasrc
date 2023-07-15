@@ -48,8 +48,8 @@ alias xless="less -X" # leave displayed contents
 alias grep="grep --color=auto"
 alias egrep="grep -E"
 alias fgrep="grep -F"
+alias pgrep="grep -P"
 alias rgrep="grep -r"
-alias plgrep="grep -P"
 alias comgrep="command grep"
 
 # sed

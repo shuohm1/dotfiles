@@ -1,6 +1,6 @@
 [core]
 	editor = vim
-	excludesFile = ~/.gitignore.global
+	excludesFile = ~/.gitignore
 [alias]
 	np = !git --no-pager
 	ap = add --patch

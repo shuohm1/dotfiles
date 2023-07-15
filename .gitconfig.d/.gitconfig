@@ -4,7 +4,7 @@
 [alias]
 	np = !git --no-pager
 	ap = add --patch
-	br = !git --no-pager branch
+	br = branch
 	co = checkout
 	df = diff
 	mg = merge
@@ -20,6 +20,10 @@
 	hard-reset = reset --hard
 ;	# pseudo command
 	where-i-am = !bash ~/bin/git-whereiam.bash
+[pager]
+;	# -F: automatically exit if one screen
+;	# -X: leave displayed contents
+	branch = less -F -X
 [commit]
 ;	# set `git commit --verbose` as default
 	verbose = true

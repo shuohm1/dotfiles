@@ -8,25 +8,25 @@ italics "$style"
 color "$style"
 
 colormap
-#               "38;05;000"   # 16-color normal black
-"black"         "38;05;008"   # 16-color bright black
+#               "38;05;000"  # 16-color normal black
+"black"         "38;05;008"  # 16-color bright black
 "darkred"       "38;05;001"
 "red"           "38;05;009"
-"darkgreen"     "38;05;002"   # 16-color normal green
-"green"         "38;05;010"   # 16-color bright green
-"brightgreen"   "38;05;121"   # PaleGreen1
+"darkgreen"     "38;05;002"  # 16-color normal green
+"green"         "38;05;010"  # 16-color bright green
+"brightgreen"   "38;05;121"  # PaleGreen1
 "brown"         "38;05;003"
 "yellow"        "38;05;011"
-#               "38;05;004"   # 16-color normal blue
-"darkblue"      "38;05;012"   # 16-color bright blue
-"blue"          "38;05;081"   # SteelBlue1
+#               "38;05;004"  # 16-color normal blue
+"darkblue"      "38;05;012"  # 16-color bright blue
+"blue"          "38;05;081"  # SteelBlue1
 "purple"        "38;05;005"
 "pink"          "38;05;013"
 "teal"          "38;05;006"
 "cyan"          "38;05;014"
 "gray"          "38;05;007"
 "white"         "38;05;015"
-"orange"        "38;05;172"   # Orange3
-"brightorange"  "38;05;214"   # Orange1
+"orange"        "38;05;172"  # Orange3
+"brightorange"  "38;05;214"  # Orange1
 default         "38;05;007"
 end

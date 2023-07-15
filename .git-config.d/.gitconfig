@@ -2,7 +2,12 @@
 	editor = vim
 	excludesFile = ~/.gitignore.global
 [alias]
+	ap = add --patch
+	br = !git --no-pager branch
 	co = checkout
+	df = diff
+	mg = merge
+	ff = merge --ff-only
 	sw = switch
 	egrep = grep -E
 	fgrep = grep -F

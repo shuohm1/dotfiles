@@ -13,10 +13,8 @@ alias bd="popd"
 # always print the directory stack with one entry per line
 alias dirs="dirs -p"
 
-# ls in color
+# ls
 alias ls="ls -v --color=auto"
-
-# ls extentions
 alias la="ls -A"    # almost all
 alias le="ls -al"   # everything
 alias lf="ls -l -L" # follow symlinks

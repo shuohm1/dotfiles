@@ -9,6 +9,7 @@
 	df = diff
 	mg = merge
 	ff = merge --ff-only
+	id = rev-parse HEAD
 	sw = switch
 	egrep = grep -E
 	fgrep = grep -F
@@ -18,7 +19,6 @@
 	unstage = reset HEAD --
 	hard-reset = reset --hard
 ;	# pseudo command
-	id = !git show HEAD | command grep -i -m1 -o -P '(?<=^commit )\\w+'
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [commit]
 ;	# set `git commit --verbose` as default

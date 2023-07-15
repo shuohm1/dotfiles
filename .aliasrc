@@ -30,7 +30,7 @@ alias lhh="lh -a"
 alias lll="ll -a"
 alias ltt="lt -L"
 # TODO: deprecated
-alias lz="ls -al"
+alias lz="ls -al && false"
 
 # always prompt before overwrite with mv/cp/rm
 alias mv="mv -i"

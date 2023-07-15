@@ -40,9 +40,10 @@ alias cp="cp -i"
 alias rm="rm -i"
 
 # less
-alias lless="less -L" # ignore LESSOPEN
-alias sless="less -S" # do not wrap on the right edge
-alias xless="less -X" # leave displayed contents
+alias lless="less -L"   # ignore LESSOPEN
+alias nless="less -N"   # with line numbers
+alias sless="less -S"   # do not wrap on the right edge
+alias xless="less -X"   # leave displayed contents
 
 # grep
 alias grep="grep --color=auto"

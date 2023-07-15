@@ -90,11 +90,10 @@ alias gr="git remote show origin"
 alias gi="git status"
 alias gap="git add --patch"
 alias gco="git checkout"
+alias gff="git merge --ff-only"
 alias gsw="git switch"
 alias gull="git pull --ff-only"
 alias gush="git push"
-alias git-id="git show HEAD | command grep -i -m1 -o -P '(?<=^commit )\w+'"
-alias git-np="git --no-pager"
 
 # a pseudo command: need to configure an alias in .gitconfig
 alias gw="git where-i-am"

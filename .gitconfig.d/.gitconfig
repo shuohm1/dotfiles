@@ -19,7 +19,7 @@
 	fast-forward = merge --ff-only
 	irebase = rebase --interactive
 	unstage = reset HEAD --
-	RESET = reset --hard
+	hard-reset = reset --hard
 ;	# pseudo command
 ;	# - check wheather conflict occurs or not before merging
 ;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6

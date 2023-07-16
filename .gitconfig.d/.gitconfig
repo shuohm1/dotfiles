@@ -1,5 +1,6 @@
 [core]
 	editor = vim
+	pager = less
 	excludesFile = ~/.gitignore
 [alias]
 	np = !git --no-pager
@@ -25,6 +26,7 @@
 ;	# -F: automatically exit if one screen
 ;	# -X: leave displayed contents
 	branch = less -F -X
+	grep = less -F -X
 [commit]
 ;	# set `git commit --verbose` as default
 	verbose = true

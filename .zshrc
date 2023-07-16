@@ -192,24 +192,36 @@ function right_prompt_git() {
     gbranch="$(echo "${gbranch}" | command grep -o -m1 -E '^.{,7}')"
   fi
 
+  # prefix (broken vertical bar)
+  local v="\u00A6"
+  # suffix
+  local u=
+  if [[ "${gstatus}" =~ (untracked files) ]]; then
+    u="?"
+  fi
+
   local p="$gbranch"
-  local v="\u00A6"  # broken vertical bar
   if [[ "${gstatus}" =~ (unmerged paths) ]]; then
-    p="%F{red}$v%f%F{white}%K{red}$p%k%f"
-  elif [[ "${gstatus}" =~ (still merging) ]]; then
-    p="%F{yellow}$v%f%F{black}%K{yellow}$p%k%f"
-  elif [[ "${gstatus}" =~ (rebase in progress) ]]; then
-    p="%F{yellow}$v%f%F{black}%K{yellow}$p%k%f"
+    v="%F{red}$v%f"
+    u="%F{red}$u%f"
+    p="$v%F{white}%K{red}$p%k%f$u"
+  elif [[ "${gstatus}" =~ (still merging|rebase in progress) ]]; then
+    v="%F{yellow}$v%f"
+    u="%F{yellow}$u%f"
+    p="$v%F{black}%K{yellow}$p%k%f$u"
   elif [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
-    p="%F{green}$v$p%f"
+    p="%F{green}$v$p$u%f"
   elif [[ "${gstatus}" =~ (changes not staged for commit) ]]; then
-    p="%F{red}$v$p%f"
+    p="%F{red}$v$p$u%f"
   elif [[ "${gstatus}" =~ (changes to be committed) ]]; then
-    p="%F{yellow}$v$p%f"
+    p="%F{yellow}$v$p$u%f"
   elif [[ "${gstatus}" =~ (untracked files) ]]; then
-    p="%F{cyan}$v$p?%f"
+    p="%F{cyan}$v$p$u%f"
   else
-    p="%F{blue}$v%f%F{white}%K{blue}$p?%k%f"
+    # unknown status
+    v="%F{blue}$v%f"
+    u="?"
+    p="$v%F{white}%K{blue}$p$u%k%f"
   fi
 
   echo -n " $p"

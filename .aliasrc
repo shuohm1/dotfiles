@@ -81,11 +81,10 @@ function git_diff_helper() { git diff --quiet "$@" || git diff "$@" }
 alias gd="git_diff_helper"
 alias g@="git_diff_helper --cached"
 alias gf="git fetch"
-alias gl="git log"
 opts="--abbrev-commit --all --date-order --decorate --graph"
-alias g1="GIT_PAGER='less -S' git log ${opts} --oneline"
-alias gg="git log ${opts} --stat"
+alias gl="git log ${opts} --stat"
 alias gp="git log ${opts} --patch-with-stat"
+alias gg="GIT_PAGER='less -S' git log ${opts} --oneline"
 unset opts
 alias gm="git merge --no-ff"
 alias gr="git remote show origin"

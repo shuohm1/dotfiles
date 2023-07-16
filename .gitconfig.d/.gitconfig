@@ -27,10 +27,7 @@
 ;	# - show brief status in color
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [pager]
-;	# -F: automatically exit if one screen
-;	# -X: leave displayed contents
-	branch = less -F -X
-	grep = less -F -X
+	branch = false
 [commit]
 ;	# set `git commit --verbose` as default
 	verbose = true

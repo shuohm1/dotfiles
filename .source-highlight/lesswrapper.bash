@@ -10,7 +10,7 @@ lesscmd="$(
   # canonicalize paths
   xargs readlink -e 2> /dev/null |
   # get the top command except this script itself
-  command grep -F -v "${mypath}" | head -n 1
+  command grep -v -F "${mypath}" | head -n 1
 )"
 
 if [ ! -x "${lesscmd}" ]; then

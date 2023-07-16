@@ -189,7 +189,7 @@ function right_prompt_git() {
   # try to get a commit ID instead of 'HEAD'
   if [ "${gbranch}" = "HEAD" ]; then
     gbranch="$($g rev-parse HEAD 2> /dev/null)"
-    gbranch="$(echo "${gbranch}" | command grep -o -m1 -E '^.{,7}')"
+    gbranch="$(echo "${gbranch}" | command grep -m1 -o -E '^.{,7}')"
   fi
 
   # prefix (broken vertical bar)

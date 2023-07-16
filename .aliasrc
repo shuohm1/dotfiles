@@ -77,7 +77,7 @@ alias ga="git add"
 alias ge="git grep"
 alias gn="git checkout -b"
 alias gk="git commit --verbose"
-function git_diff_helper() { git diff --quiet "$@" || git diff "$@" }
+function git_diff_helper() { git diff --quiet "$@" || git diff "$@"; }
 alias gd="git_diff_helper"
 alias g@="git_diff_helper --cached"
 alias gf="git fetch"

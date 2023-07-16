@@ -8,7 +8,8 @@
 	co = checkout
 	df = diff
 	mg = merge
-	ff = merge --ff-only
+	rb = rebase
+	ir = rebase --interactive
 	id = rev-parse HEAD
 	sw = switch
 	egrep = grep -E

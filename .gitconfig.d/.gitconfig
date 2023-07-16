@@ -21,7 +21,10 @@
 	unstage = reset HEAD --
 	RESET = reset --hard
 ;	# pseudo command
+;	# - check wheather conflict occurs or not before merging
+;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
 	spadework = !sh -c "git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check"
+;	# - show brief status in color
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [pager]
 ;	# -F: automatically exit if one screen

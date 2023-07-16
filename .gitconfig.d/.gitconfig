@@ -21,6 +21,7 @@
 	unstage = reset HEAD --
 	RESET = reset --hard
 ;	# pseudo command
+	spadework = !sh -c "git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check"
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [pager]
 ;	# -F: automatically exit if one screen

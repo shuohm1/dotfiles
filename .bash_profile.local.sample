@@ -2,7 +2,7 @@
 
 # tmp
 if [ -h "${HOME}/tmp" ]; then
-  tmpdir="$(readlink -m "${HOME}/tmp")"
+  tmpdir="$(readlink -f "${HOME}/tmp")"
   if [ ! -e "${tmpdir}" ]; then
     mkdir -m 700 -p "${tmpdir}"
   fi
@@ -10,7 +10,7 @@ fi
 
 # cache
 if [ -h "${HOME}/.cache" ]; then
-  cachedir="$(readlink -m "${HOME}/.cache")"
+  cachedir="$(readlink -f "${HOME}/.cache")"
   if [ ! -e "${cachedir}" ]; then
     mkdir -m 700 -p "${cachedir}"
   fi

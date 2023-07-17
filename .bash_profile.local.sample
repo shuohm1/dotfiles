@@ -15,3 +15,15 @@ if [ -h "${HOME}/.cache" ]; then
     mkdir -m 700 -p "${cachedir}"
   fi
 fi
+
+# vimswap/vimbackup
+if [ -d "${HOME}/tmp" ]; then
+  vimswapdir="$(readlink -f "${HOME}/tmp/.vimswap")"
+  if [ ! -e "${vimswapdir}" ]; then
+    mkdir -m 700 -p "${vimswapdir}"
+  fi
+  vimbackdir="$(readlink -f "${HOME}/tmp/.vimbackup")"
+  if [ ! -e "${vimbackdir}" ]; then
+    mkdir -m 700 -p "${vimbackdir}"
+  fi
+fi

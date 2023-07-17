@@ -1,5 +1,9 @@
 # .bash_profile.zsh
 
+if [ "${REPLACE_BASH_WITH_ZSH:-}" = "NO" ]; then
+  return
+fi
+
 export REPLACE_BASH_WITH_ZSH="TRY"
 
 # confirm this is bash, just in case

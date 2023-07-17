@@ -56,20 +56,22 @@ shopt -s histappend
 export PROMPT_COMMAND_HISTSAVE="history -a"
 
 # for screen
+# - WINDOWTITLE: \ekWINDOWTITLE\e\\
+# -  HARDSTATUS: \e_HARDSTATUS\e\\
 function set_title4screen() {
-  local wintitle="${WINTITLE}"
-  if [ -z "${wintitle}" ]; then
-    wintitle="${HOSTNAME}"
-    if [[ "${wintitle:-localhost}" == "localhost" ]]; then
-      wintitle="${SHELL##*/}"
+  local p="${WINTITLE}"
+  if [ -z "$p" ]; then
+    p="${HOSTNAME}"
+    if [ "${p:-localhost}" = "localhost" ]; then
+      p="${SHELL##*/}"
     fi
   fi
-
-  # window title: \ek WINDOWTITLE \e\\
-  echo -en "\ek${wintitle}\e\\"
-  # hardstatus: \e_ HARDSTATUS \e\\
+  # set a window title
+  echo -en "\ek$p\e\\"
+  # clear a hardstatus
   echo -en "\e_\e\\"
 }
+
 case $TERM in
   screen*)
     export PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"

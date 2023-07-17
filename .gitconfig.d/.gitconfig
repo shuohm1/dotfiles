@@ -20,7 +20,7 @@
 	irebase = rebase --interactive
 	unstage = reset HEAD --
 	hard-reset = reset --hard
-;	# pseudo command
+;	# pseudo commands
 ;	# - check wheather conflict occurs or not before merging
 ;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
 	spadework = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check'

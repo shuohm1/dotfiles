@@ -68,14 +68,16 @@ set hidden
 " # swap/backup
 " make swap files (foobar.txt.swp)
 set swapfile
-" a directory for swap files
-if isdirectory("/tmp")
-  set directory=/tmp
-endif
-" do not make backup files (foobar.txt~)
+" a list of directories for swap files
+" - a trailing '//' sets a name of a swap file based on its full path
+" - '.' means the same directory with an editing file
+set directory=$HOME/tmp/.vimswap//,$HOME/.vimswap//,.
+" writebackup: make backup files only during writing
+"    nobackup: remove those backup files if success to write
 set nobackup
-" a directory for backup files
-"set backupdir=
+set writebackup
+" a list of directories for backup files
+set backupdir=$HOME/tmp/.vimbackup//,$HOME/tmp//,.
 
 " a setting for the backspace key
 " * see: https://vim-jp.org/vimdoc-ja/options.html#'backspace'

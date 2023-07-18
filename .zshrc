@@ -90,61 +90,64 @@ bindkey '^]'   vi-find-next-char   # <C-]>
 bindkey '^[^]' vi-find-prev-char   # <Meta> <C-]>
 
 # for screen
+# - WINDOWTITLE: \ekWINDOWTITLE\e\\
+# -  HARDSTATUS: \e_HARDSTATUS\e\\
+function set_title4screen() {
+  if [ -n "${WINTITLE}" ]; then return; fi
+
+  # NOTE: never mind if these substitutions make wrong messages
+  local p="$1"
+  # remove leading/trailing braces, parentheses, and spaces
+  p="$(echo "$p" | command sed -E 's/^[{( ]+//; s/[ )}]+$//')"
+  # remove assignments of environment variables
+  # \x22: a double quotetion sign
+  # \x27: a single quotation sign
+  p="$(echo "$p" | command sed -E 's/^([_a-zA-Z0-9]+=([^ ]*|\x22[^\x22]*\x22|\x27[^\x27]*\x27) +)+//')"
+
+  # set a window title
+  echo -ne "\ek${p%% *}\e\\"
+
+  if [ "$p" = "${p#* }" ]; then return; fi
+  p="${p#* }"
+
+  # remove control characters
+  p="$(echo "$p" | tr -d '[:cntrl:]')"
+  # truncate in 256 bytes
+  p="$(echo "$p" | cut --bytes=-256)"
+  # reverse colors (string escapes of screen)
+  # \x05  : an escape sequence
+  # %{+r} : exchange foreground and background color
+  # %{-}  : revert colors
+  p="$(echo "$p" | LC_ALL=C command sed -E 's/([\x80-\xFF]+)/\x05{+r}\1\x05{-}/g')"
+  # replace non-ascii characters with '?'
+  p="$(echo "$p" | LC_ALL=C command sed -E 's/[\x80-\xFF]/?/g')"
+
+  # set a hardstatus
+  echo -ne "\e_$p\e\\"
+}
+function reset_title4screen() {
+  local p="${WINTITLE}"
+  if [ -z "$p" ]; then
+    p="${HOSTNAME}"
+    if [ "${p:-localhost}" = "localhost" ]; then
+      p="${SHELL##*/}"
+    fi
+  fi
+  # set a window title
+  echo -en "\ek$p\e\\"
+  # clear a hardstatus
+  echo -en "\e_\e\\"
+}
+
 case $TERM in
-  # window title: \ek WINDOWTITLE \e\\
-  #   hardstatus: \e_ HARDSTATUS  \e\\
   screen*)
     # just before the command is executed
     preexec() {
-      local args="$1"
-      # remove leading parentheses and spaces
-      args="$(echo "${args}" | command sed -E 's/^\(? *\)?//')"
-      # remove assignments of environment variables
-      args="$(echo "${args}" | command sed -E 's/^([^ ]+=[^ ]+ +)*//')"
-
-      local wintitle="${WINTITLE}"
-      if [ -z "${wintitle}" ]; then
-        # get the first token
-        wintitle="${args%% *}"
-      fi
-      echo -ne "\ek${wintitle}\e\\"
-
-      if [[ -z "${WINTITLE}" && "${args}" != "${args#* }" ]]; then
-        # get arguments
-        local hardst="${args#* }"
-
-        # remove control characters
-        hardst="$(echo "${hardst}" | tr -d "[:cntrl:]")"
-        # truncate in 256 bytes
-        hardst="$(echo "${hardst}" | cut --bytes=-256)"
-        # reverse colors (string escapes of screen)
-        # \x05  : an escape sequence
-        # %{+r} : exchange foreground and background color
-        # %{-}  : revert colors
-        hardst="$(
-          echo "${hardst}" |
-          LC_ALL=C command sed -E 's/([\x80-\xFF]+)/\x05{+r}\1\x05{-}/g'
-        )"
-        # replace non-ascii characters with '?'
-        hardst="$(
-          echo "${hardst}" |
-          LC_ALL=C command sed -E 's/[\x80-\xFF]/?/g'
-        )"
-
-        echo -ne "\e_${hardst}\e\\"
-      fi
+      set_title4screen "$1"
     }
     # just before the prompt shows
     precmd() {
-      local wintitle="${WINTITLE}"
-      if [ -z "${wintitle}" ]; then
-        wintitle="${HOSTNAME}"
-        if [[ "${wintitle:-localhost}" == "localhost" ]]; then
-          wintitle="${SHELL##*/}"
-        fi
-      fi
-      echo -en "\ek${wintitle}\e\\"
-      echo -en "\e_\e\\"
+      reset_title4screen
     }
     ;;
 esac

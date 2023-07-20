@@ -14,7 +14,7 @@ echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
 case $TERM in
   xterm*)
-    echo -en "\033]0;${USER}@${LONGHOSTNAME}\007"
+    echo -en "\033]0;${USER}@${HOSTNAME}\007"
     ;;
 esac
 
@@ -128,7 +128,7 @@ function set_title4screen() {
 function reset_title4screen() {
   local p="${WINTITLE}"
   if [ -z "$p" ]; then
-    p="${HOSTNAME}"
+    p="${FORENAME}"
     if [ "${p:-localhost}" = "localhost" ]; then
       p="${SHELL##*/}"
     fi
@@ -167,7 +167,7 @@ function() {
   p="$p)"           # fi
   p="$p%n"          # user name
   p="$p@"           # @
-  p="$p\$HOSTNAME"  # hostname (instead of %m)
+  p="$p\$FORENAME"  # hostname (instead of %m)
   p="$p:"           # :
   p="$p%~"          # current directory
   p="$p%#"          # '#' if root, otherwise '%'

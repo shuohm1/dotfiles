@@ -2,7 +2,7 @@
 # usage: ln -s lesswrapper.bash less
 set -eu
 
-mypath="$(readlink -e "$0")"
+mypath="$(readlink -e "$0" 2> /dev/null)"
 myname="$(basename "${mypath}")"
 
 lesscmd="$(

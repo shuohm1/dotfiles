@@ -2,10 +2,10 @@
 
 function make_temporary_directory() {
   local p="$(readlink -f "$1" 2> /dev/null)"
-  if [ ! -e "${p}" ]; then
-    mkdir -m 700 "${p}"
-  elif [ -d "${p}" ]; then
-    chmod 700 "${p}"
+  if [ ! -e "$p" ]; then
+    mkdir -m 700 "$p"
+  elif [ -d "$p" ]; then
+    chmod 700 "$p"
   fi
 }
 

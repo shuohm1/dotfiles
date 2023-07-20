@@ -1,29 +1,19 @@
 # .bash_profile.local
 
-# tmp
-if [ -h "${HOME}/tmp" ]; then
-  tmpdir="$(readlink -f "${HOME}/tmp")"
-  if [ ! -e "${tmpdir}" ]; then
-    mkdir -m 700 -p "${tmpdir}"
+function make_temporary_directory() {
+  local p="$(readlink -f "$1" 2> /dev/null)"
+  if [ ! -e "$p" ]; then
+    mkdir -m 700 "$p"
+  elif [ -d "$p" ]; then
+    chmod 700 "$p"
   fi
-fi
+}
 
+# tmp
+make_temporary_directory "${HOME}/tmp"
 # cache
-if [ -h "${HOME}/.cache" ]; then
-  cachedir="$(readlink -f "${HOME}/.cache")"
-  if [ ! -e "${cachedir}" ]; then
-    mkdir -m 700 -p "${cachedir}"
-  fi
-fi
+make_temporary_directory "${HOME}/.cache"
 
 # vimswap/vimbackup
-if [ -d "${HOME}/tmp" ]; then
-  vimswapdir="$(readlink -f "${HOME}/tmp/.vimswap")"
-  if [ ! -e "${vimswapdir}" ]; then
-    mkdir -m 700 -p "${vimswapdir}"
-  fi
-  vimbackdir="$(readlink -f "${HOME}/tmp/.vimbackup")"
-  if [ ! -e "${vimbackdir}" ]; then
-    mkdir -m 700 -p "${vimbackdir}"
-  fi
-fi
+make_temporary_directory "${HOME}/tmp/.vimswap"
+make_temporary_directory "${HOME}/tmp/.vimbackup"

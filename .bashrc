@@ -21,7 +21,7 @@ echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
 # terminal title
 case $TERM in
   xterm*)
-    echo -en "\033]0;${USER}@${LONGHOSTNAME}\007"
+    echo -en "\033]0;${USER}@${HOSTNAME}\007"
     ;;
 esac
 
@@ -61,7 +61,7 @@ export PROMPT_COMMAND_HISTSAVE="history -a"
 function set_title4screen() {
   local p="${WINTITLE}"
   if [ -z "$p" ]; then
-    p="${HOSTNAME}"
+    p="${FORENAME}"
     if [ "${p:-localhost}" = "localhost" ]; then
       p="${SHELL##*/}"
     fi
@@ -105,7 +105,7 @@ function init_prompt() {
   p="$p\[$rend\]"   # set renditions
   p="$p\u"          # user name
   p="$p@"           # @
-  p="$p\$HOSTNAME"  # hostname (instead of \h)
+  p="$p\$FORENAME"  # hostname (instead of \h)
   p="$p:"           # :
   p="$p\w"          # current directory
   p="$p\\$"         # '#' if root, otherwise '$'

@@ -1,5 +1,6 @@
 # .bash_profile
 
+# temporary directories
 function make_temporary_directory() {
   local p="$(readlink -f "$1" 2> /dev/null)"
   if [ ! -e "$p" ]; then
@@ -9,11 +10,8 @@ function make_temporary_directory() {
   fi
 }
 
-# tmp
 make_temporary_directory "${HOME}/tmp"
-# cache
 make_temporary_directory "${HOME}/.cache"
-# vimswap
 make_temporary_directory "${HOME}/tmp/.vimswap"
 
 # local settings

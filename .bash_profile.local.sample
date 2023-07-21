@@ -13,7 +13,5 @@ function make_temporary_directory() {
 make_temporary_directory "${HOME}/tmp"
 # cache
 make_temporary_directory "${HOME}/.cache"
-
-# vimswap/vimbackup
+# vimswap
 make_temporary_directory "${HOME}/tmp/.vimswap"
-make_temporary_directory "${HOME}/tmp/.vimbackup"

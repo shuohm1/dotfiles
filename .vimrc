@@ -71,13 +71,13 @@ set swapfile
 " a list of directories for swap files
 " - a trailing '//' sets a name of a swap file based on its full path
 " - '.' means the same directory with an editing file
-set directory=$HOME/tmp/.vimswap//,$HOME/.vimswap//,.
+set directory=$HOME/tmp/.vimswap//,$HOME/tmp//,.
 " writebackup: make backup files only during writing
 "    nobackup: remove those backup files if success to write
 set nobackup
 set writebackup
 " a list of directories for backup files
-set backupdir=$HOME/tmp/.vimbackup//,$HOME/tmp//,.
+set backupdir=$HOME/tmp//,.
 
 " a setting for the backspace key
 " * see: https://vim-jp.org/vimdoc-ja/options.html#'backspace'

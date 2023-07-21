@@ -1,5 +1,8 @@
 # .aliasrc
 
+# delete all aliases in advance
+unalias -a
+
 # expand aliases with sudo
 # see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "

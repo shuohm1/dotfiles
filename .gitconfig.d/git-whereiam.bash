@@ -25,16 +25,16 @@ elif [[ "${gstatus}" =~ (rebase in progress) ]]; then
   p="\e[30;43m${gbranch}\e[m: rebase in progress"
 elif [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
   # green
-  p="\e[32m${gbranch}\e[m: working tree clean"
+  p="\e[1;32m${gbranch}\e[m: working tree clean"
 elif [[ "${gstatus}" =~ (changes not staged for commit) ]]; then
   # red
-  p="\e[31m${gbranch}\e[m: there are changes not staged for commit"
+  p="\e[1;31m${gbranch}\e[m: there are changes not staged for commit"
 elif [[ "${gstatus}" =~ (changes to be committed) ]]; then
   # yellow
-  p="\e[33m${gbranch}\e[m: there are changes to be committed"
+  p="\e[1;33m${gbranch}\e[m: there are changes to be committed"
 elif [[ "${gstatus}" =~ (untracked files) ]]; then
   # cyan
-  p="\e[36m${gbranch}\e[m: there are untracked files"
+  p="\e[1;36m${gbranch}\e[m: there are untracked files"
 else
   # fg: white, bg: blue
   p="\e[37;44m${gbranch}\e[m"

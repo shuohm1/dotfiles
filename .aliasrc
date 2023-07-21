@@ -1,5 +1,8 @@
 # .aliasrc
 
+# delete all aliases in advance
+unalias -a
+
 # expand aliases with sudo
 # see: https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
@@ -79,7 +82,6 @@ alias gn="git checkout -b"
 alias gk="git commit --verbose"
 function git_diff_helper() { git diff --quiet "$@" || git diff "$@"; }
 alias gd="git_diff_helper"
-alias g@="git_diff_helper --cached"
 alias gf="git fetch"
 opts="--abbrev-commit --all --date-order --graph"
 alias gl="git log ${opts} --stat"
@@ -91,6 +93,7 @@ alias gr="git remote show origin"
 alias gi="git status"
 alias gap="git add --patch"
 alias gco="git checkout"
+alias gdc="git_diff_helper --cached"
 alias gsw="git switch"
 alias gull="git pull --ff-only"
 alias gush="git push"

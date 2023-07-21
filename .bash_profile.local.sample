@@ -3,9 +3,9 @@
 function make_temporary_directory() {
   local p="$(readlink -f "$1" 2> /dev/null)"
   if [ ! -e "$p" ]; then
-    mkdir -m 700 "$p"
+    mkdir -m "a=-st,u=rwx" "$p"
   elif [ -d "$p" ]; then
-    chmod 700 "$p"
+    chmod "a=-st,u=rwx" "$p"
   fi
 }
 

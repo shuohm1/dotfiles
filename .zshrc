@@ -92,9 +92,9 @@ unsetopt share_history
 # key bindings
 bindkey -d  # reset
 bindkey -e  # emacs mode
-bindkey '^U'   backward-kill-line  # <C-u>
-bindkey '^]'   vi-find-next-char   # <C-]>
-bindkey '^[^]' vi-find-prev-char   # <Meta> <C-]>
+bindkey '^U'   backward-kill-line  # Ctrl-U
+bindkey '^]'   vi-find-next-char   # Ctrl-]
+bindkey '^[^]' vi-find-prev-char   # Meta-Ctrl-]
 
 # for screen
 # - WINDOWTITLE: \ekWINDOWTITLE\e\\

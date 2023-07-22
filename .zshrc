@@ -95,6 +95,7 @@ bindkey -e  # emacs mode
 bindkey '^U'   backward-kill-line  # Ctrl-U
 bindkey '^]'   vi-find-next-char   # Ctrl-]
 bindkey '^[^]' vi-find-prev-char   # Meta-Ctrl-]
+bindkey '^[%'  vi-match-bracket    # Meta-Shift-5 (or Meta-%)
 
 # for screen
 # - WINDOWTITLE: \ekWINDOWTITLE\e\\

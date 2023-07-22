@@ -1,7 +1,6 @@
 [core]
 	editor = vim
 	pager = less
-	excludesFile = ~/.gitignore
 [alias]
 	np = !git --no-pager
 	ap = add --patch
@@ -64,4 +63,4 @@
 	pushInsteadOf = git://github.com/
 	pushInsteadOf = https://github.com/
 [include]
-	path = ~/.gitconfig.local
+	path = ./config.local

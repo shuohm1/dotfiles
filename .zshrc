@@ -7,10 +7,17 @@ ZSHRC=${(%):-%N}
 #       (see: man zshmisc)
 
 # show startup message
-RCDATE="$(date +"%Y/%m/%d %H:%M:%S")"
-# note: 1 is bold
-# note: 30-37 are [black, red, green, yellow, blue, magenta, cyan, white]
-echo -e "\e[1;37m${SHELL} started on ${RCDATE}\e[m"
+RCDATE="$(LANG=C date +"%F(%a) %T")"
+RCDATEPOS=$(($(tput cols 2> /dev/null) - ${#RCDATE}))
+# NOTE:
+# - \e[1m: bold
+# - \e[4m: underline
+# - \e[nG: set the cursor position onto the n-th letter (1-origin)
+if [ ${RCDATEPOS} -le $((${#SHELL} + 2)) ]; then
+  echo -e "\e[1m${SHELL}\e[m: \e[1m${RCDATE}\e[m"
+else
+  echo -e "\e[1m${SHELL}\e[m:\e[${RCDATEPOS}G\e[1;4m${RCDATE}\e[m"
+fi
 # terminal title
 case $TERM in
   xterm*)

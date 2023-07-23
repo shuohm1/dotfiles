@@ -2,8 +2,9 @@
 
 # zcompdump
 function() {
-  local dest="$(readlink -f "${HOME}/tmp" 2> /dev/null)"
-  if [[ -d "${dest}" && -w "${dest}" ]]; then
-    export ZCOMPDUMP="${dest}/.zcompdump"
+  local s="${HOME}/tmp"
+  local t="$(readlink -f "$s" 2> /dev/null)"
+  if [[ -d "$t" && -w "$t" ]]; then
+    export ZCOMPDUMP="${s}/.zcompdump"
   fi
 }

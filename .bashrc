@@ -38,7 +38,7 @@ function dispatch_prcmd() {
   # save the last status
   export EXIT_STATUS="$?"
   # run PROMPT_COMMAND_*
-  local f
+  local f=
   for f in ${!PROMPT_COMMAND_*}; do
     eval "${!f}"
   done
@@ -87,7 +87,7 @@ esac
 
 # renditions of the prompt
 function set_psrend() {
-  local pscolor
+  local pscolor=
   if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
     # success: cyan
     pscolor=36
@@ -107,7 +107,7 @@ function init_prompt() {
   # - escape $ symbols to prevent expanding commands and variables
   local rend="\$(echo -en "\${PS_RENDITION:-}")"
 
-  local p=""
+  local p=
   p="$p\[\e[m\]"    # reset renditions
   p="$p\[$rend\]"   # set renditions
   p="$p\u"          # user name

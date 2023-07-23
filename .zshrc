@@ -164,7 +164,7 @@ esac
 setopt prompt_subst
 # prompt
 function() {
-  local p=""
+  local p=
   p="$p%("          # if
   #                 #   %(X.---.---) means if %X then---else---fi
   p="$p?"           #   %?: exit status of the previous command ($?)

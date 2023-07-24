@@ -7,7 +7,7 @@ ZSHRC=${(%):-%N}
 #       (see: man zshmisc)
 
 # show startup message
-RCDATE="$(LANG=C date +"%F(%a) %T")"
+RCDATE="$(LC_ALL=C date +"%F(%a) %T")"
 RCDATEPOS=$(($(tput cols 2> /dev/null) - ${#RCDATE}))
 # NOTE:
 # - \e[1m: bold

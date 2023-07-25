@@ -1,0 +1,66 @@
+[core]
+	editor = vim
+	pager = less
+[alias]
+	np = !git --no-pager
+	ap = add --patch
+	br = branch
+	co = checkout
+	df = diff
+	mg = merge
+	rb = rebase
+	ir = rebase --interactive
+	id = rev-parse HEAD
+	sw = switch
+	egrep = grep -E
+	fgrep = grep -F
+	pgrep = grep -P
+	fast-forward = merge --ff-only
+	irebase = rebase --interactive
+	unstage = reset HEAD --
+	hard-reset = reset --hard
+;	# pseudo commands
+;	# - git branch [options] <branchname>.bak <branchname>
+;	#   NOTE: how to get the last command line argument
+;	#   https://qiita.com/doitnow420@github/items/b449079af841a16170c8
+	backup-branch = !bash -cx 'git branch "${@:1:$#-1}" "${@:$#:1}.bak" "${@:$#:1}"' --
+;	# - delete a remote branch
+;	#   https://tyfkda.github.io/blog/2022/01/23/git-my-alias.html
+	delete-remote-branch = !sh -c '[ -z "$2" ] && ( set -x && git push --delete origin "$1" ) || ( set -x && git push --delete "$@" )' --
+;	# - pre-check for merge conflicts
+;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
+	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' --
+;	# - show brief status in color
+	where-i-am = !bash ~/bin/git-whereiam.bash
+[pager]
+	branch = false
+[commit]
+;	# set `git commit --verbose` as default
+	verbose = true
+[fetch]
+;	# prune deleted remote branches automatically
+;	# cf. `git remote prune origin`
+	prune = true
+[grep]
+	lineNumber = true
+	extendedRegexp = true
+[log]
+	date = format:%F(%a) %T %z
+[merge]
+;	# set `git merge --no-ff` as default
+	ff = false
+[pull]
+;	# set `git pull --ff-only` as default
+	ff = only
+[push]
+;	# set `git push origin HEAD` as default
+	default = current
+[url "https://"]
+;	# use HTTPS
+	insteadOf = git://
+[url "git@github.com:"]
+;	# use SSH
+	pushInsteadOf = git://github.com/
+	pushInsteadOf = https://github.com/
+[include]
+	path = ./config.local

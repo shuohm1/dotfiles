@@ -1,6 +1,1 @@
-*.bak
-*.swp
-*~
-.DS_Store
-Thumbs.db
-~$*
+ignore

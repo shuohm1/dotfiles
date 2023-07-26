@@ -204,6 +204,18 @@ bind -c W_RESIZE W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
 unsetenv _msg_resizeh
 unsetenv _msg_resizew
 
+## 現在のウィンドウの隣にウィンドウを生成
+## cf. https://rcmdnk.com/blog/2013/12/04/computer-screen/
+### 現在のウィンドウ番号を取得
+setenv WINDOWID 0
+setenv a "$q number | grep -m1 -o -E '[0-9]+'"
+setenv a "$s setenv WINDOWID \$($a)"
+bind \# exec sh -c "$a; $s echo 'WINDOWID=\$WINDOWID'"
+### ウィンドウ生成
+bind j  exec sh -c "$a; $s screen '\$WINDOWID'"
+bind ^J exec sh -c "$a; $s screen '\$WINDOWID'"
+unsetenv a
+
 # キーバインド登録用の一時変数を削除
 unsetenv c
 unsetenv s

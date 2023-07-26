@@ -13,6 +13,9 @@ term screen-256color
 escape \233\233
 ## No Zombie: ウィンドウのプロセスが終了したら即座に終了する
 zombie
+## エスケープキー (^[) 後の入力待ち時間を削減
+## cf. https://ymizushi.hateblo.jp/entry/2017/08/27/222932
+maptimeout 10
 
 # 諸機能の停止
 ## シングルユーザーモード

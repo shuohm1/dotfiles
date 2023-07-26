@@ -59,7 +59,7 @@ bind -c resize j eval "command -c resize" "resize -v +1"
 bind -c resize k eval "command -c resize" "resize -v -1"
 
 # スクロールバッファ行数
-defscrollback 4096
+defscrollback 10000
 
 # メッセージをハードステータスに表示する最大/最小秒数
 msgwait 3

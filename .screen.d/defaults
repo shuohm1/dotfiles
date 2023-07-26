@@ -8,11 +8,16 @@ encoding UTF-8
 term screen-256color
 
 # キー設定
+## キーバインドを初期化
+source "${HOME}/.screen.d/resetbind"
 ## エスケープキーを Meta-Ctrl-[ (or Meta-Esc) に設定
 ### 要するに普通は押せないキーに設定する
 escape \233\233
 ## No Zombie: ウィンドウのプロセスが終了したら即座に終了する
 zombie
+## エスケープキー (^[) 後の入力待ち時間を削減
+## cf. https://ymizushi.hateblo.jp/entry/2017/08/27/222932
+maptimeout 10
 
 # 諸機能の停止
 ## シングルユーザーモード
@@ -23,6 +28,7 @@ idle off
 bell_msg ""
 ## ビジュアルベル
 vbell off
+vbell_msg "VISUAL BELL"
 ## 自動デタッチの無効化
 autodetach off
 ## スタートアップメッセージ
@@ -41,5 +47,8 @@ defscrollback 0
 termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 termcapinfo xterm-256color 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 
+# 設定ファイルのスタート地点を設定
+setenv SCREENRC "${HOME}/.screenrc"
+
 # 設定ファイルディレクトリに移動
-chdir ${HOME}/.screen.d/
+chdir "${HOME}/.screen.d"

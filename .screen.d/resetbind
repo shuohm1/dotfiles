@@ -1,0 +1,129 @@
+### .screen.d/resetbind ###
+
+escape ^Aa
+bind ^E
+bind ^J
+bind ^O
+bind ^U
+bind ^Y
+bind ^^
+bind ^_
+bind !
+bind \#
+bind \$
+bind %
+bind &
+bind (
+bind )
+bind +
+bind /
+bind ;
+bind @
+bind E
+bind G
+bind I
+bind J
+bind K
+bind O
+bind P
+bind R
+bind T
+bind U
+bind V
+bind Y
+bind \\
+bind \^
+bind `
+bind e
+bind g
+bind j
+bind o
+bind u
+bind y
+bind ~
+bind ^B  break
+bind b   break
+bind C   clear
+bind :   colon
+bind ^[  copy
+bind [   copy
+bind ^D  detach
+bind d   detach
+bind ^V  digraph
+bind *   displays
+bind .   dumptermcap
+bind F   fit
+bind ^F  flow
+bind f   flow
+bind ^I  focus
+bind h   hardcopy
+bind ?   help
+bind {   history
+bind }   history
+bind i   info
+bind ^K  kill
+bind k   kill
+bind ^M  lastmsg
+bind m   lastmsg
+bind ,   license
+bind ^X  lockscreen
+bind x   lockscreen
+bind H   log
+bind L   login
+bind M   monitor
+bind ^@  next
+bind ^N  next
+bind ' ' next
+bind n   next
+bind N   number
+bind Q   only
+bind ^]  paste .
+bind ]   paste .
+bind B   pow_break
+bind D   pow_detach
+bind ^H  prev
+bind ^P  prev
+bind p   prev
+bind ^?  prev
+bind ^\  quit
+bind <   readbuf
+bind ^L  redisplay
+bind l   redisplay
+bind X   remove
+bind =   removebuf
+bind Z   reset
+bind ^C  screen
+bind c   screen
+bind \'  select
+bind -   select -
+bind 0   select 0
+bind 1   select 1
+bind 2   select 2
+bind 3   select 3
+bind 4   select 4
+bind 5   select 5
+bind 6   select 6
+bind 7   select 7
+bind 8   select 8
+bind 9   select 9
+bind _   silence
+bind S   split
+bind |   split -v
+bind ^Z  suspend
+bind z   suspend
+bind ^T  time
+bind t   time
+bind A   title
+bind ^G  vbell
+bind v   version
+bind W   width
+bind \"  windowlist -b
+bind ^W  windows
+bind w   windows
+bind ^R  wrap
+bind r   wrap
+bind >   writebuf
+bind ^S  xoff
+bind s   xoff
+bind ^Q  xon
+bind q   xon

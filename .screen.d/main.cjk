@@ -1,4 +1,4 @@
 # .screen.d/main.cjk
-source ${HOME}/.screen.d/main
+source "${HOME}/.screen.d/main"
 
 cjkwidth on

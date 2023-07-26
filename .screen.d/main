@@ -35,6 +35,9 @@ bind ^G # vbell
 bind W  # width
 bind r  # wrap
 bind ^R # wrap
+## ウィンドウ番号変更
+bind N colon "number "
+bind @ colon "number "
 ## ウィンドウ生成
 bind c  screen
 bind ^C screen

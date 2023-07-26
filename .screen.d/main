@@ -36,6 +36,7 @@ bind B  # pow_break
 bind D  # pow_detach
 bind ^\ # quit (Ctrl-Backslash)
 bind =  # removebuf
+bind -  # "select -"
 bind ^G # vbell
 bind W  # width
 bind r  # wrap
@@ -65,8 +66,6 @@ bind ) bumpright
 ## 直前に表示していたウィンドウに戻る
 bind o  other
 bind ^O other
-## 番号を指定してウィンドウ選択
-bind - select
 ## ウィンドウ連続移動
 setenv _SCREEN_INITCLS SW_WIN
 setenv _SCREEN_INITMSG "Exit window switching mode"
@@ -108,6 +107,44 @@ bind -c MV_WIN ; eval "$c SW_WIN" "echo '${_msg_switch}'"
 bind -c MV_WIN + eval "$c SW_WIN" "echo '${_msg_switch}'"
 unsetenv _msg_switch
 unsetenv _msg_mvwin
+## 二桁番号のウィンドウ選択
+setenv _SCREEN_INITCLS SELWIN_U
+setenv _SCREEN_INITMSG "Exit window selecting mode"
+source "${HOME}/.screen.d/initclass"
+setenv _SCREEN_INITCLS SELWIN_L
+setenv _SCREEN_INITMSG "Exit window selecting mode"
+source "${HOME}/.screen.d/initclass"
+setenv WINPREFIX 0
+bind - eval "$c SELWIN_U"
+### 十の位
+setenv _msg_selwin '"Window selecting mode: xx"'
+bind -c SELWIN_U 0 eval "$c SELWIN_L" "setenv WINPREFIX 0"
+bind -c SELWIN_U 1 eval "$c SELWIN_L" "setenv WINPREFIX 1"
+bind -c SELWIN_U 2 eval "$c SELWIN_L" "setenv WINPREFIX 2"
+bind -c SELWIN_U 3 eval "$c SELWIN_L" "setenv WINPREFIX 3"
+bind -c SELWIN_U 4 eval "$c SELWIN_L" "setenv WINPREFIX 4"
+bind -c SELWIN_U 5 eval "$c SELWIN_L" "setenv WINPREFIX 5"
+bind -c SELWIN_U 6 eval "$c SELWIN_L" "setenv WINPREFIX 6"
+bind -c SELWIN_U 7 eval "$c SELWIN_L" "setenv WINPREFIX 7"
+bind -c SELWIN_U 8 eval "$c SELWIN_L" "setenv WINPREFIX 8"
+bind -c SELWIN_U 9 eval "$c SELWIN_L" "setenv WINPREFIX 9"
+bind -c SELWIN_U ? eval "$c SELWIN_U" "echo ${_msg_selwin}"
+bind -c SELWIN_U - select
+## 一の位
+setenv _msg_selwin '"Window selecting mode: ${WINPREFIX}x"'
+bind -c SELWIN_L 0 eval 'select ${WINPREFIX}0'
+bind -c SELWIN_L 1 eval 'select ${WINPREFIX}1'
+bind -c SELWIN_L 2 eval 'select ${WINPREFIX}2'
+bind -c SELWIN_L 3 eval 'select ${WINPREFIX}3'
+bind -c SELWIN_L 4 eval 'select ${WINPREFIX}4'
+bind -c SELWIN_L 5 eval 'select ${WINPREFIX}5'
+bind -c SELWIN_L 6 eval 'select ${WINPREFIX}6'
+bind -c SELWIN_L 7 eval 'select ${WINPREFIX}7'
+bind -c SELWIN_L 8 eval 'select ${WINPREFIX}8'
+bind -c SELWIN_L 9 eval 'select ${WINPREFIX}9'
+bind -c SELWIN_L ? eval "$c SELWIN_L" "echo ${_msg_selwin}"
+bind -c SELWIN_L - eval 'colon "select ${WINPREFIX}"'
+unsetenv _msg_selwin
 ## ウィンドウ削除
 bind K kill
 ## 検索時の大文字小文字の区別の切り替え

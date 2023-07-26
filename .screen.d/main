@@ -1,5 +1,5 @@
 ### .screen.d/main ###
-source ${HOME}/.screen.d/defaults
+source "${HOME}/.screen.d/defaults"
 
 # キー設定
 ## エスケープキーを Ctrl-T に設定
@@ -9,57 +9,329 @@ escape ^T^T
 ## 2つめはコマンド再実行キー (e.g.: zombie qr)
 zombie ^[^?
 
+# キーバインド登録用の一時変数
+setenv c "command -c"
+setenv s "screen -X"
+setenv q "screen -Q"
+
 # キーバインド
-## 危険なキーバインドの無効化
+## 危険・不要なキーバインドの無効化
+bind C  # clear
+bind ^V # digraph
+bind .  # dumptermcap
+bind F  # fit
+bind f  # flow
+bind ^F # flow
+bind h  # hardcopy
+bind {  # history
+bind }  # history
 bind k  # kill
 bind ^K # kill
-bind ^\ # quit
+bind x  # lockscreen
+bind ^X # lockscreen
+bind H  # log
+bind L  # login
+bind N  # number
+bind B  # pow_break
+bind D  # pow_detach
+bind ^\ # quit (Ctrl-Backslash)
+bind =  # removebuf
+bind -  # "select -"
+bind ^G # vbell
+bind W  # width
+bind r  # wrap
+bind ^R # wrap
+## ウィンドウ番号変更
+bind N colon "number "
+bind @ colon "number "
 ## ウィンドウ生成
 bind c  screen
 bind ^C screen
+bind j  screen
 bind ^J screen
+bind C  colon "screen "
+bind J  colon "screen "
+## ウィンドウ移動
+bind n   next
+bind ^N  next
+bind ' ' next
+bind ^@  next  # Ctrl-Space
+bind p   prev
+bind ^P  prev
+bind ^H  prev
+bind ^?  prev  # 0x7F
+## ウィンドウ位置の交換
+bind ( bumpleft
+bind ) bumpright
 ## 直前に表示していたウィンドウに戻る
-bind o other
-## 番号を指定してウィンドウ選択
-bind - select
-## リストから指定してウィンドウ選択
-bind \" windowlist -b
+bind o  other
+bind ^O other
 ## ウィンドウ連続移動
-bind @ eval "command -c switch" "echo 'Switch windows'"
-bind -c switch h eval "command -c switch" "prev"
-bind -c switch l eval "command -c switch" "next"
-bind -c switch H eval "command -c switch" "number -1"
-bind -c switch L eval "command -c switch" "number +1"
+setenv _SCREEN_INITCLS SW_WIN
+setenv _SCREEN_INITMSG "Exit window switching mode"
+source "${HOME}/.screen.d/initclass"
+setenv _msg_switch "Switch windows: next/prev"
+bind ; eval "$c SW_WIN" "echo '${_msg_switch}'"
+bind -c SW_WIN n   eval "$c SW_WIN" "next"
+bind -c SW_WIN ^N  eval "$c SW_WIN" "next"
+bind -c SW_WIN ' ' eval "$c SW_WIN" "next"
+bind -c SW_WIN ^@  eval "$c SW_WIN" "next"
+bind -c SW_WIN p   eval "$c SW_WIN" "prev"
+bind -c SW_WIN ^P  eval "$c SW_WIN" "prev"
+bind -c SW_WIN ^H  eval "$c SW_WIN" "prev"
+bind -c SW_WIN ^?  eval "$c SW_WIN" "prev"
+bind -c SW_WIN l   eval "$c SW_WIN" "next"
+bind -c SW_WIN h   eval "$c SW_WIN" "prev"
+## ウィンドウ連続交換
+setenv _SCREEN_INITCLS MV_WIN
+setenv _SCREEN_INITMSG "Exit window moving mode"
+source "${HOME}/.screen.d/initclass"
+setenv _msg_mvwin "Move windows: next/prev"
+bind + eval "$c MV_WIN" "echo '${_msg_mvwin}'"
+bind -c MV_WIN n   eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN ^N  eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN ' ' eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN ^@  eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN p   eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN ^P  eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN ^H  eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN ^?  eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN l   eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN h   eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN (   eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN )   eval "$c MV_WIN" "bumpright"
+## ウィンドウ連続移動/交換モード間の変更
+bind -c SW_WIN ; eval "$c MV_WIN" "echo '${_msg_mvwin}'"
+bind -c SW_WIN + eval "$c MV_WIN" "echo '${_msg_mvwin}'"
+bind -c MV_WIN ; eval "$c SW_WIN" "echo '${_msg_switch}'"
+bind -c MV_WIN + eval "$c SW_WIN" "echo '${_msg_switch}'"
+unsetenv _msg_switch
+unsetenv _msg_mvwin
+## 二桁番号のウィンドウ選択
+setenv _SCREEN_INITCLS SELWIN_U
+setenv _SCREEN_INITMSG "Exit window selecting mode"
+source "${HOME}/.screen.d/initclass"
+setenv _SCREEN_INITCLS SELWIN_L
+setenv _SCREEN_INITMSG "Exit window selecting mode"
+source "${HOME}/.screen.d/initclass"
+setenv WINPREFIX 0
+bind - eval "$c SELWIN_U"
+### 十の位
+setenv _msg_selwin '"Window selecting mode: xx"'
+bind -c SELWIN_U 0 eval "$c SELWIN_L" "setenv WINPREFIX 0"
+bind -c SELWIN_U 1 eval "$c SELWIN_L" "setenv WINPREFIX 1"
+bind -c SELWIN_U 2 eval "$c SELWIN_L" "setenv WINPREFIX 2"
+bind -c SELWIN_U 3 eval "$c SELWIN_L" "setenv WINPREFIX 3"
+bind -c SELWIN_U 4 eval "$c SELWIN_L" "setenv WINPREFIX 4"
+bind -c SELWIN_U 5 eval "$c SELWIN_L" "setenv WINPREFIX 5"
+bind -c SELWIN_U 6 eval "$c SELWIN_L" "setenv WINPREFIX 6"
+bind -c SELWIN_U 7 eval "$c SELWIN_L" "setenv WINPREFIX 7"
+bind -c SELWIN_U 8 eval "$c SELWIN_L" "setenv WINPREFIX 8"
+bind -c SELWIN_U 9 eval "$c SELWIN_L" "setenv WINPREFIX 9"
+bind -c SELWIN_U ? eval "$c SELWIN_U" "echo ${_msg_selwin}"
+bind -c SELWIN_U - select
+## 一の位
+setenv _msg_selwin '"Window selecting mode: ${WINPREFIX}x"'
+bind -c SELWIN_L 0 eval 'select ${WINPREFIX}0'
+bind -c SELWIN_L 1 eval 'select ${WINPREFIX}1'
+bind -c SELWIN_L 2 eval 'select ${WINPREFIX}2'
+bind -c SELWIN_L 3 eval 'select ${WINPREFIX}3'
+bind -c SELWIN_L 4 eval 'select ${WINPREFIX}4'
+bind -c SELWIN_L 5 eval 'select ${WINPREFIX}5'
+bind -c SELWIN_L 6 eval 'select ${WINPREFIX}6'
+bind -c SELWIN_L 7 eval 'select ${WINPREFIX}7'
+bind -c SELWIN_L 8 eval 'select ${WINPREFIX}8'
+bind -c SELWIN_L 9 eval 'select ${WINPREFIX}9'
+bind -c SELWIN_L ? eval "$c SELWIN_L" "echo ${_msg_selwin}"
+bind -c SELWIN_L - eval 'colon "select ${WINPREFIX}"'
+unsetenv _msg_selwin
 ## ウィンドウ削除
-bind K  kill
-bind \\ quit
-## 貼り付け
-bind ]  paste .
-bind ^] paste .
+bind K kill
+## 検索時の大文字小文字の区別の切り替え
+bind I ignorecase
+## コピーモードに入ってウィンドウの最上行へ
+### \015: Carriage Return
+setenv a "$s colon"
+setenv a "$a; $s stuff 'copy\015H'"
+bind / exec sh -c "$a"
+unsetenv a
+## コピーモードに入ると同時に第一マーカーと左端を設定
+### \015: Carriage Return
+### \040: Space
+setenv a "$s colon"
+setenv a "$a; $s stuff 'copy\015\040c'"
+bind { exec sh -c "$a"
+unsetenv a
 ## 文字コード変更
-bind u eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
-bind w eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
-bind e eval "encoding eucJP" "echo 'Set encoding to EUC-JP'"
-bind s eval "encoding SJIS"  "echo 'Set encoding to SHIFT-JIS'"
-bind j eval "encoding jis"   "echo 'Set encoding to JIS'"
+setenv _SCREEN_INITCLS CH_ENC
+setenv _SCREEN_INITMSG "Exit encoding change mode"
+source "${HOME}/.screen.d/initclass"
+setenv _msg_chenc "Change encoding: e/j/s/u"
+bind E eval "$c CH_ENC" "echo '${_msg_chenc}'"
+bind -c CH_ENC e eval "encoding eucJP" "echo 'Set encoding to EUC-JP'"
+bind -c CH_ENC j eval "encoding jis"   "echo 'Set encoding to JIS'"
+bind -c CH_ENC s eval "encoding SJIS"  "echo 'Set encoding to SHIFT-JIS'"
+bind -c CH_ENC u eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
+unsetenv _msg_chenc
 ## リージョン分割
 bind S split
 bind V split -v
+bind | split -v
 bind X remove
+bind O only
 bind Q only
 ## リージョン移動
 bind ^I focus
 bind ^U focus prev
 ## リージョンリサイズ
 bind r resize
-bind R eval "command -c resize" "echo 'Region resizing mode'"
-bind -c resize h eval "command -c resize" "resize -h -1"
-bind -c resize l eval "command -c resize" "resize -h +1"
-bind -c resize j eval "command -c resize" "resize -v +1"
-bind -c resize k eval "command -c resize" "resize -v -1"
+setenv _SCREEN_INITCLS H_RESIZE
+setenv _SCREEN_INITMSG "Exit region resizing mode"
+source "${HOME}/.screen.d/initclass"
+setenv _SCREEN_INITCLS W_RESIZE
+setenv _SCREEN_INITMSG "Exit region resizing mode"
+source "${HOME}/.screen.d/initclass"
+setenv _msg_resizeh "Resize the HEIGHT of the region: +/-"
+bind R eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c H_RESIZE i eval "$c H_RESIZE" "resize -v +1"
+bind -c H_RESIZE d eval "$c H_RESIZE" "resize -v -1"
+bind -c H_RESIZE ; eval "$c H_RESIZE" "resize -v +1"
+bind -c H_RESIZE + eval "$c H_RESIZE" "resize -v +1"
+bind -c H_RESIZE - eval "$c H_RESIZE" "resize -v -1"
+bind -c H_RESIZE = eval "$c H_RESIZE" "resize -v -1"
+setenv _msg_resizew "Resize the WIDTH of the region: +/-"
+bind W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+bind -c W_RESIZE i eval "$c W_RESIZE" "resize -h +1"
+bind -c W_RESIZE d eval "$c W_RESIZE" "resize -h -1"
+bind -c W_RESIZE ; eval "$c W_RESIZE" "resize -h +1"
+bind -c W_RESIZE + eval "$c W_RESIZE" "resize -h +1"
+bind -c W_RESIZE - eval "$c W_RESIZE" "resize -h -1"
+bind -c W_RESIZE = eval "$c W_RESIZE" "resize -h -1"
+## リージョンリサイズモード間の変更
+bind -c H_RESIZE R eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+bind -c H_RESIZE H eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c H_RESIZE W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+bind -c W_RESIZE R eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c W_RESIZE H eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c W_RESIZE W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+unsetenv _msg_resizeh
+unsetenv _msg_resizew
+
+## 現在のウィンドウの隣にウィンドウを生成
+## cf. https://rcmdnk.com/blog/2013/12/04/computer-screen/
+### 現在のウィンドウ番号を取得
+setenv WINDOWID 0
+setenv a "$q number | grep -m1 -o -E '[0-9]+'"
+setenv a "$s setenv WINDOWID \$($a)"
+bind \# exec sh -c "$a; $s echo 'WINDOWID=\$WINDOWID'"
+### ウィンドウ生成
+bind j  exec sh -c "$a; $s screen '\$WINDOWID'"
+bind ^J exec sh -c "$a; $s screen '\$WINDOWID'"
+unsetenv a
+
+# 特殊キー割り当て
+## Up, Down, Right, Left
+bindkey ^[OA stuff ^[OA
+bindkey ^[OB stuff ^[OB
+bindkey ^[OC stuff ^[OC
+bindkey ^[OD stuff ^[OD
+## Ctrl-{Up, Down, Right, Left}
+bindkey ^[[A stuff ^[[A
+bindkey ^[[B stuff ^[[B
+bindkey ^[[C next
+bindkey ^[[D prev
+## Meta-{Up, Down, Right, Left}
+bindkey ^[^[OA stuff ^[p
+bindkey ^[^[OB stuff ^[n
+bindkey ^[^[OC stuff ^[f
+bindkey ^[^[OD stuff ^[b
+## Meta-Ctrl-{Up, Down, Right, Left}
+bindkey ^[^[[A focus up
+bindkey ^[^[[B focus down
+bindkey ^[^[[C focus right
+bindkey ^[^[[D focus left
+## Insert, Delete, Home, End, PageUP, PageDown
+bindkey ^[[2~ echo "<Insert>: No operation"
+bindkey ^[[3~ echo "<Delete>: No operation"
+bindkey ^[[1~ echo "<Home>: No operation"
+bindkey ^[[4~ echo "<End>: No operation"
+bindkey ^[[5~ echo "<PageUp>: No operation"
+bindkey ^[[6~ echo "<PageDown>: No operation"
+## Shift-Tab
+bindkey ^[[Z echo "<Shift>-<Tab>: No operation"
+## Function Keys
+### F1 -- F4
+bindkey ^[[11~ stuff ^[h
+bindkey ^[[OP  stuff ^[h
+bindkey ^[[12~ screen
+bindkey ^[[OQ  screen
+bindkey ^[[13~ prev
+bindkey ^[[OR  prev
+bindkey ^[[14~ next
+bindkey ^[[OS  next
+### F5 -- F8
+setenv f7 "$s colon"
+setenv f7 "$f7; $s stuff 'copy\015H\040L\$\040'"
+setenv f7 "$f7; $s writebuf"
+bindkey ^[[15~ eval "source '${SCREENRC}'" "echo 'Reload: ${SCREENRC}'"
+bindkey ^[[17~ detach
+bindkey ^[[18~ exec sh -c "$f7"
+bindkey ^[[19~ colon "number "
+unsetenv f7
+### F9 -- F12
+bindkey ^[[20~ echo "<F9>: No operation"
+bindkey ^[[21~ echo "<F10>: No operation"
+bindkey ^[[23~ stuff ^[?        # F11 is the same as Shift-F1
+bindkey ^[[24~ colon "screen "  # F12 is the same as Shift-F2
+### Shift-{F3, F4}
+bindkey ^[[25~ bumpleft
+bindkey ^[[26~ bumpright
+### Shift-{F5 -- F8}
+setenv f7 "$s colon"
+setenv f7 "$f7; $s stuff 'copy\015g\040G\$\040'"
+setenv f7 "$f7; $s writebuf"
+bindkey ^[[28~ echo "<Shift>-<F5>: No operation"
+bindkey ^[[29~ echo "<Shift>-<F6>: No operation"
+bindkey ^[[31~ exec sh -c "$f7"
+bindkey ^[[32~ title
+unsetenv f7
+### Shift-{F9, F10}
+bindkey ^[[33~ echo "<Shift>-<F9>: No operation"
+bindkey ^[[34~ echo "<Shift>-<F10>: No operation"
+### Meta-{F1 -- F12}
+bindkey ^[^[[11~ echo "<Meta>-<F1>: No operation"
+bindkey ^[^[[OP  echo "<Meta>-<F1>: No operation"
+bindkey ^[^[[12~ echo "<Meta>-<F2>: No operation"
+bindkey ^[^[[OQ  echo "<Meta>-<F2>: No operation"
+bindkey ^[^[[13~ echo "<Meta>-<F3>: No operation"
+bindkey ^[^[[OR  echo "<Meta>-<F3>: No operation"
+bindkey ^[^[[14~ echo "WARNING: Alt-F4"
+bindkey ^[^[[OS  echo "WARNING: Alt-F4"
+bindkey ^[^[[15~ echo "<Meta>-<F5>: No operation"
+bindkey ^[^[[17~ echo "<Meta>-<F6>: No operation"
+bindkey ^[^[[18~ echo "<Meta>-<F7>: No operation"
+bindkey ^[^[[19~ echo "<Meta>-<F8>: No operation"
+bindkey ^[^[[20~ echo "<Meta>-<F9>: No operation"
+bindkey ^[^[[21~ echo "<Meta>-<F10>: No operation"
+bindkey ^[^[[23~ echo "<Meta>-<F11>: No operation"
+bindkey ^[^[[24~ echo "<Meta>-<F12>: No operation"
+### Meta-Shift-{F3 -- F10}
+bindkey ^[^[[25~ echo "<Meta>-<Shift>-<F3>: No operation"
+bindkey ^[^[[26~ echo "WARNING: Alt-F4"
+bindkey ^[^[[28~ echo "<Meta>-<Shift>-<F5>: No operation"
+bindkey ^[^[[29~ echo "<Meta>-<Shift>-<F6>: No operation"
+bindkey ^[^[[31~ echo "<Meta>-<Shift>-<F7>: No operation"
+bindkey ^[^[[32~ echo "<Meta>-<Shift>-<F8>: No operation"
+bindkey ^[^[[33~ echo "<Meta>-<Shift>-<F9>: No operation"
+bindkey ^[^[[34~ echo "<Meta>-<Shift>-<F10>: No operation"
+
+# キーバインド登録用の一時変数を削除
+unsetenv c
+unsetenv s
+unsetenv q
 
 # スクロールバッファ行数
-defscrollback 4096
+defscrollback 10000
 
 # メッセージをハードステータスに表示する最大/最小秒数
 msgwait 3
@@ -90,7 +362,7 @@ setenv a "$a%+Lw"     # 現在のウィンドウより右のウィンドウ一�
 setenv a "$a%-027="   # 右端から27文字目の直前までパディング
 #                     # - 同時に切り詰め区間の右端を設定したことにもなる
 setenv a "$a ["       # " ["
-setenv a "$a%Y/%m/%d" # 日付 YYYY/MM/DD
+setenv a "$a%Y-%m-%d" # 日付 YYYY-MM-DD
 setenv a "$a("        # "("
 setenv a "$a%1`"      # backtick: 曜日名略称 (ロケール非依存)
 setenv a "$a) "       # ") "
@@ -135,11 +407,11 @@ setenv a "$a "       #   space
 setenv a "$a%h"      #   ウィンドウから発せられたハードステータス
 #                    #   - echo -e "\e_メッセージ\e\\" で出力可能
 setenv a "$a%?"      # fi
-setenv a "$a%-19="   # 右端から19文字目の直前までパディング
+setenv a "$a%-16="   # 右端から19文字目の直前までパディング
 #                    # - 同時に切り詰め区間の右端を設定
-setenv a "$a%?%P"    # if copy/paste-mode then
+setenv a "$a%?%P"    # if copy/history-mode then
 setenv a "$a%{= BW}" #   背景色 bright Blue, 前景色 bright White
-setenv a "$a *Copy/Paste Mode* "
+setenv a "$a *Copy/History* "
 setenv a "$a%:"      # else
 setenv a "$a%-0="    #   右端までパディング
 setenv a "$a%?"      # fi
@@ -162,5 +434,13 @@ autodetach on
 # ログイン情報を utmp に吐かない
 deflogin off
 
+# 画面交換ファイル
+setenv SCREENBUF "${SCREENDIR}/screen-exchange"
+bufferfile "${SCREENBUF}"
+# ハードコピー保存用ディレクトリ
+hardcopydir "${SCREENDIR}"
+# ログファイル
+logfile "${SCREENDIR}/screenlog.%n"
+
 # ホームディレクトリに移動
-chdir $HOME
+chdir "$HOME"

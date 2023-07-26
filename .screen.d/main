@@ -59,8 +59,7 @@ bind -c switch l eval "command -c switch" "next"
 bind -c switch H eval "command -c switch" "number -1"
 bind -c switch L eval "command -c switch" "number +1"
 ## ウィンドウ削除
-bind K  kill
-bind \\ quit
+bind K kill
 ## 貼り付け
 bind ]  paste .
 bind ^] paste .

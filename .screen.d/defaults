@@ -8,6 +8,8 @@ encoding UTF-8
 term screen-256color
 
 # キー設定
+## キーバインドを初期化
+source "${HOME}/.screen.d/resetbind"
 ## エスケープキーを Meta-Ctrl-[ (or Meta-Esc) に設定
 ### 要するに普通は押せないキーに設定する
 escape \233\233

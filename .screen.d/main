@@ -75,7 +75,9 @@ bind j eval "encoding jis"   "echo 'Set encoding to JIS'"
 ## リージョン分割
 bind S split
 bind V split -v
+bind | split -v
 bind X remove
+bind O only
 bind Q only
 ## リージョン移動
 bind ^I focus

@@ -229,6 +229,28 @@ bind j  exec sh -c "$a; $s screen '\$WINDOWID'"
 bind ^J exec sh -c "$a; $s screen '\$WINDOWID'"
 unsetenv a
 
+# 特殊キー割り当て
+## Up, Down, Right, Left
+bindkey ^[OA stuff ^[OA
+bindkey ^[OB stuff ^[OB
+bindkey ^[OC stuff ^[OC
+bindkey ^[OD stuff ^[OD
+## Ctrl-{Up, Down, Right, Left}
+bindkey ^[[A stuff ^[[A
+bindkey ^[[B stuff ^[[B
+bindkey ^[[C next
+bindkey ^[[D prev
+## Meta-{Up, Down, Right, Left}
+bindkey ^[^[OA stuff ^[p
+bindkey ^[^[OB stuff ^[n
+bindkey ^[^[OC stuff ^[f
+bindkey ^[^[OD stuff ^[b
+## Meta-Ctrl-{Up, Down, Right, Left}
+bindkey ^[^[[A focus up
+bindkey ^[^[[B focus down
+bindkey ^[^[[C focus right
+bindkey ^[^[[D focus left
+
 # キーバインド登録用の一時変数を削除
 unsetenv c
 unsetenv s

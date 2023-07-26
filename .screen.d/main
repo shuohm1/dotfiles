@@ -149,6 +149,12 @@ unsetenv _msg_selwin
 bind K kill
 ## 検索時の大文字小文字の区別の切り替え
 bind I ignorecase
+## コピーモードに入ってウィンドウの最上行へ
+### \015: Carriage Return
+setenv a "$s colon"
+setenv a "$a; $s stuff 'copy\015H'"
+bind / exec sh -c "$a"
+unsetenv a
 ## 文字コード変更
 setenv _SCREEN_INITCLS CH_ENC
 setenv _SCREEN_INITMSG "Exit encoding change mode"

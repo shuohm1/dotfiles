@@ -10,10 +10,31 @@ escape ^T^T
 zombie ^[^?
 
 # キーバインド
-## 危険なキーバインドの無効化
+## 危険・不要なキーバインドの無効化
+bind C  # clear
+bind ^V # digraph
+bind .  # dumptermcap
+bind F  # fit
+bind f  # flow
+bind ^F # flow
+bind h  # hardcopy
+bind {  # history
+bind }  # history
 bind k  # kill
 bind ^K # kill
-bind ^\ # quit
+bind x  # lockscreen
+bind ^X # lockscreen
+bind H  # log
+bind L  # login
+bind N  # number
+bind B  # pow_break
+bind D  # pow_detach
+bind ^\ # quit (Ctrl-Backslash)
+bind =  # removebuf
+bind ^G # vbell
+bind W  # width
+bind r  # wrap
+bind ^R # wrap
 ## ウィンドウ生成
 bind c  screen
 bind ^C screen

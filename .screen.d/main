@@ -9,6 +9,11 @@ escape ^T^T
 ## 2つめはコマンド再実行キー (e.g.: zombie qr)
 zombie ^[^?
 
+# キーバインド登録用の一時変数
+setenv c "command -c"
+setenv s "screen -X"
+setenv q "screen -Q"
+
 # キーバインド
 ## 危険・不要なキーバインドの無効化
 bind C  # clear
@@ -95,6 +100,11 @@ bind -c resize h eval "command -c resize" "resize -h -1"
 bind -c resize l eval "command -c resize" "resize -h +1"
 bind -c resize j eval "command -c resize" "resize -v +1"
 bind -c resize k eval "command -c resize" "resize -v -1"
+
+# キーバインド登録用の一時変数を削除
+unsetenv c
+unsetenv s
+unsetenv q
 
 # スクロールバッファ行数
 defscrollback 10000

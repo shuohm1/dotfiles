@@ -62,8 +62,6 @@ bind o  other
 bind ^O other
 ## 番号を指定してウィンドウ選択
 bind - select
-## リストから指定してウィンドウ選択
-bind \" windowlist -b
 ## ウィンドウ連続移動
 bind @ eval "command -c switch" "echo 'Switch windows'"
 bind -c switch h eval "command -c switch" "prev"
@@ -72,9 +70,6 @@ bind -c switch H eval "command -c switch" "number -1"
 bind -c switch L eval "command -c switch" "number +1"
 ## ウィンドウ削除
 bind K kill
-## 貼り付け
-bind ]  paste .
-bind ^] paste .
 ## 検索時の大文字小文字の区別の切り替え
 bind I ignorecase
 ## 文字コード変更

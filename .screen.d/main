@@ -64,6 +64,8 @@ bind \\ quit
 ## 貼り付け
 bind ]  paste .
 bind ^] paste .
+## 検索時の大文字小文字の区別の切り替え
+bind I ignorecase
 ## 文字コード変更
 bind u eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
 bind w eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"

@@ -135,11 +135,11 @@ setenv a "$a "       #   space
 setenv a "$a%h"      #   ウィンドウから発せられたハードステータス
 #                    #   - echo -e "\e_メッセージ\e\\" で出力可能
 setenv a "$a%?"      # fi
-setenv a "$a%-19="   # 右端から19文字目の直前までパディング
+setenv a "$a%-16="   # 右端から19文字目の直前までパディング
 #                    # - 同時に切り詰め区間の右端を設定
-setenv a "$a%?%P"    # if copy/paste-mode then
+setenv a "$a%?%P"    # if copy/history-mode then
 setenv a "$a%{= BW}" #   背景色 bright Blue, 前景色 bright White
-setenv a "$a *Copy/Paste Mode* "
+setenv a "$a *Copy/History* "
 setenv a "$a%:"      # else
 setenv a "$a%-0="    #   右端までパディング
 setenv a "$a%?"      # fi

@@ -54,6 +54,9 @@ bind p   prev
 bind ^P  prev
 bind ^H  prev
 bind ^?  prev  # 0x7F
+## ウィンドウ位置の交換
+bind ( bumpleft
+bind ) bumpright
 ## 直前に表示していたウィンドウに戻る
 bind o  other
 bind ^O other

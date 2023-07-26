@@ -1,5 +1,5 @@
 ### .screen.d/main ###
-source ${HOME}/.screen.d/defaults
+source "${HOME}/.screen.d/defaults"
 
 # キー設定
 ## エスケープキーを Ctrl-T に設定
@@ -163,4 +163,4 @@ autodetach on
 deflogin off
 
 # ホームディレクトリに移動
-chdir $HOME
+chdir "$HOME"

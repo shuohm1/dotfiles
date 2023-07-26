@@ -250,6 +250,15 @@ bindkey ^[^[[A focus up
 bindkey ^[^[[B focus down
 bindkey ^[^[[C focus right
 bindkey ^[^[[D focus left
+## Insert, Delete, Home, End, PageUP, PageDown
+bindkey ^[[2~ echo "<Insert>: No operation"
+bindkey ^[[3~ echo "<Delete>: No operation"
+bindkey ^[[1~ echo "<Home>: No operation"
+bindkey ^[[4~ echo "<End>: No operation"
+bindkey ^[[5~ echo "<PageUp>: No operation"
+bindkey ^[[6~ echo "<PageDown>: No operation"
+## Shift-Tab
+bindkey ^[[Z echo "<Shift>-<Tab>: No operation"
 ## Function Keys
 ### F1 -- F4
 bindkey ^[[11~ stuff ^[h

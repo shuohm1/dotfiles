@@ -38,6 +38,7 @@ bind ^R # wrap
 ## ウィンドウ生成
 bind c  screen
 bind ^C screen
+bind j  screen
 bind ^J screen
 ## 直前に表示していたウィンドウに戻る
 bind o other

@@ -68,11 +68,46 @@ bind ^O other
 ## 番号を指定してウィンドウ選択
 bind - select
 ## ウィンドウ連続移動
-bind @ eval "command -c switch" "echo 'Switch windows'"
-bind -c switch h eval "command -c switch" "prev"
-bind -c switch l eval "command -c switch" "next"
-bind -c switch H eval "command -c switch" "number -1"
-bind -c switch L eval "command -c switch" "number +1"
+setenv _SCREEN_INITCLS SW_WIN
+setenv _SCREEN_INITMSG "Exit window switching mode"
+source "${HOME}/.screen.d/initclass"
+setenv _msg_switch "Switch windows: next/prev"
+bind ; eval "$c SW_WIN" "echo '${_msg_switch}'"
+bind -c SW_WIN n   eval "$c SW_WIN" "next"
+bind -c SW_WIN ^N  eval "$c SW_WIN" "next"
+bind -c SW_WIN ' ' eval "$c SW_WIN" "next"
+bind -c SW_WIN ^@  eval "$c SW_WIN" "next"
+bind -c SW_WIN p   eval "$c SW_WIN" "prev"
+bind -c SW_WIN ^P  eval "$c SW_WIN" "prev"
+bind -c SW_WIN ^H  eval "$c SW_WIN" "prev"
+bind -c SW_WIN ^?  eval "$c SW_WIN" "prev"
+bind -c SW_WIN l   eval "$c SW_WIN" "next"
+bind -c SW_WIN h   eval "$c SW_WIN" "prev"
+## ウィンドウ連続交換
+setenv _SCREEN_INITCLS MV_WIN
+setenv _SCREEN_INITMSG "Exit window moving mode"
+source "${HOME}/.screen.d/initclass"
+setenv _msg_mvwin "Move windows: next/prev"
+bind + eval "$c MV_WIN" "echo '${_msg_mvwin}'"
+bind -c MV_WIN n   eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN ^N  eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN ' ' eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN ^@  eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN p   eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN ^P  eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN ^H  eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN ^?  eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN l   eval "$c MV_WIN" "bumpright"
+bind -c MV_WIN h   eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN (   eval "$c MV_WIN" "bumpleft"
+bind -c MV_WIN )   eval "$c MV_WIN" "bumpright"
+## ウィンドウ連続移動/交換モード間の変更
+bind -c SW_WIN ; eval "$c MV_WIN" "echo '${_msg_mvwin}'"
+bind -c SW_WIN + eval "$c MV_WIN" "echo '${_msg_mvwin}'"
+bind -c MV_WIN ; eval "$c SW_WIN" "echo '${_msg_switch}'"
+bind -c MV_WIN + eval "$c SW_WIN" "echo '${_msg_switch}'"
+unsetenv _msg_switch
+unsetenv _msg_mvwin
 ## ウィンドウ削除
 bind K kill
 ## 検索時の大文字小文字の区別の切り替え

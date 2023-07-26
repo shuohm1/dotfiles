@@ -155,6 +155,13 @@ setenv a "$s colon"
 setenv a "$a; $s stuff 'copy\015H'"
 bind / exec sh -c "$a"
 unsetenv a
+## コピーモードに入ると同時に第一マーカーと左端を設定
+### \015: Carriage Return
+### \040: Space
+setenv a "$s colon"
+setenv a "$a; $s stuff 'copy\015\040c'"
+bind { exec sh -c "$a"
+unsetenv a
 ## 文字コード変更
 setenv _SCREEN_INITCLS CH_ENC
 setenv _SCREEN_INITMSG "Exit encoding change mode"

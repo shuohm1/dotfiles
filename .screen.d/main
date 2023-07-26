@@ -40,6 +40,8 @@ bind c  screen
 bind ^C screen
 bind j  screen
 bind ^J screen
+bind C  colon "screen "
+bind J  colon "screen "
 ## 直前に表示していたウィンドウに戻る
 bind o other
 ## 番号を指定してウィンドウ選択

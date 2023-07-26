@@ -250,6 +250,71 @@ bindkey ^[^[[A focus up
 bindkey ^[^[[B focus down
 bindkey ^[^[[C focus right
 bindkey ^[^[[D focus left
+## Function Keys
+### F1 -- F4
+bindkey ^[[11~ stuff ^[h
+bindkey ^[[OP  stuff ^[h
+bindkey ^[[12~ screen
+bindkey ^[[OQ  screen
+bindkey ^[[13~ prev
+bindkey ^[[OR  prev
+bindkey ^[[14~ next
+bindkey ^[[OS  next
+### F5 -- F8
+setenv f7 "$s colon"
+setenv f7 "$f7; $s stuff 'copy\015H\040L\$\040'"
+setenv f7 "$f7; $s writebuf"
+bindkey ^[[15~ eval "source '${SCREENRC}'" "echo 'Reload: ${SCREENRC}'"
+bindkey ^[[17~ detach
+bindkey ^[[18~ exec sh -c "$f7"
+bindkey ^[[19~ colon "number "
+unsetenv f7
+### F9 -- F12
+bindkey ^[[20~ echo "<F9>: No operation"
+bindkey ^[[21~ echo "<F10>: No operation"
+bindkey ^[[23~ stuff ^[?        # F11 is the same as Shift-F1
+bindkey ^[[24~ colon "screen "  # F12 is the same as Shift-F2
+### Shift-{F3, F4}
+bindkey ^[[25~ bumpleft
+bindkey ^[[26~ bumpright
+### Shift-{F5 -- F8}
+setenv f7 "$s colon"
+setenv f7 "$f7; $s stuff 'copy\015g\040G\$\040'"
+setenv f7 "$f7; $s writebuf"
+bindkey ^[[28~ echo "<Shift>-<F5>: No operation"
+bindkey ^[[29~ echo "<Shift>-<F6>: No operation"
+bindkey ^[[31~ exec sh -c "$f7"
+bindkey ^[[32~ title
+unsetenv f7
+### Shift-{F9, F10}
+bindkey ^[[33~ echo "<Shift>-<F9>: No operation"
+bindkey ^[[34~ echo "<Shift>-<F10>: No operation"
+### Meta-{F1 -- F12}
+bindkey ^[^[[11~ echo "<Meta>-<F1>: No operation"
+bindkey ^[^[[OP  echo "<Meta>-<F1>: No operation"
+bindkey ^[^[[12~ echo "<Meta>-<F2>: No operation"
+bindkey ^[^[[OQ  echo "<Meta>-<F2>: No operation"
+bindkey ^[^[[13~ echo "<Meta>-<F3>: No operation"
+bindkey ^[^[[OR  echo "<Meta>-<F3>: No operation"
+bindkey ^[^[[14~ echo "WARNING: Alt-F4"
+bindkey ^[^[[OS  echo "WARNING: Alt-F4"
+bindkey ^[^[[15~ echo "<Meta>-<F5>: No operation"
+bindkey ^[^[[17~ echo "<Meta>-<F6>: No operation"
+bindkey ^[^[[18~ echo "<Meta>-<F7>: No operation"
+bindkey ^[^[[19~ echo "<Meta>-<F8>: No operation"
+bindkey ^[^[[20~ echo "<Meta>-<F9>: No operation"
+bindkey ^[^[[21~ echo "<Meta>-<F10>: No operation"
+bindkey ^[^[[23~ echo "<Meta>-<F11>: No operation"
+bindkey ^[^[[24~ echo "<Meta>-<F12>: No operation"
+### Meta-Shift-{F3 -- F10}
+bindkey ^[^[[25~ echo "<Meta>-<Shift>-<F3>: No operation"
+bindkey ^[^[[26~ echo "WARNING: Alt-F4"
+bindkey ^[^[[28~ echo "<Meta>-<Shift>-<F5>: No operation"
+bindkey ^[^[[29~ echo "<Meta>-<Shift>-<F6>: No operation"
+bindkey ^[^[[31~ echo "<Meta>-<Shift>-<F7>: No operation"
+bindkey ^[^[[32~ echo "<Meta>-<Shift>-<F8>: No operation"
+bindkey ^[^[[33~ echo "<Meta>-<Shift>-<F9>: No operation"
+bindkey ^[^[[34~ echo "<Meta>-<Shift>-<F10>: No operation"
 
 # キーバインド登録用の一時変数を削除
 unsetenv c

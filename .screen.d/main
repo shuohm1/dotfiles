@@ -172,11 +172,37 @@ bind ^I focus
 bind ^U focus prev
 ## リージョンリサイズ
 bind r resize
-bind R eval "command -c resize" "echo 'Region resizing mode'"
-bind -c resize h eval "command -c resize" "resize -h -1"
-bind -c resize l eval "command -c resize" "resize -h +1"
-bind -c resize j eval "command -c resize" "resize -v +1"
-bind -c resize k eval "command -c resize" "resize -v -1"
+setenv _SCREEN_INITCLS H_RESIZE
+setenv _SCREEN_INITMSG "Exit region resizing mode"
+source "${HOME}/.screen.d/initclass"
+setenv _SCREEN_INITCLS W_RESIZE
+setenv _SCREEN_INITMSG "Exit region resizing mode"
+source "${HOME}/.screen.d/initclass"
+setenv _msg_resizeh "Resize the HEIGHT of the region: +/-"
+bind R eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c H_RESIZE i eval "$c H_RESIZE" "resize -v +1"
+bind -c H_RESIZE d eval "$c H_RESIZE" "resize -v -1"
+bind -c H_RESIZE ; eval "$c H_RESIZE" "resize -v +1"
+bind -c H_RESIZE + eval "$c H_RESIZE" "resize -v +1"
+bind -c H_RESIZE - eval "$c H_RESIZE" "resize -v -1"
+bind -c H_RESIZE = eval "$c H_RESIZE" "resize -v -1"
+setenv _msg_resizew "Resize the WIDTH of the region: +/-"
+bind W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+bind -c W_RESIZE i eval "$c W_RESIZE" "resize -h +1"
+bind -c W_RESIZE d eval "$c W_RESIZE" "resize -h -1"
+bind -c W_RESIZE ; eval "$c W_RESIZE" "resize -h +1"
+bind -c W_RESIZE + eval "$c W_RESIZE" "resize -h +1"
+bind -c W_RESIZE - eval "$c W_RESIZE" "resize -h -1"
+bind -c W_RESIZE = eval "$c W_RESIZE" "resize -h -1"
+## リージョンリサイズモード間の変更
+bind -c H_RESIZE R eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+bind -c H_RESIZE H eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c H_RESIZE W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+bind -c W_RESIZE R eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c W_RESIZE H eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
+bind -c W_RESIZE W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
+unsetenv _msg_resizeh
+unsetenv _msg_resizew
 
 # キーバインド登録用の一時変数を削除
 unsetenv c

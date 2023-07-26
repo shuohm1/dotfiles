@@ -434,5 +434,13 @@ autodetach on
 # ログイン情報を utmp に吐かない
 deflogin off
 
+# 画面交換ファイル
+setenv SCREENBUF "${SCREENDIR}/screen-exchange"
+bufferfile "${SCREENBUF}"
+# ハードコピー保存用ディレクトリ
+hardcopydir "${SCREENDIR}"
+# ログファイル
+logfile "${SCREENDIR}/screenlog.%n"
+
 # ホームディレクトリに移動
 chdir "$HOME"

@@ -26,6 +26,7 @@ idle off
 bell_msg ""
 ## ビジュアルベル
 vbell off
+vbell_msg "VISUAL BELL"
 ## 自動デタッチの無効化
 autodetach off
 ## スタートアップメッセージ

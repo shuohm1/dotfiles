@@ -45,6 +45,15 @@ bind j  screen
 bind ^J screen
 bind C  colon "screen "
 bind J  colon "screen "
+## ウィンドウ移動
+bind n   next
+bind ^N  next
+bind ' ' next
+bind ^@  next  # Ctrl-Space
+bind p   prev
+bind ^P  prev
+bind ^H  prev
+bind ^?  prev  # 0x7F
 ## 直前に表示していたウィンドウに戻る
 bind o  other
 bind ^O other

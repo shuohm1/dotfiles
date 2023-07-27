@@ -221,7 +221,8 @@ unsetenv _msg_resizew
 ## cf. https://rcmdnk.com/blog/2013/12/04/computer-screen/
 ### 現在のウィンドウ番号を取得
 setenv WINDOWID 0
-setenv a "$q number | grep -m1 -o -E '[0-9]+'"
+setenv a "$q number | tr -c -s '0-9' ' '"
+setenv a "echo \$($a) | cut -d ' ' -f1"
 setenv a "$s setenv WINDOWID \$($a)"
 bind \# exec sh -c "$a; $s echo 'WINDOWID=\$WINDOWID'"
 ### ウィンドウ生成

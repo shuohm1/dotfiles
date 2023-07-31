@@ -14,32 +14,32 @@ source "${HOME}/.screen.d/resetbind"
 escape \233\233
 
 # initialize several functions
-# - no zombie: remove a window as soon as a process in it has exited
-zombie
+# - disable automatic detaching by a hang-up signal
+autodetach off
+# - discard outputs which have not been written to the terminal yet
+#   when screen gets a clearing sequence
+autonuke on
+# - no bell message
+bell_msg ""
+# - do not write logging-in status to utmp
+deflogin off
+# - no scroll back
+defscrollback 0
+# - no idle command
+idle off
 # - reduce a timeout from 300ms (default) after the escape character
 #   (^[, note that it is not a prefix key of screen) is input
 #   cf. https://ymizushi.hateblo.jp/entry/2017/08/27/222932
 maptimeout 10
 # - single user mode
 multiuser off
-# - no idle command
-idle off
-# - no bell message
-bell_msg ""
+# - no start-up message
+startup_message off
 # - no visual bell
 vbell off
 vbell_msg "VISUAL BELL"
-# - disable automatic detaching by a hang-up signal
-autodetach off
-# - no start-up message
-startup_message off
-# - do not write logging-in status to utmp
-deflogin off
-# - discard outputs which have not been written to the terminal yet
-#   when screen gets a clearing sequence
-autonuke on
-# - no scroll back
-defscrollback 0
+# - no zombie: remove a window as soon as a process in it has exited
+zombie
 
 # - do not resize the window (of the terminal application)
 #   cf. /etc/screenrc

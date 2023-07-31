@@ -127,6 +127,14 @@ nnoremap <Space>O :<C-u>for i in range(v:count1) <bar> call append(line('.')-1, 
 nnoremap ZZ <Nop>
 " - exit without saving
 nnoremap ZQ <Nop>
+" for command line mode
+cnoremap <C-a> <Home>
+cnoremap <C-b> <Left>
+cnoremap <C-d> <Del>
+cnoremap <C-e> <End>
+cnoremap <C-f> <Right>
+cnoremap <C-n> <Down>
+cnoremap <C-p> <Up>
 
 " disable format options
 set formatoptions=

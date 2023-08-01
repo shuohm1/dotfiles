@@ -1,57 +1,54 @@
-### .screen.d/main ###
+# .screen.d/main
 source "${HOME}/.screen.d/defaults"
 
-# キー設定
-## エスケープキーを Ctrl-T に設定
+# set a prefix key, and a meta key to send the prefix character itself
 escape ^T^T
-## プロセスが終了したウィンドウを明示的に閉じるキーを設定
-## デフォルトではキーを押さなくてもウィンドウは閉じる
-## 2つめはコマンド再実行キー (e.g.: zombie qr)
+# set keys to kill/revive zombies
 zombie ^[^?
 
-# キーバインド登録用の一時変数
+# temporary variables to configure key bindings
 setenv c "command -c"
 setenv s "screen -X"
 setenv q "screen -Q"
 
-# キーバインド
-## 危険・不要なキーバインドの無効化
-bind C  # clear
-bind ^V # digraph
-bind .  # dumptermcap
-bind F  # fit
-bind f  # flow
-bind ^F # flow
-bind h  # hardcopy
-bind {  # history
-bind }  # history
-bind k  # kill
-bind ^K # kill
-bind x  # lockscreen
-bind ^X # lockscreen
-bind H  # log
-bind L  # login
-bind N  # number
-bind B  # pow_break
-bind D  # pow_detach
-bind ^\ # quit (Ctrl-Backslash)
-bind =  # removebuf
-bind -  # "select -"
-bind ^G # vbell
-bind W  # width
-bind r  # wrap
-bind ^R # wrap
-## ウィンドウ番号変更
+# key bindings
+# - disable dangerous/unnecessary key bindings
+bind C   # clear
+bind ^V  # digraph
+bind .   # dumptermcap
+bind F   # fit
+bind f   # flow
+bind ^F  # flow
+bind h   # hardcopy
+bind {   # history
+bind }   # history
+bind k   # kill
+bind ^K  # kill
+bind x   # lockscreen
+bind ^X  # lockscreen
+bind H   # log
+bind L   # login
+bind N   # number
+bind B   # pow_break
+bind D   # pow_detach
+bind ^\  # quit (Ctrl-Backslash)
+bind =   # removebuf
+bind -   # "select -"
+bind ^G  # vbell
+bind W   # width
+bind r   # wrap
+bind ^R  # wrap
+# - to change a window ID
 bind N colon "number "
 bind @ colon "number "
-## ウィンドウ生成
+# - to create a new window
 bind c  screen
 bind ^C screen
 bind j  screen
 bind ^J screen
 bind C  colon "screen "
 bind J  colon "screen "
-## ウィンドウ移動
+# - to switch windows
 bind n   next
 bind ^N  next
 bind ' ' next
@@ -60,13 +57,13 @@ bind p   prev
 bind ^P  prev
 bind ^H  prev
 bind ^?  prev  # 0x7F
-## ウィンドウ位置の交換
+# - to swap windows
 bind ( bumpleft
 bind ) bumpright
-## 直前に表示していたウィンドウに戻る
+# - to go back to the window just before selected
 bind o  other
 bind ^O other
-## ウィンドウ連続移動
+# - to switch windows continuously
 setenv _SCREEN_INITCLS SW_WIN
 setenv _SCREEN_INITMSG "Exit window switching mode"
 source "${HOME}/.screen.d/initclass"
@@ -82,7 +79,7 @@ bind -c SW_WIN ^H  eval "$c SW_WIN" "prev"
 bind -c SW_WIN ^?  eval "$c SW_WIN" "prev"
 bind -c SW_WIN l   eval "$c SW_WIN" "next"
 bind -c SW_WIN h   eval "$c SW_WIN" "prev"
-## ウィンドウ連続交換
+# - to swap windows continuously
 setenv _SCREEN_INITCLS MV_WIN
 setenv _SCREEN_INITMSG "Exit window moving mode"
 source "${HOME}/.screen.d/initclass"
@@ -100,14 +97,14 @@ bind -c MV_WIN l   eval "$c MV_WIN" "bumpright"
 bind -c MV_WIN h   eval "$c MV_WIN" "bumpleft"
 bind -c MV_WIN (   eval "$c MV_WIN" "bumpleft"
 bind -c MV_WIN )   eval "$c MV_WIN" "bumpright"
-## ウィンドウ連続移動/交換モード間の変更
+# - to toggle between window switching/swapping modes
 bind -c SW_WIN ; eval "$c MV_WIN" "echo '${_msg_mvwin}'"
 bind -c SW_WIN + eval "$c MV_WIN" "echo '${_msg_mvwin}'"
 bind -c MV_WIN ; eval "$c SW_WIN" "echo '${_msg_switch}'"
 bind -c MV_WIN + eval "$c SW_WIN" "echo '${_msg_switch}'"
 unsetenv _msg_switch
 unsetenv _msg_mvwin
-## 二桁番号のウィンドウ選択
+# - to select windows whose ID is two digits
 setenv _SCREEN_INITCLS SELWIN_U
 setenv _SCREEN_INITMSG "Exit window selecting mode"
 source "${HOME}/.screen.d/initclass"
@@ -116,7 +113,7 @@ setenv _SCREEN_INITMSG "Exit window selecting mode"
 source "${HOME}/.screen.d/initclass"
 setenv WINPREFIX 0
 bind - eval "$c SELWIN_U"
-### 十の位
+# - * tens place
 setenv _msg_selwin '"Window selecting mode: xx"'
 bind -c SELWIN_U 0 eval "$c SELWIN_L" "setenv WINPREFIX 0"
 bind -c SELWIN_U 1 eval "$c SELWIN_L" "setenv WINPREFIX 1"
@@ -130,7 +127,7 @@ bind -c SELWIN_U 8 eval "$c SELWIN_L" "setenv WINPREFIX 8"
 bind -c SELWIN_U 9 eval "$c SELWIN_L" "setenv WINPREFIX 9"
 bind -c SELWIN_U ? eval "$c SELWIN_U" "echo ${_msg_selwin}"
 bind -c SELWIN_U - select
-## 一の位
+# - * ones place
 setenv _msg_selwin '"Window selecting mode: ${WINPREFIX}x"'
 bind -c SELWIN_L 0 eval 'select ${WINPREFIX}0'
 bind -c SELWIN_L 1 eval 'select ${WINPREFIX}1'
@@ -145,24 +142,25 @@ bind -c SELWIN_L 9 eval 'select ${WINPREFIX}9'
 bind -c SELWIN_L ? eval "$c SELWIN_L" "echo ${_msg_selwin}"
 bind -c SELWIN_L - eval 'colon "select ${WINPREFIX}"'
 unsetenv _msg_selwin
-## ウィンドウ削除
+# - to remove a window
 bind K kill
-## 検索時の大文字小文字の区別の切り替え
+# - to toggle a search mode between case-sensitive/insensitive
 bind I ignorecase
-## コピーモードに入ってウィンドウの最上行へ
-### \015: Carriage Return
+# - to enter the copy/history mode and then go to the top line of the
+#   window
 setenv a "$s colon"
+#   NOTE:                   <CR>
 setenv a "$a; $s stuff 'copy\015H'"
 bind / exec sh -c "$a"
 unsetenv a
-## コピーモードに入ると同時に第一マーカーと左端を設定
-### \015: Carriage Return
-### \040: Space
+# - to enter the copy/history mode and then set the first mark and the
+#   left edge
 setenv a "$s colon"
+#   NOTE:                   <CR><SP>
 setenv a "$a; $s stuff 'copy\015\040c'"
 bind { exec sh -c "$a"
 unsetenv a
-## 文字コード変更
+# - to change encoding
 setenv _SCREEN_INITCLS CH_ENC
 setenv _SCREEN_INITMSG "Exit encoding change mode"
 source "${HOME}/.screen.d/initclass"
@@ -173,17 +171,17 @@ bind -c CH_ENC j eval "encoding jis"   "echo 'Set encoding to JIS'"
 bind -c CH_ENC s eval "encoding SJIS"  "echo 'Set encoding to SHIFT-JIS'"
 bind -c CH_ENC u eval "encoding UTF-8" "echo 'Set encoding to UTF-8'"
 unsetenv _msg_chenc
-## リージョン分割
+# - to split into regions and restore them
 bind S split
 bind V split -v
 bind | split -v
 bind X remove
 bind O only
 bind Q only
-## リージョン移動
+# - to switch regions
 bind ^I focus
 bind ^U focus prev
-## リージョンリサイズ
+# - to resize regions
 bind r resize
 setenv _SCREEN_INITCLS H_RESIZE
 setenv _SCREEN_INITMSG "Exit region resizing mode"
@@ -207,7 +205,7 @@ bind -c W_RESIZE ; eval "$c W_RESIZE" "resize -h +1"
 bind -c W_RESIZE + eval "$c W_RESIZE" "resize -h +1"
 bind -c W_RESIZE - eval "$c W_RESIZE" "resize -h -1"
 bind -c W_RESIZE = eval "$c W_RESIZE" "resize -h -1"
-## リージョンリサイズモード間の変更
+# - to toggle region resizing modes between height/width
 bind -c H_RESIZE R eval "$c W_RESIZE" "echo '${_msg_resizew}'"
 bind -c H_RESIZE H eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
 bind -c H_RESIZE W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
@@ -216,53 +214,51 @@ bind -c W_RESIZE H eval "$c H_RESIZE" "echo '${_msg_resizeh}'"
 bind -c W_RESIZE W eval "$c W_RESIZE" "echo '${_msg_resizew}'"
 unsetenv _msg_resizeh
 unsetenv _msg_resizew
-
-## 現在のウィンドウの隣にウィンドウを生成
-## cf. https://rcmdnk.com/blog/2013/12/04/computer-screen/
-### 現在のウィンドウ番号を取得
+# - to create a new window next to the current window
+#   cf. https://rcmdnk.com/blog/2013/12/04/computer-screen/
+#   * get the ID of the current window
 setenv WINDOWID 0
 setenv a "$q number | tr -c -s '0-9' ' '"
 setenv a "echo \$($a)"          # remove leading/trailing whitespaces
 setenv a "$a | cut -d ' ' -f1"  # get only the first number
 setenv a "$s setenv WINDOWID \$($a)"
 bind \# exec sh -c "$a; $s echo 'WINDOWID=\$WINDOWID'"
-### ウィンドウ生成
+#   * and then create new one
 bind j  exec sh -c "$a; $s screen '\$WINDOWID'"
 bind ^J exec sh -c "$a; $s screen '\$WINDOWID'"
 unsetenv a
 
-# 特殊キー割り当て
-## Up, Down, Right, Left
+# key bindings for functional keys
+# * {Up, Down, Right, Left}
 bindkey ^[OA stuff ^[OA
 bindkey ^[OB stuff ^[OB
 bindkey ^[OC stuff ^[OC
 bindkey ^[OD stuff ^[OD
-## Ctrl-{Up, Down, Right, Left}
+# * Ctrl-{Up, Down, Right, Left}
 bindkey ^[[A stuff ^[[A
 bindkey ^[[B stuff ^[[B
 bindkey ^[[C next
 bindkey ^[[D prev
-## Meta-{Up, Down, Right, Left}
+# * Meta-{Up, Down, Right, Left}
 bindkey ^[^[OA stuff ^[p
 bindkey ^[^[OB stuff ^[n
 bindkey ^[^[OC stuff ^[f
 bindkey ^[^[OD stuff ^[b
-## Meta-Ctrl-{Up, Down, Right, Left}
+# * Meta-Ctrl-{Up, Down, Right, Left}
 bindkey ^[^[[A focus up
 bindkey ^[^[[B focus down
 bindkey ^[^[[C focus right
 bindkey ^[^[[D focus left
-## Insert, Delete, Home, End, PageUP, PageDown
+# * Insert, Delete, Home, End, PageUP, PageDown
 bindkey ^[[2~ echo "<Insert>: No operation"
 bindkey ^[[3~ echo "<Delete>: No operation"
 bindkey ^[[1~ echo "<Home>: No operation"
 bindkey ^[[4~ echo "<End>: No operation"
 bindkey ^[[5~ echo "<PageUp>: No operation"
 bindkey ^[[6~ echo "<PageDown>: No operation"
-## Shift-Tab
+# * Shift-Tab
 bindkey ^[[Z echo "<Shift>-<Tab>: No operation"
-## Function Keys
-### F1 -- F4
+# * {F1 -- F4}
 bindkey ^[[11~ stuff ^[h
 bindkey ^[[OP  stuff ^[h
 bindkey ^[[12~ screen
@@ -271,7 +267,7 @@ bindkey ^[[13~ prev
 bindkey ^[[OR  prev
 bindkey ^[[14~ next
 bindkey ^[[OS  next
-### F5 -- F8
+# * {F5 -- F8}
 setenv f7 "$s colon"
 setenv f7 "$f7; $s stuff 'copy\015H\040L\$\040'"
 setenv f7 "$f7; $s writebuf"
@@ -280,15 +276,15 @@ bindkey ^[[17~ detach
 bindkey ^[[18~ exec sh -c "$f7"
 bindkey ^[[19~ colon "number "
 unsetenv f7
-### F9 -- F12
+# * {F9 -- F12}
 bindkey ^[[20~ echo "<F9>: No operation"
 bindkey ^[[21~ echo "<F10>: No operation"
 bindkey ^[[23~ stuff ^[?        # F11 is the same as Shift-F1
 bindkey ^[[24~ colon "screen "  # F12 is the same as Shift-F2
-### Shift-{F3, F4}
+# * Shift-{F3, F4}
 bindkey ^[[25~ bumpleft
 bindkey ^[[26~ bumpright
-### Shift-{F5 -- F8}
+# * Shift-{F5 -- F8}
 setenv f7 "$s colon"
 setenv f7 "$f7; $s stuff 'copy\015g\040G\$\040'"
 setenv f7 "$f7; $s writebuf"
@@ -297,10 +293,10 @@ bindkey ^[[29~ echo "<Shift>-<F6>: No operation"
 bindkey ^[[31~ exec sh -c "$f7"
 bindkey ^[[32~ title
 unsetenv f7
-### Shift-{F9, F10}
+# * Shift-{F9, F10}
 bindkey ^[[33~ echo "<Shift>-<F9>: No operation"
 bindkey ^[[34~ echo "<Shift>-<F10>: No operation"
-### Meta-{F1 -- F12}
+# * Meta-{F1 -- F12}
 bindkey ^[^[[11~ echo "<Meta>-<F1>: No operation"
 bindkey ^[^[[OP  echo "<Meta>-<F1>: No operation"
 bindkey ^[^[[12~ echo "<Meta>-<F2>: No operation"
@@ -317,7 +313,7 @@ bindkey ^[^[[20~ echo "<Meta>-<F9>: No operation"
 bindkey ^[^[[21~ echo "<Meta>-<F10>: No operation"
 bindkey ^[^[[23~ echo "<Meta>-<F11>: No operation"
 bindkey ^[^[[24~ echo "<Meta>-<F12>: No operation"
-### Meta-Shift-{F3 -- F10}
+# * Meta-Shift-{F3 -- F10}
 bindkey ^[^[[25~ echo "<Meta>-<Shift>-<F3>: No operation"
 bindkey ^[^[[26~ echo "WARNING: Alt-F4"
 bindkey ^[^[[28~ echo "<Meta>-<Shift>-<F5>: No operation"
@@ -327,122 +323,133 @@ bindkey ^[^[[32~ echo "<Meta>-<Shift>-<F8>: No operation"
 bindkey ^[^[[33~ echo "<Meta>-<Shift>-<F9>: No operation"
 bindkey ^[^[[34~ echo "<Meta>-<Shift>-<F10>: No operation"
 
-# キーバインド登録用の一時変数を削除
+# delete temporary variables
 unsetenv c
 unsetenv s
 unsetenv q
 
-# スクロールバッファ行数
+# the number of lines for scroll buffers
 defscrollback 10000
-
-# メッセージをハードステータスに表示する最大/最小秒数
+# the max/min seconds to show messages on the hardstatus line
 msgwait 3
 msgminwait 0
 
-# ハードステータス
+# backtick id lifespan autorefresh cmd args...
+#   id         : the number for "%id`"
+#   lifespan   : seconds that the output is considered as effective
+#   autorefresh: seconds for automatic refreshing
+#   NOTE: an output of a backtick is automatically updated
+#         everytime a command produces new lines
+#         if both lifespan and autorefresh are specified as 0
+# - %0`: a user name
+backtick 0 0 0 whoami
+# - %1`: a day of the week in three letters
+backtick 1 60 60 sh -c 'LC_ALL=C date +"%a"'
+
+# hardstatus
 setenv a ""
-setenv a "$a%{= Wk}"  # 背景色 bright White, 前景色 blacK
-setenv a "$a["        # "["
-setenv a "$a%0`"      # backtick: ユーザ名
-setenv a "$a@"        # "@"
-setenv a "$a%H"       # ホスト名
-setenv a "$a] "       # "] "
-setenv a "$a%0L="     # 左端から 0% の位置までパディング
-#                     # - 左端から 0% の位置は既に過ぎているので何も起こらない
-#                     # - 実態は切り詰め区間の左端を設定するためのもの
-#                     # - L : 切り詰めはせずにパディングのみを行う
-setenv a "$a%-Lw"     # 現在のウィンドウより左のウィンドウ一覧
-setenv a "$a%40L>"    # 切り詰め発生時にはこの位置を左端から 40% にする
-#                     # - L : 切り詰められた箇所に "..." を配置
-setenv a "$a%{= Ck}"  # 背景色 bright Cyan, 前景色 blacK
-setenv a "$a%n"       # ウィンドウ番号
-setenv a "$a*%f"      # ウィンドウのフラグ
-setenv a "$a "        # space
-setenv a "$a%t"       # ウィンドウ名
-setenv a "$a%{-}"     # 直前の色/属性指定を元に戻す
-setenv a "$a%+Lw"     # 現在のウィンドウより右のウィンドウ一覧
-setenv a "$a%-027="   # 右端から27文字目の直前までパディング
-#                     # - 同時に切り詰め区間の右端を設定したことにもなる
-setenv a "$a ["       # " ["
-setenv a "$a%Y-%m-%d" # 日付 YYYY-MM-DD
-setenv a "$a("        # "("
-setenv a "$a%1`"      # backtick: 曜日名略称 (ロケール非依存)
-setenv a "$a) "       # ") "
-setenv a "$a%0c:%s"   # 現在時刻 HH:MM:SS (24時間表記)
-setenv a "$a]"        # "]"
+setenv a "$a%{= Wk}"   # - bg: bright white, fg: black
+setenv a "$a["         # - "["
+setenv a "$a%0`"       # - backtick #0: a user name
+setenv a "$a@"         # - "@"
+setenv a "$a%H"        # - a host name
+setenv a "$a] "        # - "] "
+setenv a "$a%0L="      # - padding up to the 0% position from the left
+#                      #   edge of the terminal
+#                      #   * L: do not truncate, just do padding
+#                      # - actually, no padding occurs since the 0%
+#                      #   position from the left edge is already passed
+#                      # - this is in order to set the left border of
+#                      #   the truncation area
+setenv a "$a%-Lw"      # - windows on the left of the current window
+setenv a "$a%40L>"     # - set this point as the 40% position from the
+#                      #   left edge of the terminal when truncation
+#                      #   occurs
+#                      #   * L: show "..." for truncated characters
+setenv a "$a%{= Ck}"   # - bg: bright cyan, fg: black
+setenv a "$a%n"        # - a window ID
+setenv a "$a*%f"       # - flags of a window
+setenv a "$a "         # - a whitespace
+setenv a "$a%t"        # - a window name
+setenv a "$a%{-}"      # - revert renditions to just before set ones
+setenv a "$a%+Lw"      # - windows on the right of the current window
+setenv a "$a%-027="    # - padding up to the 27th digit from the right
+#                      #   edge of the terminal
+#                      # - the right border of the truncation area is
+#                      #   also set
+setenv a "$a ["        # - " ["
+setenv a "$a%Y-%m-%d"  # - a date YYYY-MM-DD
+setenv a "$a("         # - "("
+setenv a "$a%1`"       # - backtick #1: a day of the week
+setenv a "$a) "        # - ") "
+setenv a "$a%0c:%s"    # - a time HH:MM:SS (in 24 hours)
+setenv a "$a]"         # - "]"
 hardstatus alwayslastline "$a"
 unsetenv a
 
-# Backtick
-# backtick id lifespan autorefresh cmd args...
-#   id          : %id` に代入する際の ID
-#   lifespan    : 出力の有効秒数
-#   autorefresh : 自動リフレッシュ秒数
-#   lifespan も autorefresh も 0 の場合はコマンドの出力が逐次出力される
-## ユーザ名
-backtick 0 0 0 whoami
-## 曜日名略称 (一時的にロケールを C にして date)
-backtick 1 60 60 sh -c 'LC_ALL=C date +"%a"'
-
-# キャプション
+# caption
 setenv a ""
-setenv a "$a%0L>"    # 切り詰め発生時にはこの位置を左端にする
-#                    # - L : 切り詰められた箇所に "..." を配置
-setenv a "$a%{= Yk}" # 背景色 bright Yellow, 前景色 blacK
-setenv a "$a%?%P"    # if copy/paste-mode then
-setenv a "$a%{= Bk}" #   背景色 bright Blue, 前景色 blacK
-setenv a "$a%?"      # fi
-setenv a "$a%?%F"    # if focus then
-#                    #
-setenv a "$a%:"      # else
-setenv a "$a%{= Kw}" #   背景色 bright blacK, 前景色 White
-setenv a "$a%?"      # fi
-setenv a "$a%n"      # ウィンドウ番号
-setenv a "$a%?%F"    # if focus then
-setenv a "$a*"       #   "*": 現在のウィンドウを表すフラグ
-setenv a "$a%?"      # fi
-setenv a "$a%f"      # ウィンドウのフラグ
-setenv a "$a "       # space
-setenv a "$a%t"      # ウィンドウ名
-setenv a "$a%?"      # if len(next-escape) > 0 then
-setenv a "$a "       #   space
-setenv a "$a%h"      #   ウィンドウから発せられたハードステータス
-#                    #   - echo -e "\e_メッセージ\e\\" で出力可能
-setenv a "$a%?"      # fi
-setenv a "$a%-16="   # 右端から19文字目の直前までパディング
-#                    # - 同時に切り詰め区間の右端を設定
-setenv a "$a%?%P"    # if copy/history-mode then
-setenv a "$a%{= BW}" #   背景色 bright Blue, 前景色 bright White
+setenv a "$a%0L>"     # - set this point as the left border of the
+#                     #   truncation area
+#                     #   * L: show "..." for truncated characters
+setenv a "$a%{= Yk}"  # - bg: bright yellow, fg: black
+setenv a "$a%?%P"     # - if copy/history-mode then
+setenv a "$a%{= Bk}"  #   - bg: bright blue, fg: black
+setenv a "$a%?"       # - fi
+setenv a "$a%?%F"     # - if focus then
+#                     #   - nop
+setenv a "$a%:"       # - else
+setenv a "$a%{= Kw}"  #   - bg: bright black, fg: white
+setenv a "$a%?"       # - fi
+setenv a "$a%n"       # - a window ID
+setenv a "$a%?%F"     # - if focus then
+setenv a "$a*"        #   - "*": a dummy flag for the current window
+setenv a "$a%?"       # - fi
+setenv a "$a%f"       # - flags of a window
+setenv a "$a "        # - " "
+setenv a "$a%t"       # - a window name
+setenv a "$a%?"       # - if len(next-escape) > 0 then
+setenv a "$a "        #   - a whitespace
+setenv a "$a%h"       #   - a hardstatus message from a process in a
+#                     #     window
+#                     #     * a process can send a hardstatus message by
+#                     #       "\e_MESSAGE\e\\"
+#                     #       <ESC><underscore>...<ESC><backslash>
+setenv a "$a%?"       # - fi
+setenv a "$a%-16="    # - padding up to the 19th digit from the right
+#                     #   edge of the terminal
+#                     #   * the right border of the truncation area is
+#                     #     also set
+setenv a "$a%?%P"     # - if copy/history-mode then
+setenv a "$a%{= BW}"  #   - bg: bright blue, fg: bright white
 setenv a "$a *Copy/History* "
-setenv a "$a%:"      # else
-setenv a "$a%-0="    #   右端までパディング
-setenv a "$a%?"      # fi
+setenv a "$a%:"       # - else
+setenv a "$a%-0="     #   - padding up to the right edge
+setenv a "$a%?"       # - fi
 caption always "$a"
 unsetenv a
 
-# イベント発生ウィンドウの装飾
-rendition bell "= Rk"
-rendition monitor "=u Bk"
-rendition silence "=u wk"
-rendition so "= yk"
+# renditions of windows where some event occurs
+rendition bell "= Rk"      # bg: bright red,  fg: black
+rendition monitor "=u Bk"  # bg: bright blue, fg: black, and underline
+rendition silence "=u wk"  # bg: white,       fg: black, and underline
+rendition so "= yk"        # bg: yellow,      fg: black
 
-# Alternate Screen を使用する
-## less 等の全画面コマンド終了後に元の画面に戻る
+# enable an alternate screen mode
+# i.e. restore the screen after full screen commands such as less
 altscreen on
-
-# 自動デタッチ
+# enable automatic detaching by a hang-up signal
 autodetach on
-
-# ログイン情報を utmp に吐かない
+# do not write logging-in status to utmp
 deflogin off
 
-# 画面交換ファイル
+# a file to exchange screens
 setenv SCREENBUF "${SCREENDIR}/screen-exchange"
 bufferfile "${SCREENBUF}"
-# ハードコピー保存用ディレクトリ
+# a directory to save hard copies
 hardcopydir "${SCREENDIR}"
-# ログファイル
+# a name rule of log files
 logfile "${SCREENDIR}/screenlog.%n"
 
-# ホームディレクトリに移動
+# go to the home directory
 chdir "$HOME"

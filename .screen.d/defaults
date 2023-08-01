@@ -1,54 +1,59 @@
-### .screen.d/defaults ###
+# .screen.d/defaults
 
-# Encoding
+# encoding
 defencoding UTF-8
 encoding UTF-8
 
 # $TERM
 term screen-256color
 
-# キー設定
-## キーバインドを初期化
+# initialize all key bindings
 source "${HOME}/.screen.d/resetbind"
-## エスケープキーを Meta-Ctrl-[ (or Meta-Esc) に設定
-### 要するに普通は押せないキーに設定する
+# set a prefix key to Meta-Ctrl-[ (or Meta-Esc),
+# in short, it cannot be pressed in ordinary ways
 escape \233\233
-## No Zombie: ウィンドウのプロセスが終了したら即座に終了する
-zombie
-## エスケープキー (^[) 後の入力待ち時間を削減
-## cf. https://ymizushi.hateblo.jp/entry/2017/08/27/222932
-maptimeout 10
 
-# 諸機能の停止
-## シングルユーザーモード
-multiuser off
-## アイドル時コマンドの無効化
-idle off
-## ベルメッセージ
+# initialize several functions
+# - disable automatic detaching by a hang-up signal
+autodetach off
+# - discard outputs which have not been written to the terminal yet
+#   when screen gets a clearing sequence
+autonuke on
+# - no bell message
 bell_msg ""
-## ビジュアルベル
+# - do not write logging-in status to utmp
+deflogin off
+# - no scroll back
+defscrollback 0
+# - no idle command
+idle off
+# - reduce a timeout from 300ms (default) after the escape character
+#   (^[, note that it is not a prefix key of screen) is input
+#   cf. https://ymizushi.hateblo.jp/entry/2017/08/27/222932
+maptimeout 10
+# - single user mode
+multiuser off
+# - no start-up message
+startup_message off
+# - no visual bell
 vbell off
 vbell_msg "VISUAL BELL"
-## 自動デタッチの無効化
-autodetach off
-## スタートアップメッセージ
-startup_message off
-## ログイン情報を utmp に吐かない
-deflogin off
-## 画面クリアの際にまだ端末に書き出されていない出力を破棄する
-autonuke on
-## スクロールバックしない
-defscrollback 0
+# - no zombie: remove a window as soon as a process in it has exited
+zombie
 
-# ウィンドウ強制リサイズの回避
-## (see: /etc/screenrc)
-## Change the xterm initialization string from is2=\E[!p\E[?3;4l\E[4l\E>
-## (This fixes the "Aborted because of window size change" konsole symptoms found in bug #134198)
+# - do not resize the window (of the terminal application)
+#   cf. /etc/screenrc
+#   > Change the xterm initialization string from
+#   >   is2=\E[!p\E[?3;4l\E[4l\E>
+#   > (This fixes the "Aborted because of window size change" konsole
+#   >  symptoms found in bug #134198)
+# - TODO: understand meanings of these commands, because I have no idea
+#         why they can resolve the problem
 termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 termcapinfo xterm-256color 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 
-# 設定ファイルのスタート地点を設定
+# set the first file of configurations
 setenv SCREENRC "${HOME}/.screenrc"
 
-# 設定ファイルディレクトリに移動
+# go to the configuration directory
 chdir "${HOME}/.screen.d"

@@ -48,7 +48,7 @@ zombie
 #   > (This fixes the "Aborted because of window size change" konsole
 #   >  symptoms found in bug #134198)
 # - TODO: understand meanings of these commands, because I have no idea
-#         why they can resolve the problem
+#         why these can resolve the problem ¯\_(ツ)_/¯
 termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 termcapinfo xterm-256color 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 

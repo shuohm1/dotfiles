@@ -1,4 +1,4 @@
-### .screen.d/resetbind ###
+# .screen.d/resetbind
 
 escape ^Aa
 bind ^E

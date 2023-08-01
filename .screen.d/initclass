@@ -1,4 +1,4 @@
-### .screen.d/initclass ###
+# .screen.d/initclass
 
 bind -c $_SCREEN_INITCLS ^@  echo "$_SCREEN_INITMSG"
 bind -c $_SCREEN_INITCLS ^A  echo "$_SCREEN_INITMSG"

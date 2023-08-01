@@ -334,6 +334,18 @@ defscrollback 10000
 msgwait 3
 msgminwait 0
 
+# backtick id lifespan autorefresh cmd args...
+#   id         : the number for "%id`"
+#   lifespan   : seconds that the output is considered as effective
+#   autorefresh: seconds for automatic refreshing
+#   NOTE: an output of a backtick is automatically updated
+#         everytime a command produces new lines
+#         if both lifespan and autorefresh are specified as 0
+# - %0`: a user name
+backtick 0 0 0 whoami
+# - %1`: a day of the week in three letters
+backtick 1 60 60 sh -c 'LC_ALL=C date +"%a"'
+
 # hardstatus
 setenv a ""
 setenv a "$a%{= Wk}"  # - bg: bright white, fg: black
@@ -374,18 +386,6 @@ setenv a "$a%0c:%s"   # - a time HH:MM:SS (in 24 hours)
 setenv a "$a]"        # - "]"
 hardstatus alwayslastline "$a"
 unsetenv a
-
-# backtick id lifespan autorefresh cmd args...
-#   id         : the number for "%id`"
-#   lifespan   : seconds that the output is considered as effective
-#   autorefresh: seconds for automatic refreshing
-#   NOTE: an output of a backtick is automatically updated
-#         everytime a command produces new lines
-#         if both lifespan and autorefresh are specified as 0
-# - %0`: a user name
-backtick 0 0 0 whoami
-# - %1`: a day of the week in three letters
-backtick 1 60 60 sh -c 'LC_ALL=C date +"%a"'
 
 # caption
 setenv a ""

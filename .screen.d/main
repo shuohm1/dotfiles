@@ -13,31 +13,31 @@ setenv q "screen -Q"
 
 # key bindings
 # - disable dangerous/unnecessary key bindings
-bind C  # clear
-bind ^V # digraph
-bind .  # dumptermcap
-bind F  # fit
-bind f  # flow
-bind ^F # flow
-bind h  # hardcopy
-bind {  # history
-bind }  # history
-bind k  # kill
-bind ^K # kill
-bind x  # lockscreen
-bind ^X # lockscreen
-bind H  # log
-bind L  # login
-bind N  # number
-bind B  # pow_break
-bind D  # pow_detach
-bind ^\ # quit (Ctrl-Backslash)
-bind =  # removebuf
-bind -  # "select -"
-bind ^G # vbell
-bind W  # width
-bind r  # wrap
-bind ^R # wrap
+bind C   # clear
+bind ^V  # digraph
+bind .   # dumptermcap
+bind F   # fit
+bind f   # flow
+bind ^F  # flow
+bind h   # hardcopy
+bind {   # history
+bind }   # history
+bind k   # kill
+bind ^K  # kill
+bind x   # lockscreen
+bind ^X  # lockscreen
+bind H   # log
+bind L   # login
+bind N   # number
+bind B   # pow_break
+bind D   # pow_detach
+bind ^\  # quit (Ctrl-Backslash)
+bind =   # removebuf
+bind -   # "select -"
+bind ^G  # vbell
+bind W   # width
+bind r   # wrap
+bind ^R  # wrap
 # - to change a window ID
 bind N colon "number "
 bind @ colon "number "
@@ -348,84 +348,84 @@ backtick 1 60 60 sh -c 'LC_ALL=C date +"%a"'
 
 # hardstatus
 setenv a ""
-setenv a "$a%{= Wk}"  # - bg: bright white, fg: black
-setenv a "$a["        # - "["
-setenv a "$a%0`"      # - backtick #0: a user name
-setenv a "$a@"        # - "@"
-setenv a "$a%H"       # - a host name
-setenv a "$a] "       # - "] "
-setenv a "$a%0L="     # - padding up to the 0% position from the left
-#                     #   edge of the terminal
-#                     #   * L: do not truncate, just do padding
-#                     # - actually, no padding occurs since the 0%
-#                     #   position from the left edge is already passed
-#                     # - this is in order to set the left border of
-#                     #   the truncation area
-setenv a "$a%-Lw"     # - windows on the left of the current window
-setenv a "$a%40L>"    # - set this point as the 40% position from the
-#                     #   left edge of the terminal when truncation
-#                     #   occurs
-#                     #   * L: show "..." for truncated characters
-setenv a "$a%{= Ck}"  # - bg: bright cyan, fg: black
-setenv a "$a%n"       # - a window ID
-setenv a "$a*%f"      # - flags of a window
-setenv a "$a "        # - a whitespace
-setenv a "$a%t"       # - a window name
-setenv a "$a%{-}"     # - revert renditions to just before set ones
-setenv a "$a%+Lw"     # - windows on the right of the current window
-setenv a "$a%-027="   # - padding up to the 27th digit from the right
-#                     #   edge of the terminal
-#                     # - the right border of the truncation area is
-#                     #   also set
-setenv a "$a ["       # - " ["
-setenv a "$a%Y-%m-%d" # - a date YYYY-MM-DD
-setenv a "$a("        # - "("
-setenv a "$a%1`"      # - backtick #1: a day of the week
-setenv a "$a) "       # - ") "
-setenv a "$a%0c:%s"   # - a time HH:MM:SS (in 24 hours)
-setenv a "$a]"        # - "]"
+setenv a "$a%{= Wk}"   # - bg: bright white, fg: black
+setenv a "$a["         # - "["
+setenv a "$a%0`"       # - backtick #0: a user name
+setenv a "$a@"         # - "@"
+setenv a "$a%H"        # - a host name
+setenv a "$a] "        # - "] "
+setenv a "$a%0L="      # - padding up to the 0% position from the left
+#                      #   edge of the terminal
+#                      #   * L: do not truncate, just do padding
+#                      # - actually, no padding occurs since the 0%
+#                      #   position from the left edge is already passed
+#                      # - this is in order to set the left border of
+#                      #   the truncation area
+setenv a "$a%-Lw"      # - windows on the left of the current window
+setenv a "$a%40L>"     # - set this point as the 40% position from the
+#                      #   left edge of the terminal when truncation
+#                      #   occurs
+#                      #   * L: show "..." for truncated characters
+setenv a "$a%{= Ck}"   # - bg: bright cyan, fg: black
+setenv a "$a%n"        # - a window ID
+setenv a "$a*%f"       # - flags of a window
+setenv a "$a "         # - a whitespace
+setenv a "$a%t"        # - a window name
+setenv a "$a%{-}"      # - revert renditions to just before set ones
+setenv a "$a%+Lw"      # - windows on the right of the current window
+setenv a "$a%-027="    # - padding up to the 27th digit from the right
+#                      #   edge of the terminal
+#                      # - the right border of the truncation area is
+#                      #   also set
+setenv a "$a ["        # - " ["
+setenv a "$a%Y-%m-%d"  # - a date YYYY-MM-DD
+setenv a "$a("         # - "("
+setenv a "$a%1`"       # - backtick #1: a day of the week
+setenv a "$a) "        # - ") "
+setenv a "$a%0c:%s"    # - a time HH:MM:SS (in 24 hours)
+setenv a "$a]"         # - "]"
 hardstatus alwayslastline "$a"
 unsetenv a
 
 # caption
 setenv a ""
-setenv a "$a%0L>"    # - set this point as the left border of the
-#                    #   truncation area
-#                    #   * L: show "..." for truncated characters
-setenv a "$a%{= Yk}" # - bg: bright yellow, fg: black
-setenv a "$a%?%P"    # - if copy/history-mode then
-setenv a "$a%{= Bk}" #   - bg: bright blue, fg: black
-setenv a "$a%?"      # - fi
-setenv a "$a%?%F"    # - if focus then
-#                    #   - nop
-setenv a "$a%:"      # - else
-setenv a "$a%{= Kw}" #   - bg: bright black, fg: white
-setenv a "$a%?"      # - fi
-setenv a "$a%n"      # - a window ID
-setenv a "$a%?%F"    # - if focus then
-setenv a "$a*"       #   - "*": a dummy flag for the current window
-setenv a "$a%?"      # - fi
-setenv a "$a%f"      # - flags of a window
-setenv a "$a "       # - " "
-setenv a "$a%t"      # - a window name
-setenv a "$a%?"      # - if len(next-escape) > 0 then
-setenv a "$a "       #   - a whitespace
-setenv a "$a%h"      #   - a hardstatus message from a process in a
-#                    #     window
-#                    #     * a process can send a hardstatus message by
-#                    #       "\e_MESSAGE\e\\"
-#                    #       <ESC><underscore>...<ESC><backslash>
-setenv a "$a%?"      # - fi
-setenv a "$a%-16="   # - padding up to the 19th digit from the right
-#                    #   edge of the terminal
-#                    #   * the right border of the truncation area is
-#                    #     also set
-setenv a "$a%?%P"    # - if copy/history-mode then
-setenv a "$a%{= BW}" #   - bg: bright blue, fg: bright white
+setenv a "$a%0L>"     # - set this point as the left border of the
+#                     #   truncation area
+#                     #   * L: show "..." for truncated characters
+setenv a "$a%{= Yk}"  # - bg: bright yellow, fg: black
+setenv a "$a%?%P"     # - if copy/history-mode then
+setenv a "$a%{= Bk}"  #   - bg: bright blue, fg: black
+setenv a "$a%?"       # - fi
+setenv a "$a%?%F"     # - if focus then
+#                     #   - nop
+setenv a "$a%:"       # - else
+setenv a "$a%{= Kw}"  #   - bg: bright black, fg: white
+setenv a "$a%?"       # - fi
+setenv a "$a%n"       # - a window ID
+setenv a "$a%?%F"     # - if focus then
+setenv a "$a*"        #   - "*": a dummy flag for the current window
+setenv a "$a%?"       # - fi
+setenv a "$a%f"       # - flags of a window
+setenv a "$a "        # - " "
+setenv a "$a%t"       # - a window name
+setenv a "$a%?"       # - if len(next-escape) > 0 then
+setenv a "$a "        #   - a whitespace
+setenv a "$a%h"       #   - a hardstatus message from a process in a
+#                     #     window
+#                     #     * a process can send a hardstatus message by
+#                     #       "\e_MESSAGE\e\\"
+#                     #       <ESC><underscore>...<ESC><backslash>
+setenv a "$a%?"       # - fi
+setenv a "$a%-16="    # - padding up to the 19th digit from the right
+#                     #   edge of the terminal
+#                     #   * the right border of the truncation area is
+#                     #     also set
+setenv a "$a%?%P"     # - if copy/history-mode then
+setenv a "$a%{= BW}"  #   - bg: bright blue, fg: bright white
 setenv a "$a *Copy/History* "
-setenv a "$a%:"      # - else
-setenv a "$a%-0="    #   - padding up to the right edge
-setenv a "$a%?"      # - fi
+setenv a "$a%:"       # - else
+setenv a "$a%-0="     #   - padding up to the right edge
+setenv a "$a%?"       # - fi
 caption always "$a"
 unsetenv a
 

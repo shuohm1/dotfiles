@@ -47,8 +47,8 @@ zombie
 #   >   is2=\E[!p\E[?3;4l\E[4l\E>
 #   > (This fixes the "Aborted because of window size change" konsole
 #   >  symptoms found in bug #134198)
-# - TODO: understand meanings of these commands, because I have no idea
-#         why these can resolve the problem ¯\_(ツ)_/¯
+# - TODO: understand the meaning of these commands, because I have no
+#         idea why these can resolve the problem ¯\_(ツ)_/¯
 termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 termcapinfo xterm-256color 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 

@@ -9,15 +9,15 @@ term screen-256color
 
 # initialize all key bindings
 source "${HOME}/.screen.d/resetbind"
-# set a prefix key to Meta-Ctrl-[ (or Meta-Esc),
-# in short, it cannot be pressed in ordinary ways
+# set a prefix key to Meta-Ctrl-[ (or Meta-Esc)
+# i.e. it cannot be pressed in ordinary ways
 escape \233\233
 
 # initialize several functions
 # - disable automatic detaching by a hang-up signal
 autodetach off
-# - discard outputs which have not been written to the terminal yet
-#   when screen gets a clearing sequence
+# - discard outputs which have not been written to the terminal yet when
+#   screen gets a clearing sequence
 autonuke on
 # - no bell message
 bell_msg ""

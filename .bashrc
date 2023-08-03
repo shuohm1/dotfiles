@@ -13,9 +13,18 @@ if [ -z "${PS1}" ]; then
   return
 fi
 
+function get_termcols() {
+  local tput="$(command which tput 2> /dev/null)"
+  if [ -x "${tput}" ]; then
+    "${tput}" cols
+  else
+    echo 0
+  fi
+}
+
 # show startup message
 RCDATE="$(LC_ALL=C date +"%F(%a) %T")"
-RCDATEPOS=$(($(tput cols 2> /dev/null) - ${#RCDATE}))
+RCDATEPOS=$(($(get_termcols) - ${#RCDATE}))
 # NOTE:
 # - \e[1m: bold
 # - \e[4m: underline

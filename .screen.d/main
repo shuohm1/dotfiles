@@ -65,7 +65,7 @@ bind o  other
 bind ^O other
 # - to switch windows continuously
 setenv _SCREEN_INITCLS SW_WIN
-setenv _SCREEN_INITMSG "Exit window switching mode"
+setenv _SCREEN_INITMSG "Window switching mode aborted"
 source "${HOME}/.screen.d/initclass"
 setenv _msg_switch "Switch windows: next/prev"
 bind ; eval "$c SW_WIN" "echo '${_msg_switch}'"
@@ -81,7 +81,7 @@ bind -c SW_WIN l   eval "$c SW_WIN" "next"
 bind -c SW_WIN h   eval "$c SW_WIN" "prev"
 # - to swap windows continuously
 setenv _SCREEN_INITCLS MV_WIN
-setenv _SCREEN_INITMSG "Exit window moving mode"
+setenv _SCREEN_INITMSG "Window moving mode aborted"
 source "${HOME}/.screen.d/initclass"
 setenv _msg_mvwin "Move windows: next/prev"
 bind + eval "$c MV_WIN" "echo '${_msg_mvwin}'"
@@ -106,10 +106,10 @@ unsetenv _msg_switch
 unsetenv _msg_mvwin
 # - to select windows whose ID is two digits
 setenv _SCREEN_INITCLS SELWIN_U
-setenv _SCREEN_INITMSG "Exit window selecting mode"
+setenv _SCREEN_INITMSG "Window selecting mode aborted"
 source "${HOME}/.screen.d/initclass"
 setenv _SCREEN_INITCLS SELWIN_L
-setenv _SCREEN_INITMSG "Exit window selecting mode"
+setenv _SCREEN_INITMSG "Window selecting mode aborted"
 source "${HOME}/.screen.d/initclass"
 setenv WINPREFIX 0
 bind - eval "$c SELWIN_U"
@@ -162,7 +162,7 @@ bind { exec sh -c "$a"
 unsetenv a
 # - to change encoding
 setenv _SCREEN_INITCLS CH_ENC
-setenv _SCREEN_INITMSG "Exit encoding change mode"
+setenv _SCREEN_INITMSG "Encoding change mode aborted"
 source "${HOME}/.screen.d/initclass"
 setenv _msg_chenc "Change encoding: e/j/s/u"
 bind E eval "$c CH_ENC" "echo '${_msg_chenc}'"
@@ -184,10 +184,10 @@ bind ^U focus prev
 # - to resize regions
 bind r resize
 setenv _SCREEN_INITCLS H_RESIZE
-setenv _SCREEN_INITMSG "Exit region resizing mode"
+setenv _SCREEN_INITMSG "Region resizing mode aborted"
 source "${HOME}/.screen.d/initclass"
 setenv _SCREEN_INITCLS W_RESIZE
-setenv _SCREEN_INITMSG "Exit region resizing mode"
+setenv _SCREEN_INITMSG "Region resizing mode aborted"
 source "${HOME}/.screen.d/initclass"
 setenv _msg_resizeh "Resize the HEIGHT of the region: +/-"
 bind R eval "$c H_RESIZE" "echo '${_msg_resizeh}'"

@@ -16,7 +16,6 @@
 	fgrep = grep -F
 	pgrep = grep -P
 	fast-forward = merge --ff-only
-	irebase = rebase --interactive
 	unstage = reset HEAD --
 	hard-reset = reset --hard
 ;	# pseudo commands

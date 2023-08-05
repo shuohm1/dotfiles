@@ -88,6 +88,7 @@ opts="--abbrev-commit --all --date-order --graph"
 alias gl="git log ${opts} --stat"
 alias gp="git log ${opts} --patch-with-stat"
 alias gg="GIT_PAGER='less -S' git log ${opts} --oneline"
+alias gll="git log ${opts} --pretty=fuller --stat"
 unset opts
 alias gm="git merge --no-ff"
 alias gr="git remote show origin"

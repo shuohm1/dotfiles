@@ -13,6 +13,7 @@ alias su="PROMPT_COMMAND= su"
 # directory stack
 alias pd="pushd"
 alias bd="popd"
+alias ud="pushd -"
 # always print the directory stack with one entry per line
 alias dirs="dirs -p"
 

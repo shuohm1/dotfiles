@@ -2,6 +2,9 @@
 source "${HOME}/.screen.d/defaults"
 
 # set a prefix key, and a meta key to send the prefix character itself
+# NOTE: Ctrl-T originally performs:
+# - bash/zsh: swapping two letters on the cursor
+# -      vim: jumping with a tag stack / indenting
 escape ^T^T
 # set keys to kill/revive zombies
 zombie ^[^?

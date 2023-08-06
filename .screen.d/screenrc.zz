@@ -1,0 +1,7 @@
+# .screen.d/screenrc.??
+source "${HOME}/.screen.d/main.cjk"
+
+# NOTE: Ctrl-Z originally performs:
+# - bash/zsh: suspending a process
+# -      vim: suspending a vim
+escape ^Z^Z

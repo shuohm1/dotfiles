@@ -1,0 +1,7 @@
+# .screen.d/screenrc.??
+source "${HOME}/.screen.d/main.cjk"
+
+# NOTE: Ctrl-V originally performs:
+# - bash/zsh: inputting control characters
+# -      vim: selecting a visual block / inputting control characters
+escape ^V^V

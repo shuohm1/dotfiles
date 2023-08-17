@@ -54,6 +54,9 @@
 [push]
 ;	# set `git push origin HEAD` as default
 	default = current
+[rebase]
+;	# use `--autosquash` as default with interactive rebase
+	autosquash = true
 [url "https://"]
 ;	# use HTTPS
 	insteadOf = git://

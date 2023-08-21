@@ -436,11 +436,14 @@ setenv a "$a%?"       # - fi
 caption always "$a"
 unsetenv a
 
-# renditions of windows where some event occurs
+# renditions
+# - a default rendition of hardstatus, captions, command lines, and
+#   borders of regions
+rendition so "= yk"        # bg: yellow,      fg: black
+# - renditions of windows where events occur
 rendition bell "= Rk"      # bg: bright red,  fg: black
 rendition monitor "=u Bk"  # bg: bright blue, fg: black, and underline
 rendition silence "=u wk"  # bg: white,       fg: black, and underline
-rendition so "= yk"        # bg: yellow,      fg: black
 
 # enable an alternate screen mode
 # i.e. restore the screen after full screen commands such as less

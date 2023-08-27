@@ -23,7 +23,7 @@ function get_termcols() {
 }
 
 # show startup message
-RCDATE="$(LC_ALL=C date +"%F(%a) %T")"
+RCDATE="$(LC_ALL=C date "+%F(%a) %T")"
 RCDATEPOS=$(($(get_termcols) - ${#RCDATE}))
 # NOTE:
 # - \e[1m: bold

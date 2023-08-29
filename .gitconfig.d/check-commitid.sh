@@ -17,7 +17,7 @@ fi
 
 logs="$(
   echo "${logs}" |
-  command sed -E 's/^([a-zA-Z0-9]+)/\x1b[30;41m\1\x1b[m/' |
+  command sed -E 's/^([a-zA-Z0-9]+)/\x1b[1;37;45m\1\x1b[m/' |
   command sed 's/^/* /'
 )"
 

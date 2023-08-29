@@ -20,19 +20,20 @@ alias dirs="dirs -p"
 # ls
 alias ls="ls -v --color=auto"
 alias la="ls -A"     # almost all
-alias le="ls -al"    # everything
-alias lf="ls -l -L"  # follow symlinks
-alias lg="ls -go"    # do not list owner/group
-alias lh="ls -hl"    # human readable
+alias le="ls -a -l"  # everything
+alias lf="ls -l -H"  # follow symlinks on the command line
+alias lg="ls -g -o"  # do not list owner/group
+alias lh="ls -h -l"  # human readable
 alias ll="ls -l"     # long
-alias lt="ls -al --time-style='+%F %T.%3N'"
+alias ly="ls -l -L"  # follow all symlinks
+alias lt="ls -a -l --time-style='+%F %T.%3N'"
 # more details
-alias laa="ls -al"
+alias laa="la -l"
 alias lff="lf -a"
 alias lgg="lg -a"
 alias lhh="lh -a"
 alias lll="ll -a"
-alias ltt="lt -L"
+alias lyy="lc -a"
 
 # always prompt before overwrite with mv/cp/rm
 alias mv="mv -i"

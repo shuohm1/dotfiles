@@ -77,12 +77,12 @@ alias view="vim -R"
 
 # git
 alias ga="git add"
-alias ge="git grep"
 alias gn="git checkout -b"
 alias gk="git commit --verbose"
 function git_diff_helper() { git diff --quiet "$@" || git diff "$@"; }
 alias gd="git_diff_helper"
 alias gf="git fetch"
+alias gr="git grep"
 opts="--abbrev-commit --all --graph"
 alias gl="git log ${opts} --stat"
 alias gp="git log ${opts} --patch-with-stat"
@@ -90,7 +90,6 @@ alias gg="GIT_PAGER='less -S' git log ${opts} --oneline"
 alias gll="git log ${opts} --pretty=fuller --stat"
 unset opts
 alias gm="git merge --no-ff"
-alias gr="git remote show origin"
 alias gi="git status"
 alias gap="git add --patch"
 alias gco="git checkout"

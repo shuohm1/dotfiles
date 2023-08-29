@@ -107,5 +107,10 @@ alias wi="while read i"
 alias wj="while read j"
 alias wk="while read k"
 
+# xargs
+alias xargs="xargs --no-run-if-empty"
+alias xa="xargs"
+alias xi="xargs -I{}"
+
 # ring a bell
 alias bell="echo -ne '\a'"

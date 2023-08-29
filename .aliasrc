@@ -90,7 +90,6 @@ alias gg="GIT_PAGER='less -S' git log ${opts} --oneline"
 alias gll="git log ${opts} --pretty=fuller --stat"
 unset opts
 alias gm="git merge --no-ff"
-alias gr="git remote show origin"
 alias gi="git status"
 alias gap="git add --patch"
 alias gco="git checkout"

@@ -102,5 +102,10 @@ alias gush="git push"
 # a pseudo command: need to configure an alias in .gitconfig
 alias gw="git where-i-am"
 
+# while
+alias wi="while read i"
+alias wj="while read j"
+alias wk="while read k"
+
 # ring a bell
 alias bell="echo -ne '\a'"

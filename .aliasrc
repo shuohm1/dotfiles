@@ -53,6 +53,7 @@ alias fgrep="grep -F"
 alias pgrep="grep -P"
 alias rgrep="grep -r"
 alias bgrep="command grep"
+alias g="egrep"
 
 # sed
 alias sed="sed -E"

@@ -78,6 +78,7 @@ alias view="vim -R"
 
 # git
 alias ga="git add"
+alias gb="git branch"
 alias gn="git checkout -b"
 alias gk="git commit --verbose"
 function git_diff_helper() { git diff --quiet "$@" || git diff "$@"; }
@@ -94,6 +95,7 @@ alias gm="git merge --no-ff"
 alias gi="git status"
 alias gap="git add --patch"
 alias gco="git checkout"
+alias gka="git commit --amend --verbose"
 alias gdc="git_diff_helper --cached"
 alias gsw="git switch"
 alias gull="git pull --ff-only"

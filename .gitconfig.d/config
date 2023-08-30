@@ -6,16 +6,19 @@
 	ap = add --patch
 	br = branch
 	co = checkout
+	ci = commit
+	ca = commit --amend
 	df = diff
 	mg = merge
+	ff = merge --ff-only
 	rb = rebase
-	ir = rebase --interactive
+	ir = rebase --interactive --keep-empty
 	id = rev-parse HEAD
+	st = status
 	sw = switch
 	egrep = grep -E
 	fgrep = grep -F
 	pgrep = grep -P
-	fast-forward = merge --ff-only
 	unstage = reset HEAD --
 	hard-reset = reset --hard
 ;	# pseudo commands

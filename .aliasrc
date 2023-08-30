@@ -33,7 +33,7 @@ alias lff="lf -a"
 alias lgg="lg -a"
 alias lhh="lh -a"
 alias lll="ll -a"
-alias lyy="lc -a"
+alias lyy="ly -a"
 
 # always prompt before overwrite with mv/cp/rm
 alias mv="mv -i"

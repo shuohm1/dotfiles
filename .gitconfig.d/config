@@ -9,7 +9,7 @@
 	df = diff
 	mg = merge
 	rb = rebase
-	ir = rebase --interactive
+	ir = rebase --interactive --keep-empty
 	id = rev-parse HEAD
 	sw = switch
 	egrep = grep -E

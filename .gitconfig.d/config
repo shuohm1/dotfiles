@@ -17,6 +17,8 @@
 	id = rev-parse HEAD
 	st = status
 	sw = switch
+	fixup = commit --fixup
+	squash = commit --squash
 	egrep = grep -E
 	fgrep = grep -F
 	pgrep = grep -P
@@ -32,9 +34,13 @@
 	delete-remote-branch = !sh -c '[ -z "$2" ] && ( set -x && git push --delete origin "$1" ) || ( set -x && git push --delete "$@" )' --
 ;	# - a helper for diff
 	diff-helper = !sh -c 'git diff --quiet "$@" || git diff "$@"' --
+;	# - a helper for fixup
+	fixup-helper = !sh -c '[ "$#" -eq 0 ] && git fixup HEAD || git fixup "$@"' --
 ;	# - pre-check for merge conflicts
 ;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
 	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' --
+;	# - a helper for squash
+	squash-helper = !sh -c '[ "$#" -eq 0 ] && git squash HEAD || git squash "$@"' --
 ;	# - show brief status in color
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [pager]

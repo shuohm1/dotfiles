@@ -8,6 +8,7 @@
 	co = checkout
 	ci = commit
 	ca = commit --amend
+	ce = commit --allow-empty
 	df = diff
 	mg = merge
 	ff = merge --ff-only

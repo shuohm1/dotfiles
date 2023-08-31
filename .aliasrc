@@ -101,6 +101,8 @@ alias gush="git push"
 # a pseudo command: need to configure an alias in .gitconfig
 alias gd="git diff-helper"
 alias g@="git diff-helper --cached"
+alias gx="git fixup-helper"
+alias gq="git squash-helper"
 alias gw="git where-i-am"
 
 # sort

@@ -81,8 +81,6 @@ alias ga="git add"
 alias gb="git branch"
 alias gn="git checkout -b"
 alias gk="git commit --verbose"
-function git_diff_helper() { git diff --quiet "$@" || git diff "$@"; }
-alias gd="git_diff_helper"
 alias gf="git fetch"
 alias gr="git grep"
 alias gl="git log --abbrev-commit --all --graph --stat"
@@ -94,7 +92,6 @@ alias gap="git add --patch"
 alias gco="git checkout"
 alias gka="git commit --amend --verbose"
 alias gke="git commit --allow-empty --verbose"
-alias gdc="git_diff_helper --cached"
 alias gll="git log --abbrev-commit --all --graph --pretty=fuller --stat"
 alias gpa="git log --abbrev-commit --all --graph --patch-with-stat"
 alias gsw="git switch"
@@ -102,6 +99,8 @@ alias gull="git pull --ff-only"
 alias gush="git push"
 
 # a pseudo command: need to configure an alias in .gitconfig
+alias gd="git diff-helper"
+alias gdc="git diff-helper --cached"
 alias gw="git where-i-am"
 
 # sort

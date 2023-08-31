@@ -30,6 +30,8 @@
 ;	# - delete a remote branch
 ;	#   https://tyfkda.github.io/blog/2022/01/23/git-my-alias.html
 	delete-remote-branch = !sh -c '[ -z "$2" ] && ( set -x && git push --delete origin "$1" ) || ( set -x && git push --delete "$@" )' --
+;	# - a helper for diff
+	diff-helper = !sh -c 'git diff --quiet "$@" || git diff "$@"' --
 ;	# - pre-check for merge conflicts
 ;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
 	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' --

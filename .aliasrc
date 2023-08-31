@@ -64,7 +64,7 @@ alias diff="diff -u"
 if [ -x "$(command which colordiff 2> /dev/null)" ]; then
   alias diff="colordiff -u"
 fi
-alias kdiff="command diff"
+alias cdiff="command diff"
 
 # screen
 alias sc="screen"

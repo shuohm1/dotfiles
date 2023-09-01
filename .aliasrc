@@ -77,34 +77,37 @@ alias vi="vim"
 alias view="vim -R"
 
 # git
-alias ga="git add"
-alias gb="git branch"
-alias gn="git checkout -b"
-alias gk="git commit --verbose"
 alias gf="git fetch"
 alias gr="git grep"
-alias gl="git log --abbrev-commit --all --graph --stat"
-alias gp="gl --patch"
-alias gg="GIT_PAGER='less -S' git log --all --graph --oneline"
 alias gm="git merge --no-ff"
 alias gi="git status"
-alias gap="git add --patch"
+alias gw="git where-i-am"
 alias gco="git checkout"
-alias gka="git commit --amend --verbose"
-alias gke="git commit --allow-empty --verbose"
-alias gll="gl --pretty=fuller"
-alias glr="gl --reflog"
-alias ggr="gg --reflog"
 alias gsw="git switch"
 alias gull="git pull --ff-only"
 alias gush="git push"
-
-# a pseudo command: need to configure an alias in .gitconfig
+# git add
+alias ga="git add"
+alias gap="git add --patch"
+# git branch
+alias gb="git branch"
+alias gn="git checkout -b"
+# git commit
+alias gk="git commit --verbose"
 alias gx="git fixup-helper"
 alias gq="git squash-helper"
+alias gka="git commit --amend --verbose"
+alias gke="git commit --allow-empty --verbose"
+# git diff
 alias gd="git diff-helper"
 alias g@="git diff-helper --cached"
-alias gw="git where-i-am"
+# git log
+alias gl="git log --abbrev-commit --all --graph --stat"
+alias gp="gl --patch"
+alias gg="GIT_PAGER='less -S' git log --all --graph --oneline"
+alias gll="gl --pretty=fuller"
+alias glr="gl --reflog"
+alias ggr="gg --reflog"
 
 # sort
 alias sv="sort -V"

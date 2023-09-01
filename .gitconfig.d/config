@@ -25,22 +25,22 @@
 	unstage = reset HEAD --
 	hard-reset = reset --hard
 ;	# pseudo commands
+;	# - pre-check for merge conflicts
+;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
+	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' --
 ;	# - git branch [options] <branchname>.bak <branchname>
 ;	#   NOTE: how to get the last command line argument
 ;	#   https://qiita.com/doitnow420@github/items/b449079af841a16170c8
 	backup-branch = !bash -cx 'git branch "${@:1:$#-1}" "${@:$#:1}.bak" "${@:$#:1}"' --
+;	# - a helper for fixup
+	fixup-helper = !sh -c '[ "$#" -eq 0 ] && git fixup HEAD || git fixup "$@"' --
+;	# - a helper for squash
+	squash-helper = !sh -c '[ "$#" -eq 0 ] && git squash HEAD || git squash "$@"' --
+;	# - a helper for diff
+	diff-helper = !sh -c 'git diff --quiet "$@" || git diff "$@"' --
 ;	# - delete a remote branch
 ;	#   https://tyfkda.github.io/blog/2022/01/23/git-my-alias.html
 	delete-remote-branch = !sh -c '[ -z "$2" ] && ( set -x && git push --delete origin "$1" ) || ( set -x && git push --delete "$@" )' --
-;	# - a helper for diff
-	diff-helper = !sh -c 'git diff --quiet "$@" || git diff "$@"' --
-;	# - a helper for fixup
-	fixup-helper = !sh -c '[ "$#" -eq 0 ] && git fixup HEAD || git fixup "$@"' --
-;	# - pre-check for merge conflicts
-;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
-	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' --
-;	# - a helper for squash
-	squash-helper = !sh -c '[ "$#" -eq 0 ] && git squash HEAD || git squash "$@"' --
 ;	# - show brief status in color
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [pager]

@@ -26,7 +26,7 @@
 	graph = log --graph
 	unstage = reset HEAD --
 	hard-reset = reset --hard
-;	# pseudo commands
+;	# *** pseudo commands ***
 ;	# - pre-check for merge conflicts
 ;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
 	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' --

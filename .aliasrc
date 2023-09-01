@@ -106,8 +106,8 @@ alias gl="git log --abbrev-commit --all --graph --stat"
 alias gp="gl --patch"
 alias gg="GIT_PAGER='less -S' git log --all --graph --oneline"
 alias gll="gl --pretty=fuller"
-alias glr="gl --reflog"
-alias ggr="gg --reflog"
+alias GL="gl --reflog"
+alias GG="gg --reflog"
 
 # sort
 alias sv="sort -V"

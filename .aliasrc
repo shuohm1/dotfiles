@@ -53,7 +53,7 @@ alias fgrep="grep -F"
 alias pgrep="grep -P"
 alias rgrep="grep -r"
 alias bgrep="command grep"  # basic regex
-alias g="egrep"
+alias gr="egrep"
 
 # sed
 alias sed="sed -E"
@@ -78,7 +78,6 @@ alias view="vim -R"
 
 # git
 alias gf="git fetch"
-alias gr="git grep"
 alias gm="git merge --no-ff"
 alias gi="git status"
 alias gw="git where-i-am"

@@ -10,6 +10,7 @@
 	ca = commit --amend
 	ce = commit --allow-empty
 	df = diff
+	gr = grep
 	mg = merge
 	ff = merge --ff-only
 	rb = rebase

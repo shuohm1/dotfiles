@@ -25,7 +25,7 @@ set ruler
 " wrap long lines
 set wrap
 " move the cursor between the head/tail of lines
-" * see: https://vim-jp.org/vimdoc-ja/options.html#'whichwrap'
+" * cf. https://vim-jp.org/vimdoc-ja/options.html#'whichwrap'
 set whichwrap=b,s
 
 " # indent
@@ -60,7 +60,7 @@ set nowrapscan
 set noincsearch
 
 " a completion mode for a name of a file
-" * see: https://vim-jp.org/vimdoc-ja/options.html#'wildmode'
+" * cf. https://vim-jp.org/vimdoc-ja/options.html#'wildmode'
 set wildmode=longest,list
 " enable hidden (inactive) buffers
 set hidden
@@ -80,8 +80,8 @@ set writebackup
 set backupdir=$HOME/tmp//,.
 
 " a setting for the backspace key
-" * see: https://vim-jp.org/vimdoc-ja/options.html#'backspace'
-" * see: http://www.atmarkit.co.jp/ait/articles/1107/21/news115.html
+" * cf. https://vim-jp.org/vimdoc-ja/options.html#'backspace'
+" * cf. http://www.atmarkit.co.jp/ait/articles/1107/21/news115.html
 set backspace=indent,eol,start
 
 " visualize whitespace, tab, etc.

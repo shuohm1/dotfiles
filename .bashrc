@@ -1,4 +1,8 @@
 # .bashrc
+BASHRC="${BASH_SOURCE[0]}"
+BASHRCDIR="${BASHRC%/*}"
+RSLV_BASHRC="$(readlink -e "${BASHRC}" 2> /dev/null)"
+RSLV_BASHRCDIR="${RSLV_BASHRC%/*}"
 
 # a system wide bashrc file
 if [ -f "/etc/bashrc" ]; then
@@ -16,8 +20,8 @@ if [ -f "${HOME}/.bashrc.env" ]; then
 fi
 
 # aliases
-if [ -f "${HOME}/.aliasrc" ]; then
-  source "${HOME}/.aliasrc"
+if [ -f "${RSLV_BASHRCDIR}/.aliasrc" ]; then
+  source "${RSLV_BASHRCDIR}/.aliasrc"
 fi
 
 function get_termcols() {

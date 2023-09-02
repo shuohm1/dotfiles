@@ -1,14 +1,17 @@
 # .zshrc
-ZSHRC=${(%):-%N}
+ZSHRC="${(%):-%N}"
 # (%) : expand prompt-style %-escapes
 #       (see: man zshexpn)
 # %N  : the name of a script, sourced file, or shell function
 #       which is most recently loaded by zsh
 #       (see: man zshmisc)
+ZSHRCDIR="${ZSHRC%/*}"
+RSLV_ZSHRC="$(readlink -e "${ZSHRC}" 2> /dev/null)"
+RSLV_ZSHRCDIR="${RSLV_ZSHRC%/*}"
 
 # aliases
-if [ -f "${HOME}/.aliasrc" ]; then
-  source "${HOME}/.aliasrc"
+if [ -f "${RSLV_ZSHRCDIR}/.aliasrc" ]; then
+  source "${RSLV_ZSHRCDIR}/.aliasrc"
 fi
 
 function get_termcols() {

@@ -45,7 +45,7 @@ esac
 
 # dipatch PROMPT_COMMAND
 # see: http://qiita.com/tay07212/items/9509aef6dc3bffa7dd0c
-function dispatch_prcmd() {
+function dispatch_precmd() {
   # save the last status
   LAST_STATUS=$?
   # run PROMPT_COMMAND_*
@@ -54,7 +54,7 @@ function dispatch_prcmd() {
     eval "${!f}"
   done
 }
-PROMPT_COMMAND="dispatch_prcmd"
+PROMPT_COMMAND="dispatch_precmd"
 
 # command histories
 export HISTFILE="${HOME}/.bash_history"
@@ -97,7 +97,7 @@ case "${TERM}" in
 esac
 
 # renditions of the prompt
-function set_psrend() {
+function update_psrendition() {
   local pscolor=
   if [ "${LAST_STATUS:-0}" -eq 0 ]; then
     # success: cyan
@@ -108,7 +108,7 @@ function set_psrend() {
   fi
   PSRENDITION="\e[${pscolor}m"
 }
-PROMPT_COMMAND_PSRENDITION="set_psrend"
+PROMPT_COMMAND_PSRENDITION="update_psrendition"
 
 # prompt
 function init_prompt() {

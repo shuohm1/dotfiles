@@ -353,14 +353,17 @@ backtick 0 0 0 whoami
 # - %1`: a day of the week in three letters
 backtick 1 60 60 sh -c 'LC_ALL=C date "+%a"'
 
-# hardstatus
+# the hardstatus
 setenv a ""
+# -------------------- # <rendition settings>
 setenv a "$a%{= Wk}"   # - bg: bright white, fg: black
-setenv a "$a["         # - "["
+# -------------------- # <a prefix>
+setenv a "$a["         # - a left bracket
 setenv a "$a%0`"       # - backtick #0: a user name
-setenv a "$a@"         # - "@"
+setenv a "$a@"         # - an at sign
 setenv a "$a%H"        # - a host name
-setenv a "$a] "        # - "] "
+setenv a "$a]"         # - a right bracket
+setenv a "$a "         # - a whitespace
 setenv a "$a%0L="      # - padding up to the 0% position from the left
 #                      #   edge of the terminal
 #                      #   * L: do not truncate, just do padding
@@ -368,10 +371,11 @@ setenv a "$a%0L="      # - padding up to the 0% position from the left
 #                      #   position from the left edge is already passed
 #                      # - this is in order to set the left border of
 #                      #   the truncation area
+# -------------------- # <windows>
 setenv a "$a%-Lw"      # - windows on the left of the current window
-setenv a "$a%40L>"     # - set this point as the 40% position from the
-#                      #   left edge of the terminal when truncation
-#                      #   occurs
+setenv a "$a%40L>"     # - when truncation occurs, move this point to
+#                      #   the 40% position from the left edge of the
+#                      #   terminal
 #                      #   * L: show "..." for truncated characters
 setenv a "$a%{= Ck}"   # - bg: bright cyan, fg: black
 setenv a "$a%n"        # - a window ID
@@ -380,17 +384,22 @@ setenv a "$a "         # - a whitespace
 setenv a "$a%t"        # - a window name
 setenv a "$a%{-}"      # - revert renditions to just before set ones
 setenv a "$a%+Lw"      # - windows on the right of the current window
+# -------------------- # <a suffix>
 setenv a "$a%-027="    # - padding up to the 27th digit from the right
 #                      #   edge of the terminal
 #                      # - the right border of the truncation area is
 #                      #   also set
-setenv a "$a ["        # - " ["
+setenv a "$a "         # - a whitespace
+setenv a "$a["         # - a left bracket
 setenv a "$a%Y-%m-%d"  # - a date YYYY-MM-DD
-setenv a "$a("         # - "("
+setenv a "$a("         # - a left parenthesis
 setenv a "$a%1`"       # - backtick #1: a day of the week
-setenv a "$a) "        # - ") "
+setenv a "$a)"         # - a right parenthesis
+setenv a "$a "         # - a whitespace
 setenv a "$a%0c:%s"    # - a time HH:MM:SS (in 24 hours)
-setenv a "$a]"         # - "]"
+setenv a "$a]"         # - a right bracket
+# -------------------- # <revert rendition settings>
+setenv a "$a%{-}"      # - revert renditions
 hardstatus alwayslastline "$a"
 unsetenv a
 
@@ -437,7 +446,7 @@ caption always "$a"
 unsetenv a
 
 # renditions
-# - a default rendition of hardstatus, captions, command lines, and
+# - a default rendition of the hardstatus, captions, command lines, and
 #   borders of regions
 rendition so "= yk"        # bg: yellow,      fg: black
 # - renditions of windows where events occur

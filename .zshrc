@@ -53,12 +53,12 @@ else
   compinit -d "${ZCOMPDUMP}"
 fi
 
-if [ -f "${ZSHRCDIR}/.zshcomp.sudovim" ]; then
-  source "${ZSHRCDIR}/.zshcomp.sudovim"
-elif [ -f "${RSLV_ZSHRCDIR}/.zshcomp.sudovim" ]; then
-  source "${RSLV_ZSHRCDIR}/.zshcomp.sudovim"
+if [ -f "${ZSHRCDIR}/.zcomp_sudovim" ]; then
+  source "${ZSHRCDIR}/.zcomp_sudovim"
+elif [ -f "${RSLV_ZSHRCDIR}/.zcomp_sudovim" ]; then
+  source "${RSLV_ZSHRCDIR}/.zcomp_sudovim"
 else
-  echo "NOT FOUND: .zshcomp.sudovim" 1>&2
+  echo "NOT FOUND: .zcomp_sudovim" 1>&2
 fi
 
 # do not beep when completion

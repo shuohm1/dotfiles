@@ -5,14 +5,19 @@ if [ -f "/etc/bashrc" ]; then
   source "/etc/bashrc"
 fi
 
+# return if non-interactive shells
+if [ -z "${PS1}" ]; then
+  return
+fi
+
 # environment
 if [ -f "${HOME}/.bashrc.env" ]; then
   source "${HOME}/.bashrc.env"
 fi
 
-# return if non-interactive shells
-if [ -z "${PS1}" ]; then
-  return
+# aliases
+if [ -f "${HOME}/.aliasrc" ]; then
+  source "${HOME}/.aliasrc"
 fi
 
 function get_termcols() {
@@ -139,11 +144,6 @@ init_prompt
 if [ -n "${SSH_TTY}" ]; then
   # if you want to re-enable Ctrl-S, run 'stty stop ^S'
   stty stop undef
-fi
-
-# aliases
-if [ -f "${HOME}/.aliasrc" ]; then
-  source "${HOME}/.aliasrc"
 fi
 
 if [ -f "${HOME}/.bashrc.local" ]; then

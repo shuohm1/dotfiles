@@ -1,11 +1,14 @@
 # .bashrc
+RCEPOCH="$(date "+%s.%N")"
 
-if [ -f /etc/bashrc ]; then
-  source /etc/bashrc
-fi
+BASHRC="${BASH_SOURCE[0]}"
+BASHRCDIR="${BASHRC%/*}"
+RSLV_BASHRC="$(readlink -e "${BASHRC}" 2> /dev/null)"
+RSLV_BASHRCDIR="${RSLV_BASHRC%/*}"
 
-if [ -f "${HOME}/.bashrc.env" ]; then
-  source "${HOME}/.bashrc.env"
+# TODO: unsource a system wide bashrc file
+if [ -f "/etc/bashrc" ]; then
+  source "/etc/bashrc"
 fi
 
 # return if non-interactive shells
@@ -13,46 +16,52 @@ if [ -z "${PS1}" ]; then
   return
 fi
 
-function get_termcols() {
-  local tput="$(command which tput 2> /dev/null)"
-  if [ -x "${tput}" ]; then
-    "${tput}" cols
-  else
-    echo 0
-  fi
-}
+# environment
+source "${HOME}/.bashrc.env"
 
-# show startup message
-RCDATE="$(LC_ALL=C date "+%F(%a) %T")"
-RCDATEPOS=$(($(get_termcols) - ${#RCDATE}))
-# NOTE:
-# - \e[1m: bold
-# - \e[4m: underline
-# - \e[nG: set the cursor position onto the n-th letter (1-origin)
-if [ ${RCDATEPOS} -le $((${#SHELL} + 2)) ]; then
-  echo -e "\e[1m${SHELL}\e[m: \e[1m${RCDATE}\e[m"
+# aliases
+if [ -f "${BASHRCDIR}/.unirc_alias.sh" ]; then
+  source "${BASHRCDIR}/.unirc_alias.sh"
+elif [ -f "${RSLV_BASHRCDIR}/.unirc_alias.sh" ]; then
+  source "${RSLV_BASHRCDIR}/.unirc_alias.sh"
 else
-  echo -e "\e[1m${SHELL}\e[m:\e[${RCDATEPOS}G\e[1;4m${RCDATE}\e[m"
+  echo "NOT FOUND: .unirc_alias.sh" 1>&2
 fi
-# terminal title
-case $TERM in
+
+# functions
+if [ -f "${BASHRCDIR}/.unirc_func.sh" ]; then
+  source "${BASHRCDIR}/.unirc_func.sh"
+elif [ -f "${RSLV_BASHRCDIR}/.unirc_func.sh" ]; then
+  source "${RSLV_BASHRCDIR}/.unirc_func.sh"
+else
+  echo "NOT FOUND: .unirc_func.sh" 1>&2
+fi
+
+# show a startup message
+startup_message "${RCEPOCH}"
+
+# a terminal title
+case "${TERM}" in
   xterm*)
-    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    send_terminaltitle "${USER}@${HOSTNAME}"
+    ;;
+  putty*)
+    send_terminaltitle "${USER}@${HOSTNAME} - PuTTY"
     ;;
 esac
 
 # dipatch PROMPT_COMMAND
-# see: http://qiita.com/tay07212/items/9509aef6dc3bffa7dd0c
-function dispatch_prcmd() {
+# cf. http://qiita.com/tay07212/items/9509aef6dc3bffa7dd0c
+function dispatch_precmd() {
   # save the last status
-  export EXIT_STATUS="$?"
+  LAST_STATUS=$?
   # run PROMPT_COMMAND_*
   local f=
   for f in ${!PROMPT_COMMAND_*}; do
     eval "${!f}"
   done
 }
-export PROMPT_COMMAND="dispatch_prcmd"
+PROMPT_COMMAND="dispatch_precmd"
 
 # command histories
 export HISTFILE="${HOME}/.bash_history"
@@ -69,79 +78,57 @@ export HISTCONTROL=ignoreboth
 # appending mode (NOT overwriting)
 shopt -s histappend
 # save a history to HISTFILE before the prompt is shown
-export PROMPT_COMMAND_HISTSAVE="history -a"
+PROMPT_COMMAND_HISTSAVE="history -a"
 
 # for screen
-# - WINDOWTITLE: \ekWINDOWTITLE\e\\
-# -  HARDSTATUS: \e_HARDSTATUS\e\\
-function set_title4screen() {
-  local p="${WINTITLE}"
-  if [ -z "$p" ]; then
-    p="${FORENAME}"
-    if [ "${p:-localhost}" = "localhost" ]; then
-      p="${SHELL##*/}"
-    fi
-  fi
-  # set a window title
-  echo -en "\ek$p\e\\"
-  # clear a hardstatus
-  echo -en "\e_\e\\"
-}
-
-case $TERM in
-  screen*)
-    export PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"
-    ;;
-esac
+if [[ "${TERM}" = screen* ]]; then
+  PROMPT_COMMAND_RESET_WINDOWTITLE="reset_windowtitle"
+  PROMPT_COMMAND_RESET_HARDSTATUS="reset_hardstatus"
+fi
 
 # renditions of the prompt
-function set_psrend() {
+function update_psrendition() {
   local pscolor=
-  if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
+  if [ "${LAST_STATUS:-0}" -eq 0 ]; then
     # success: cyan
     pscolor=36
   else
-    # failed: magenta
-    pscolor=35
+    # failed: blue
+    pscolor=34
   fi
-  export PS_RENDITION="\e[${pscolor}m"
+  PSRENDITION="\e[${pscolor}m"
 }
-export PROMPT_COMMAND_PSRENDITION="set_psrend"
+PROMPT_COMMAND_PSRENDITION="update_psrendition"
 
 # prompt
 function init_prompt() {
   # set renditions every time
-  # - a command substitution $(echo -e ...) is required
-  #   to interpret escape sequences
-  # - escape $ symbols to prevent expanding commands and variables
-  local rend="\$(echo -en "\${PS_RENDITION:-}")"
+  # - a command substitution $(...) is required to interpret escape
+  #   sequences
+  # - escape dollar signs to prevent expanding commands and variables
+  local c="\$(printf "\${PSRENDITION:-}")"
 
   local p=
   p="$p\[\e[m\]"    # reset renditions
-  p="$p\[$rend\]"   # set renditions
-  p="$p\u"          # user name
-  p="$p@"           # @
-  p="$p\$FORENAME"  # hostname (instead of \h)
-  p="$p:"           # :
-  p="$p\w"          # current directory
+  p="$p\[$c\]"      # set renditions
+  p="$p\u"          # a user name
+  p="$p@"           # an at sign
+  p="$p\$FORENAME"  # a host name (instead of \h)
+  p="$p:"           # a colon
+  p="$p\w"          # the current directory
   p="$p\\$"         # '#' if root, otherwise '$'
-  p="$p "           # space
+  p="$p "           # a whitespace
   p="$p\[\e[m\]"    # reset renditions
-  echo "$p"
+  PS1="$p"
 }
-export PS1="$(init_prompt)"
+init_prompt
 
 # disable Ctrl-S (stop the terminal output temporarily)
 # NOTE: check $SSH_TTY since an error may occur with scp
-# see: https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
+# cf. https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
 if [ -n "${SSH_TTY}" ]; then
   # if you want to re-enable Ctrl-S, run 'stty stop ^S'
   stty stop undef
-fi
-
-# aliases
-if [ -f "${HOME}/.aliasrc" ]; then
-  source "${HOME}/.aliasrc"
 fi
 
 if [ -f "${HOME}/.bashrc.local" ]; then

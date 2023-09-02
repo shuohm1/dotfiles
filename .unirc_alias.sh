@@ -1,4 +1,4 @@
-# .aliasrc
+# .unirc_alias.sh
 
 # delete all aliases in advance
 unalias -a
@@ -6,9 +6,6 @@ unalias -a
 # expand aliases with sudo
 # cf. https://qiita.com/homines22/items/ba1a6d03df85e65fc85a
 alias sudo="sudo "
-
-# disable PROMPT_COMMAND for su
-alias su="PROMPT_COMMAND= su"
 
 # directory stack
 alias pd="pushd"

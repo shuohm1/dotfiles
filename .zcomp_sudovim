@@ -1,3 +1,5 @@
+# .zcomp_sudovim
+
 # complementor for sudo.vim
 # cf. https://www.yuuan.net/item/736
 function _sudovim() {

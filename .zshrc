@@ -1,43 +1,51 @@
 # .zshrc
-ZSHRC=${(%):-%N}
+RCEPOCH="$(date "+%s.%N")"
+
+ZSHRC="${(%):-%N}"
 # (%) : expand prompt-style %-escapes
-#       (see: man zshexpn)
+#       (cf. man zshexpn)
 # %N  : the name of a script, sourced file, or shell function
 #       which is most recently loaded by zsh
-#       (see: man zshmisc)
+#       (cf. man zshmisc)
+ZSHRCDIR="${ZSHRC%/*}"
+RSLV_ZSHRC="$(readlink -e "${ZSHRC}" 2> /dev/null)"
+RSLV_ZSHRCDIR="${RSLV_ZSHRC%/*}"
 
-function get_termcols() {
-  local tput="$(command which tput 2> /dev/null)"
-  if [ -x "${tput}" ]; then
-    "${tput}" cols
-  else
-    echo 0
-  fi
-}
-
-# show startup message
-RCDATE="$(LC_ALL=C date "+%F(%a) %T")"
-RCDATEPOS=$(($(get_termcols) - ${#RCDATE}))
-# NOTE:
-# - \e[1m: bold
-# - \e[4m: underline
-# - \e[nG: set the cursor position onto the n-th letter (1-origin)
-if [ ${RCDATEPOS} -le $((${#SHELL} + 2)) ]; then
-  echo -e "\e[1m${SHELL}\e[m: \e[1m${RCDATE}\e[m"
+# aliases
+if [ -f "${ZSHRCDIR}/.unirc_alias.sh" ]; then
+  source "${ZSHRCDIR}/.unirc_alias.sh"
+elif [ -f "${RSLV_ZSHRCDIR}/.unirc_alias.sh" ]; then
+  source "${RSLV_ZSHRCDIR}/.unirc_alias.sh"
 else
-  echo -e "\e[1m${SHELL}\e[m:\e[${RCDATEPOS}G\e[1;4m${RCDATE}\e[m"
+  echo "NOT FOUND: .unirc_alias.sh" 1>&2
 fi
-# terminal title
-case $TERM in
+
+# functions
+if [ -f "${ZSHRCDIR}/.unirc_func.sh" ]; then
+  source "${ZSHRCDIR}/.unirc_func.sh"
+elif [ -f "${RSLV_ZSHRCDIR}/.unirc_func.sh" ]; then
+  source "${RSLV_ZSHRCDIR}/.unirc_func.sh"
+else
+  echo "NOT FOUND: .unirc_func.sh" 1>&2
+fi
+
+# show a startup message
+startup_message "${RCEPOCH}"
+
+# a terminal title
+case "${TERM}" in
   xterm*)
-    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    send_terminaltitle "${USER}@${HOSTNAME}"
+    ;;
+  putty*)
+    send_terminaltitle "${USER}@${HOSTNAME} - PuTTY"
     ;;
 esac
 
 # completion settings
-# -U: do not expand aliases during autoload
-# -z: force zsh format
-# see: https://medium.com/@rukurx/ad471efd84c3
+#   -U: do not expand aliases during autoload
+#   -z: force zsh format
+# cf. https://medium.com/@rukurx/ad471efd84c3
 autoload -Uz compinit
 if [ -z "${ZCOMPDUMP}" ]; then
   compinit
@@ -45,27 +53,13 @@ else
   compinit -d "${ZCOMPDUMP}"
 fi
 
-# complementor for sudo.vim
-# see: https://blog.besky-works.net/2012/04/sudovim-zsh.html
-# see: https://www.yuuan.net/item/736
-function zshcomp_sudovim() {
-  local LAST="${words[$#words[*]]}"
-  case "${LAST}" in
-    sudo:*)
-      local BASEDIR="${LAST##sudo:}"
-      BASEDIR="${~BASEDIR}"
-      [ -d "${BASEDIR}" ] && BASEDIR="${BASEDIR%%/}/"
-      compadd -P 'sudo:' -f $(print ${BASEDIR}*) \
-      && return 0
-      ;;
-    *)
-      _vim && return 0
-      ;;
-  esac
-
-  return 1
-}
-compdef zshcomp_sudovim vim
+if [ -f "${ZSHRCDIR}/.zshcomp.sudovim" ]; then
+  source "${ZSHRCDIR}/.zshcomp.sudovim"
+elif [ -f "${RSLV_ZSHRCDIR}/.zshcomp.sudovim" ]; then
+  source "${RSLV_ZSHRCDIR}/.zshcomp.sudovim"
+else
+  echo "NOT FOUND: .zshcomp.sudovim" 1>&2
+fi
 
 # do not beep when completion
 setopt nolistbeep
@@ -109,8 +103,8 @@ bindkey '^[%'  vi-match-bracket    # Meta-Shift-5 (or Meta-%)
 # for screen
 # - WINDOWTITLE: \ekWINDOWTITLE\e\\
 # -  HARDSTATUS: \e_HARDSTATUS\e\\
-function set_title4screen() {
-  if [ -n "${WINTITLE}" ]; then return; fi
+function update_windowtitle_preexec() {
+  if [ -n "${WINDOWTITLE}" ]; then return; fi
 
   # NOTE: never mind if these substitutions make wrong messages
   local p="$1"
@@ -142,29 +136,17 @@ function set_title4screen() {
   # set a hardstatus
   echo -ne "\e_$p\e\\"
 }
-function reset_title4screen() {
-  local p="${WINTITLE}"
-  if [ -z "$p" ]; then
-    p="${FORENAME}"
-    if [ "${p:-localhost}" = "localhost" ]; then
-      p="${SHELL##*/}"
-    fi
-  fi
-  # set a window title
-  echo -en "\ek$p\e\\"
-  # clear a hardstatus
-  echo -en "\e_\e\\"
-}
 
-case $TERM in
+case "${TERM}" in
   screen*)
     # just before the command is executed
     preexec() {
-      set_title4screen "$1"
+      update_windowtitle_preexec "$1"
     }
     # just before the prompt shows
     precmd() {
-      reset_title4screen
+      reset_windowtitle
+      reset_hardstatus
     }
     ;;
 esac
@@ -176,27 +158,27 @@ function() {
   local p=
   p="$p%("          # if
   #                 #   %(X.---.---) means if %X then---else---fi
-  p="$p?"           #   %?: exit status of the previous command ($?)
+  p="$p?"           #   %?: the exit status of the previous command
   p="$p."           # then
-  p="$p%F{green}"   #   color between %F{color}---%f
+  p="$p%F{green}"   #   start a color setting (green)
   p="$p."           # else
-  p="$p%F{red}"     #   %F{red}
+  p="$p%F{red}"     #   start a color setting (red)
   p="$p)"           # fi
-  p="$p%n"          # user name
-  p="$p@"           # @
-  p="$p\$FORENAME"  # hostname (instead of %m)
-  p="$p:"           # :
-  p="$p%~"          # current directory
+  p="$p%n"          # a user name
+  p="$p@"           # an at sign
+  p="$p\$FORENAME"  # a host name (instead of %m)
+  p="$p:"           # a colon
+  p="$p%~"          # the current directory
   p="$p%#"          # '#' if root, otherwise '%'
-  p="$p "           # space
-  p="$p%f"          # end of the color setting
+  p="$p "           # a whitespace
+  p="$p%f"          # end a color setting
   PROMPT="$p"
 }
 
 # show the right prompt only on the latest command line
 setopt transient_rprompt
 # right prompt
-function right_prompt_git() {
+function rprompt_gitstatus() {
   local g="$(command which git 2> /dev/null)"
   if [ ! -x "$g" ]; then return; fi
 
@@ -246,19 +228,14 @@ function right_prompt_git() {
 
   echo -n " $p"
 }
-RPROMPT="\$(right_prompt_git)"
+RPROMPT="\$(rprompt_gitstatus)"
 
 # disable Ctrl-S (stop the terminal output temporarily)
 # NOTE: check $SSH_TTY since an error may occur with scp
-# see: https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
+# cf. https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
 if [ -n "${SSH_TTY}" ]; then
   # if you want to re-enable Ctrl-S, run 'stty stop ^S'
   stty stop undef
-fi
-
-# aliases
-if [ -f "${HOME}/.aliasrc" ]; then
-  source "${HOME}/.aliasrc"
 fi
 
 if [ -f "${HOME}/.zshrc.local" ]; then

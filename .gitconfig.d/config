@@ -29,24 +29,24 @@
 ;	# *** pseudo commands ***
 ;	# - pre-check for merge conflicts
 ;	#   https://qiita.com/horimislime/items/84fa431460c8d39f37e6
-	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' --
+	pre-check = !sh -c 'git format-patch $(git rev-parse --abbrev-ref HEAD)..$(git rev-parse --abbrev-ref @{-1}) --stdout | git apply --check' sh
 ;	# - git branch [options] <branchname>.bak <branchname>
 ;	#   NOTE: how to get the last command line argument
 ;	#   https://qiita.com/doitnow420@github/items/b449079af841a16170c8
-	backup-branch = !bash -cx 'git branch "${@:1:$#-1}" "${@:$#:1}.bak" "${@:$#:1}"' --
+	backup-branch = !bash -cx 'git branch "${@:1:$#-1}" "${@:$#:1}.bak" "${@:$#:1}"' bash
 ;	# - a helper for fixup
-	fixup-helper = !sh -c '[ "$#" -eq 0 ] && git fixup HEAD || git fixup "$@"' --
+	fixup-helper = !sh -c '[ "$#" -eq 0 ] && git fixup HEAD || git fixup "$@"' sh
 ;	# - a helper for squash
-	squash-helper = !sh -c '[ "$#" -eq 0 ] && git squash HEAD || git squash "$@"' --
+	squash-helper = !sh -c '[ "$#" -eq 0 ] && git squash HEAD || git squash "$@"' sh
 ;	# - a helper for diff
-	diff-helper = !sh -c 'git diff --quiet "$@" || git diff "$@"' --
+	diff-helper = !sh -c 'git diff --quiet "$@" || git diff "$@"' sh
 ;	# - show further logs including unreachable commits
 ;	#   https://qiita.com/querykuma/items/ac6287002e752535d7ae
-	further-log = !sh -c 'git fsck --verbose 2>&1 | grep -o -E "[0-9A-Fa-f]{40}" | grep -v -E "0{40}" | sort -u | git log --stdin "$@"' --
+	further-log = !sh -c 'git fsck --verbose 2>&1 | grep -o -E "[0-9A-Fa-f]{40}" | grep -v -E "0{40}" | sort -u | git log --stdin "$@"' sh
 	further-graph = further-log --graph
 ;	# - delete a remote branch
 ;	#   https://tyfkda.github.io/blog/2022/01/23/git-my-alias.html
-	delete-remote-branch = !sh -c '[ -z "$2" ] && ( set -x && git push --delete origin "$1" ) || ( set -x && git push --delete "$@" )' --
+	delete-remote-branch = !sh -c '[ -z "$2" ] && ( set -x && git push --delete origin "$1" ) || ( set -x && git push --delete "$@" )' sh
 ;	# - show brief status in color
 	where-i-am = !bash ~/bin/git-whereiam.bash
 [pager]

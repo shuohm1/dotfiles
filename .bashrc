@@ -6,7 +6,7 @@ BASHRCDIR="${BASHRC%/*}"
 RSLV_BASHRC="$(readlink -e "${BASHRC}" 2> /dev/null)"
 RSLV_BASHRCDIR="${RSLV_BASHRC%/*}"
 
-# a system wide bashrc file
+# TODO: unsource a system wide bashrc file
 if [ -f "/etc/bashrc" ]; then
   source "/etc/bashrc"
 fi

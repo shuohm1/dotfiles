@@ -20,8 +20,8 @@ if [ -f "${HOME}/.bashrc.env" ]; then
 fi
 
 # aliases
-if [ -f "${RSLV_BASHRCDIR}/.aliasrc" ]; then
-  source "${RSLV_BASHRCDIR}/.aliasrc"
+if [ -f "${RSLV_BASHRCDIR}/.unirc_alias.sh" ]; then
+  source "${RSLV_BASHRCDIR}/.unirc_alias.sh"
 fi
 
 function get_termcols() {

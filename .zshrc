@@ -10,8 +10,8 @@ RSLV_ZSHRC="$(readlink -e "${ZSHRC}" 2> /dev/null)"
 RSLV_ZSHRCDIR="${RSLV_ZSHRC%/*}"
 
 # aliases
-if [ -f "${RSLV_ZSHRCDIR}/.aliasrc" ]; then
-  source "${RSLV_ZSHRCDIR}/.aliasrc"
+if [ -f "${RSLV_ZSHRCDIR}/.unirc_alias.sh" ]; then
+  source "${RSLV_ZSHRCDIR}/.unirc_alias.sh"
 fi
 
 function get_termcols() {

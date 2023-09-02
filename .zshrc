@@ -12,13 +12,21 @@ RSLV_ZSHRC="$(readlink -e "${ZSHRC}" 2> /dev/null)"
 RSLV_ZSHRCDIR="${RSLV_ZSHRC%/*}"
 
 # aliases
-if [ -f "${RSLV_ZSHRCDIR}/.unirc_alias.sh" ]; then
+if [ -f "${ZSHRCDIR}/.unirc_alias.sh" ]; then
+  source "${ZSHRCDIR}/.unirc_alias.sh"
+elif [ -f "${RSLV_ZSHRCDIR}/.unirc_alias.sh" ]; then
   source "${RSLV_ZSHRCDIR}/.unirc_alias.sh"
+else
+  echo "NOT FOUND: .unirc_alias.sh" 1>&2
 fi
 
 # functions
-if [ -f "${RSLV_ZSHRCDIR}/.unirc_func.sh" ]; then
+if [ -f "${ZSHRCDIR}/.unirc_func.sh" ]; then
+  source "${ZSHRCDIR}/.unirc_func.sh"
+elif [ -f "${RSLV_ZSHRCDIR}/.unirc_func.sh" ]; then
   source "${RSLV_ZSHRCDIR}/.unirc_func.sh"
+else
+  echo "NOT FOUND: .unirc_func.sh" 1>&2
 fi
 
 # show a startup message
@@ -45,8 +53,12 @@ else
   compinit -d "${ZCOMPDUMP}"
 fi
 
-if [ -f "${RSLV_ZSHRCDIR}/.zshcomp.sudovim" ]; then
+if [ -f "${ZSHRCDIR}/.zshcomp.sudovim" ]; then
+  source "${ZSHRCDIR}/.zshcomp.sudovim"
+elif [ -f "${RSLV_ZSHRCDIR}/.zshcomp.sudovim" ]; then
   source "${RSLV_ZSHRCDIR}/.zshcomp.sudovim"
+else
+  echo "NOT FOUND: .zshcomp.sudovim" 1>&2
 fi
 
 # do not beep when completion

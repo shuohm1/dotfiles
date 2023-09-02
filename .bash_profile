@@ -25,6 +25,4 @@ if [ -f "${HOME}/.bash_profile.zsh" ]; then
 fi
 
 # to be continued
-if [ -f "${HOME}/.bashrc" ]; then
-  source "${HOME}/.bashrc"
-fi
+source "${HOME}/.bashrc"

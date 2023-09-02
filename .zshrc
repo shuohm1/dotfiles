@@ -6,6 +6,11 @@ ZSHRC=${(%):-%N}
 #       which is most recently loaded by zsh
 #       (see: man zshmisc)
 
+# aliases
+if [ -f "${HOME}/.aliasrc" ]; then
+  source "${HOME}/.aliasrc"
+fi
+
 function get_termcols() {
   local tput="$(command which tput 2> /dev/null)"
   if [ -x "${tput}" ]; then
@@ -254,11 +259,6 @@ RPROMPT="\$(right_prompt_git)"
 if [ -n "${SSH_TTY}" ]; then
   # if you want to re-enable Ctrl-S, run 'stty stop ^S'
   stty stop undef
-fi
-
-# aliases
-if [ -f "${HOME}/.aliasrc" ]; then
-  source "${HOME}/.aliasrc"
 fi
 
 if [ -f "${HOME}/.zshrc.local" ]; then

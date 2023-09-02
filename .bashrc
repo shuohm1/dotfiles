@@ -1,9 +1,11 @@
 # .bashrc
 
-if [ -f /etc/bashrc ]; then
-  source /etc/bashrc
+# a system wide bashrc file
+if [ -f "/etc/bashrc" ]; then
+  source "/etc/bashrc"
 fi
 
+# environment
 if [ -f "${HOME}/.bashrc.env" ]; then
   source "${HOME}/.bashrc.env"
 fi
@@ -35,7 +37,7 @@ else
   echo -e "\e[1m${SHELL}\e[m:\e[${RCDATEPOS}G\e[1;4m${RCDATE}\e[m"
 fi
 # terminal title
-case $TERM in
+case "${TERM}" in
   xterm*)
     echo -en "\033]0;${USER}@${HOSTNAME}\007"
     ;;
@@ -45,14 +47,14 @@ esac
 # see: http://qiita.com/tay07212/items/9509aef6dc3bffa7dd0c
 function dispatch_prcmd() {
   # save the last status
-  export EXIT_STATUS="$?"
+  LAST_STATUS=$?
   # run PROMPT_COMMAND_*
   local f=
   for f in ${!PROMPT_COMMAND_*}; do
     eval "${!f}"
   done
 }
-export PROMPT_COMMAND="dispatch_prcmd"
+PROMPT_COMMAND="dispatch_prcmd"
 
 # command histories
 export HISTFILE="${HOME}/.bash_history"
@@ -69,7 +71,7 @@ export HISTCONTROL=ignoreboth
 # appending mode (NOT overwriting)
 shopt -s histappend
 # save a history to HISTFILE before the prompt is shown
-export PROMPT_COMMAND_HISTSAVE="history -a"
+PROMPT_COMMAND_HISTSAVE="history -a"
 
 # for screen
 # - WINDOWTITLE: \ekWINDOWTITLE\e\\
@@ -88,48 +90,48 @@ function set_title4screen() {
   echo -en "\e_\e\\"
 }
 
-case $TERM in
+case "${TERM}" in
   screen*)
-    export PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"
+    PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"
     ;;
 esac
 
 # renditions of the prompt
 function set_psrend() {
   local pscolor=
-  if [ "${EXIT_STATUS:-0}" -eq 0 ]; then
+  if [ "${LAST_STATUS:-0}" -eq 0 ]; then
     # success: cyan
     pscolor=36
   else
     # failed: magenta
     pscolor=35
   fi
-  export PS_RENDITION="\e[${pscolor}m"
+  PSRENDITION="\e[${pscolor}m"
 }
-export PROMPT_COMMAND_PSRENDITION="set_psrend"
+PROMPT_COMMAND_PSRENDITION="set_psrend"
 
 # prompt
 function init_prompt() {
   # set renditions every time
-  # - a command substitution $(echo -e ...) is required
-  #   to interpret escape sequences
-  # - escape $ symbols to prevent expanding commands and variables
-  local rend="\$(echo -en "\${PS_RENDITION:-}")"
+  # - a command substitution $(...) is required to interpret escape
+  #   sequences
+  # - escape dollar signs to prevent expanding commands and variables
+  local c="\$(printf "\${PSRENDITION:-}")"
 
   local p=
   p="$p\[\e[m\]"    # reset renditions
-  p="$p\[$rend\]"   # set renditions
-  p="$p\u"          # user name
-  p="$p@"           # @
-  p="$p\$FORENAME"  # hostname (instead of \h)
-  p="$p:"           # :
-  p="$p\w"          # current directory
+  p="$p\[$c\]"      # set renditions
+  p="$p\u"          # a user name
+  p="$p@"           # an at sign
+  p="$p\$FORENAME"  # a host name (instead of \h)
+  p="$p:"           # a colon
+  p="$p\w"          # the current directory
   p="$p\\$"         # '#' if root, otherwise '$'
-  p="$p "           # space
+  p="$p "           # a whitespace
   p="$p\[\e[m\]"    # reset renditions
-  echo "$p"
+  PS1="$p"
 }
-export PS1="$(init_prompt)"
+init_prompt
 
 # disable Ctrl-S (stop the terminal output temporarily)
 # NOTE: check $SSH_TTY since an error may occur with scp

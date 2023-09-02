@@ -1,4 +1,6 @@
 # .zshrc
+RCEPOCH="$(date "+%s.%N")"
+
 ZSHRC="${(%):-%N}"
 # (%) : expand prompt-style %-escapes
 #       (see: man zshexpn)
@@ -14,31 +16,21 @@ if [ -f "${RSLV_ZSHRCDIR}/.unirc_alias.sh" ]; then
   source "${RSLV_ZSHRCDIR}/.unirc_alias.sh"
 fi
 
-function get_termcols() {
-  local tput="$(command which tput 2> /dev/null)"
-  if [ -x "${tput}" ]; then
-    "${tput}" cols
-  else
-    echo 0
-  fi
-}
-
-# show startup message
-RCDATE="$(LC_ALL=C date "+%F(%a) %T")"
-RCDATEPOS=$(($(get_termcols) - ${#RCDATE}))
-# NOTE:
-# - \e[1m: bold
-# - \e[4m: underline
-# - \e[nG: set the cursor position onto the n-th letter (1-origin)
-if [ ${RCDATEPOS} -le $((${#SHELL} + 2)) ]; then
-  echo -e "\e[1m${SHELL}\e[m: \e[1m${RCDATE}\e[m"
-else
-  echo -e "\e[1m${SHELL}\e[m:\e[${RCDATEPOS}G\e[1;4m${RCDATE}\e[m"
+# functions
+if [ -f "${RSLV_ZSHRCDIR}/.unirc_func.sh" ]; then
+  source "${RSLV_ZSHRCDIR}/.unirc_func.sh"
 fi
-# terminal title
+
+# show a startup message
+startup_message "${RCEPOCH}"
+
+# a terminal title
 case "${TERM}" in
   xterm*)
-    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    send_terminaltitle "${USER}@${HOSTNAME}"
+    ;;
+  putty*)
+    send_terminaltitle "${USER}@${HOSTNAME} - PuTTY"
     ;;
 esac
 
@@ -117,8 +109,8 @@ bindkey '^[%'  vi-match-bracket    # Meta-Shift-5 (or Meta-%)
 # for screen
 # - WINDOWTITLE: \ekWINDOWTITLE\e\\
 # -  HARDSTATUS: \e_HARDSTATUS\e\\
-function set_title4screen() {
-  if [ -n "${WINTITLE}" ]; then return; fi
+function update_windowtitle_preexec() {
+  if [ -n "${WINDOWTITLE}" ]; then return; fi
 
   # NOTE: never mind if these substitutions make wrong messages
   local p="$1"
@@ -150,29 +142,17 @@ function set_title4screen() {
   # set a hardstatus
   echo -ne "\e_$p\e\\"
 }
-function reset_title4screen() {
-  local p="${WINTITLE}"
-  if [ -z "$p" ]; then
-    p="${FORENAME}"
-    if [ "${p:-localhost}" = "localhost" ]; then
-      p="${SHELL##*/}"
-    fi
-  fi
-  # set a window title
-  echo -en "\ek$p\e\\"
-  # clear a hardstatus
-  echo -en "\e_\e\\"
-}
 
 case "${TERM}" in
   screen*)
     # just before the command is executed
     preexec() {
-      set_title4screen "$1"
+      update_windowtitle_preexec "$1"
     }
     # just before the prompt shows
     precmd() {
-      reset_title4screen
+      reset_windowtitle
+      reset_hardstatus
     }
     ;;
 esac
@@ -204,7 +184,7 @@ function() {
 # show the right prompt only on the latest command line
 setopt transient_rprompt
 # right prompt
-function right_prompt_git() {
+function rprompt_gitstatus() {
   local g="$(command which git 2> /dev/null)"
   if [ ! -x "$g" ]; then return; fi
 
@@ -254,7 +234,7 @@ function right_prompt_git() {
 
   echo -n " $p"
 }
-RPROMPT="\$(right_prompt_git)"
+RPROMPT="\$(rprompt_gitstatus)"
 
 # disable Ctrl-S (stop the terminal output temporarily)
 # NOTE: check $SSH_TTY since an error may occur with scp

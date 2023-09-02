@@ -93,8 +93,8 @@ function update_psrendition() {
     # success: cyan
     pscolor=36
   else
-    # failed: magenta
-    pscolor=35
+    # failed: blue
+    pscolor=34
   fi
   PSRENDITION="\e[${pscolor}m"
 }

@@ -1,4 +1,6 @@
 # .bashrc
+RCEPOCH="$(date "+%s.%N")"
+
 BASHRC="${BASH_SOURCE[0]}"
 BASHRCDIR="${BASHRC%/*}"
 RSLV_BASHRC="$(readlink -e "${BASHRC}" 2> /dev/null)"
@@ -24,31 +26,21 @@ if [ -f "${RSLV_BASHRCDIR}/.unirc_alias.sh" ]; then
   source "${RSLV_BASHRCDIR}/.unirc_alias.sh"
 fi
 
-function get_termcols() {
-  local tput="$(command which tput 2> /dev/null)"
-  if [ -x "${tput}" ]; then
-    "${tput}" cols
-  else
-    echo 0
-  fi
-}
-
-# show startup message
-RCDATE="$(LC_ALL=C date "+%F(%a) %T")"
-RCDATEPOS=$(($(get_termcols) - ${#RCDATE}))
-# NOTE:
-# - \e[1m: bold
-# - \e[4m: underline
-# - \e[nG: set the cursor position onto the n-th letter (1-origin)
-if [ ${RCDATEPOS} -le $((${#SHELL} + 2)) ]; then
-  echo -e "\e[1m${SHELL}\e[m: \e[1m${RCDATE}\e[m"
-else
-  echo -e "\e[1m${SHELL}\e[m:\e[${RCDATEPOS}G\e[1;4m${RCDATE}\e[m"
+# functions
+if [ -f "${RSLV_BASHRCDIR}/.unirc_func.sh" ]; then
+  source "${RSLV_BASHRCDIR}/.unirc_func.sh"
 fi
-# terminal title
+
+# show a startup message
+startup_message "${RCEPOCH}"
+
+# a terminal title
 case "${TERM}" in
   xterm*)
-    echo -en "\033]0;${USER}@${HOSTNAME}\007"
+    send_terminaltitle "${USER}@${HOSTNAME}"
+    ;;
+  putty*)
+    send_terminaltitle "${USER}@${HOSTNAME} - PuTTY"
     ;;
 esac
 
@@ -83,27 +75,10 @@ shopt -s histappend
 PROMPT_COMMAND_HISTSAVE="history -a"
 
 # for screen
-# - WINDOWTITLE: \ekWINDOWTITLE\e\\
-# -  HARDSTATUS: \e_HARDSTATUS\e\\
-function set_title4screen() {
-  local p="${WINTITLE}"
-  if [ -z "$p" ]; then
-    p="${FORENAME}"
-    if [ "${p:-localhost}" = "localhost" ]; then
-      p="${SHELL##*/}"
-    fi
-  fi
-  # set a window title
-  echo -en "\ek$p\e\\"
-  # clear a hardstatus
-  echo -en "\e_\e\\"
-}
-
-case "${TERM}" in
-  screen*)
-    PROMPT_COMMAND_TITLE4SCREEN="set_title4screen"
-    ;;
-esac
+if [[ "${TERM}" = screen* ]]; then
+  PROMPT_COMMAND_RESET_WINDOWTITLE="reset_windowtitle"
+  PROMPT_COMMAND_RESET_HARDSTATUS="reset_hardstatus"
+fi
 
 # renditions of the prompt
 function update_psrendition() {

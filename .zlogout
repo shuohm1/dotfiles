@@ -1,5 +1,5 @@
 # .zlogout
 
 # do not read any subsequent rc files, /etc/zlogout, which clears terminal
-# see: https://superuser.com/questions/496618/
+# cf. https://superuser.com/questions/496618/
 setopt norcs

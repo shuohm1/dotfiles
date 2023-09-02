@@ -51,7 +51,7 @@ case "${TERM}" in
 esac
 
 # dipatch PROMPT_COMMAND
-# see: http://qiita.com/tay07212/items/9509aef6dc3bffa7dd0c
+# cf. http://qiita.com/tay07212/items/9509aef6dc3bffa7dd0c
 function dispatch_precmd() {
   # save the last status
   LAST_STATUS=$?
@@ -125,7 +125,7 @@ init_prompt
 
 # disable Ctrl-S (stop the terminal output temporarily)
 # NOTE: check $SSH_TTY since an error may occur with scp
-# see: https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
+# cf. https://linux.just4fun.biz/?%E9%80%86%E5%BC%95%E3%81%8DUNIX%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/Ctrl%2BS%E3%81%AB%E3%82%88%E3%82%8B%E7%AB%AF%E6%9C%AB%E3%83%AD%E3%83%83%E3%82%AF%E3%82%92%E7%84%A1%E5%8A%B9%E3%81%AB%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95
 if [ -n "${SSH_TTY}" ]; then
   # if you want to re-enable Ctrl-S, run 'stty stop ^S'
   stty stop undef

@@ -15,6 +15,8 @@ make_temporary_directory "${HOME}/.cache"
 make_temporary_directory "${HOME}/tmp/.vimswap"
 
 # local settings
-if [ -f "${HOME}/.zprofile.local" ]; then
+if [[ -d "${ZDOTDIR}" && -f "${ZDOTDIR}/.zprofile.local" ]]; then
+  source "${ZDOTDIR}/.zprofile.local"
+elif [ -f "${HOME}/.zprofile.local" ]; then
   source "${HOME}/.zprofile.local"
 fi

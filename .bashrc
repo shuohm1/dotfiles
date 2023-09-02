@@ -17,18 +17,24 @@ if [ -z "${PS1}" ]; then
 fi
 
 # environment
-if [ -f "${HOME}/.bashrc.env" ]; then
-  source "${HOME}/.bashrc.env"
-fi
+source "${HOME}/.bashrc.env"
 
 # aliases
-if [ -f "${RSLV_BASHRCDIR}/.unirc_alias.sh" ]; then
+if [ -f "${BASHRCDIR}/.unirc_alias.sh" ]; then
+  source "${BASHRCDIR}/.unirc_alias.sh"
+elif [ -f "${RSLV_BASHRCDIR}/.unirc_alias.sh" ]; then
   source "${RSLV_BASHRCDIR}/.unirc_alias.sh"
+else
+  echo "NOT FOUND: .unirc_alias.sh" 1>&2
 fi
 
 # functions
-if [ -f "${RSLV_BASHRCDIR}/.unirc_func.sh" ]; then
+if [ -f "${BASHRCDIR}/.unirc_func.sh" ]; then
+  source "${BASHRCDIR}/.unirc_func.sh"
+elif [ -f "${RSLV_BASHRCDIR}/.unirc_func.sh" ]; then
   source "${RSLV_BASHRCDIR}/.unirc_func.sh"
+else
+  echo "NOT FOUND: .unirc_func.sh" 1>&2
 fi
 
 # show a startup message

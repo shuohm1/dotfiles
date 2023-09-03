@@ -107,56 +107,14 @@ bindkey '^]'   vi-find-next-char   # Ctrl-]
 bindkey '^[^]' vi-find-prev-char   # Meta-Ctrl-]
 bindkey '^[%'  vi-match-bracket    # Meta-Shift-5 (or Meta-%)
 
-# for screen
-# - WINDOWTITLE: \ekWINDOWTITLE\e\\
-# -  HARDSTATUS: \e_HARDSTATUS\e\\
-function update_windowtitle_preexec() {
-  if [ -n "${WINDOWTITLE}" ]; then return; fi
-
-  # NOTE: never mind if these substitutions make wrong messages
-  local p="$1"
-  # remove leading/trailing braces, parentheses, and spaces
-  p="$(echo "$p" | command sed -E 's/^[{( ]+//; s/[ )}]+$//')"
-  # remove assignments of environment variables
-  # \x22: a double quotetion sign
-  # \x27: a single quotation sign
-  p="$(echo "$p" | command sed -E 's/^([_a-zA-Z0-9]+=([^ ]*|\x22[^\x22]*\x22|\x27[^\x27]*\x27) +)+//')"
-
-  # set a window title
-  echo -ne "\ek${p%% *}\e\\"
-
-  if [ "$p" = "${p#* }" ]; then return; fi
-  p="${p#* }"
-
-  # remove control characters
-  p="$(echo "$p" | tr -d '[:cntrl:]')"
-  # truncate in 256 bytes
-  p="$(echo "$p" | cut --bytes=-256)"
-  # reverse colors (string escapes of screen)
-  # \x05  : an escape sequence
-  # %{+r} : exchange foreground and background color
-  # %{-}  : revert colors
-  p="$(echo "$p" | LC_ALL=C command sed -E 's/([\x80-\xFF]+)/\x05{+r}\1\x05{-}/g')"
-  # replace non-ascii characters with '?'
-  p="$(echo "$p" | LC_ALL=C command sed -E 's/[\x80-\xFF]/?/g')"
-
-  # set a hardstatus
-  echo -ne "\e_$p\e\\"
-}
-
-case "${TERM}" in
-  screen*)
-    # just before the command is executed
-    preexec() {
-      update_windowtitle_preexec "$1"
-    }
-    # just before the prompt shows
-    precmd() {
-      reset_windowtitle
-      reset_hardstatus
-    }
-    ;;
-esac
+# hooks
+if [ -f "${ZSHRCDIR}/.zsh_hooks" ]; then
+  source "${ZSHRCDIR}/.zsh_hooks"
+elif [ -f "${RSLV_ZSHRCDIR}/.zsh_hooks" ]; then
+  source "${RSLV_ZSHRCDIR}/.zsh_hooks"
+else
+  echo "NOT FOUND: .zsh_hooks" 1>&2
+fi
 
 # expand environment variables in the prompt
 setopt prompt_subst

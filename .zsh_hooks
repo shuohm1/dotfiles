@@ -1,0 +1,54 @@
+# .zsh_hooks
+
+# hook functions
+# 1. zshaddhistory: before the input command is added to histories
+# 2. preexec:       before the input command is executed
+# 3. -------------- the input command is executed
+# 4. chpwd:         after the current working directory is changed
+# 5. precmd:        before the prompt is shown (i.e. after the previous
+#                   command exited)
+# 6. periodic:      before the prompt is shown, but only if $PERIOD
+#                   seconds have passed since the previous `periodic`
+# *. zshexit:       before this zsh exits
+autoload -Uz add-zsh-hook
+
+function update_windowtitle_preexec() {
+  if [ -n "${WINDOWTITLE}" ]; then return; fi
+
+  # NOTE: never mind if these substitutions make wrong messages
+  local p="$1"
+  # remove leading/trailing braces, parentheses, and spaces
+  p="$(echo "$p" | command sed -E 's/^[{( ]+//; s/[ )}]+$//')"
+  # remove assignments of environment variables
+  # \x22: a double quotetion sign
+  # \x27: a single quotation sign
+  p="$(echo "$p" | command sed -E 's/^([_a-zA-Z0-9]+=([^ ]*|\x22[^\x22]*\x22|\x27[^\x27]*\x27) +)+//')"
+
+  # set a window title
+  echo -ne "\ek${p%% *}\e\\"
+
+  if [ "$p" = "${p#* }" ]; then return; fi
+  p="${p#* }"
+
+  # remove control characters
+  p="$(echo "$p" | tr -d '[:cntrl:]')"
+  # truncate in 256 bytes
+  p="$(echo "$p" | cut --bytes=-256)"
+  # reverse colors (string escapes of screen)
+  # \x05  : an escape sequence
+  # %{+r} : exchange foreground and background color
+  # %{-}  : revert colors
+  p="$(echo "$p" | LC_ALL=C command sed -E 's/([\x80-\xFF]+)/\x05{+r}\1\x05{-}/g')"
+  # replace non-ascii characters with '?'
+  p="$(echo "$p" | LC_ALL=C command sed -E 's/[\x80-\xFF]/?/g')"
+
+  # set a hardstatus
+  echo -ne "\e_$p\e\\"
+}
+
+# register hooks for screen
+if [[ "${TERM}" = screen* ]]; then
+  add-zsh-hook preexec update_windowtitle_preexec
+  add-zsh-hook precmd  reset_windowtitle
+  add-zsh-hook precmd  reset_hardstatus
+fi

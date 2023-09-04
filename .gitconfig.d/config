@@ -19,7 +19,7 @@
 	st = status
 	sw = switch
 	fixup = commit --fixup
-	squash = commit --squash
+	squash = commit --message="" --squash
 	egrep = grep -E
 	fgrep = grep -F
 	pgrep = grep -P

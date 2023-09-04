@@ -42,7 +42,7 @@ case "${TERM}" in
     ;;
 esac
 
-# completion settings
+# complement settings
 #   -U: do not expand aliases during autoload
 #   -z: force zsh format
 # cf. https://medium.com/@rukurx/ad471efd84c3
@@ -61,11 +61,11 @@ else
   echo "NOT FOUND: .zshcomp_sudovim" 1>&2
 fi
 
-# do not beep when completion
+# do not beep when complement
 setopt nolistbeep
 # complement for --foo=bar
 setopt magic_equal_subst
-# disable switching completions
+# disable switching complements
 unsetopt auto_menu
 
 # command histories

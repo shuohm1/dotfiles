@@ -1,7 +1,7 @@
 # .bash_funcs
 
 function ensure_asciichars() {
-  printf "$(printf "$1" | LANG=C tr -c '[:cntrl:][:print:]' '[?*]')\n"
+  echo -n "${1//[^[:ascii:]]/?}"
 }
 
 function startup_message() {

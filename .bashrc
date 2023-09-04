@@ -86,39 +86,33 @@ if [[ "${TERM}" = screen* ]]; then
   PROMPT_COMMAND_RESET_HARDSTATUS="reset_hardstatus"
 fi
 
-# renditions of the prompt
-function update_psrendition() {
-  local pscolor=
+# color of the prompt
+function update_pscolor() {
   if [ "${LAST_STATUS:-0}" -eq 0 ]; then
     # success: cyan
-    pscolor=36
+    PSCOLOR=36
   else
     # failed: blue
-    pscolor=34
+    PSCOLOR=34
   fi
-  PSRENDITION="\e[${pscolor}m"
 }
-PROMPT_COMMAND_PSRENDITION="update_psrendition"
+PROMPT_COMMAND_PSCOLOR="update_pscolor"
 
 # prompt
 function init_prompt() {
-  # set renditions every time
-  # - a command substitution $(...) is required to interpret escape
-  #   sequences
-  # - escape dollar signs to prevent expanding commands and variables
-  local c="\$(printf "\${PSRENDITION:-}")"
-
   local p=
-  p="$p\[\e[m\]"    # reset renditions
-  p="$p\[$c\]"      # set renditions
-  p="$p\u"          # a user name
-  p="$p@"           # an at sign
-  p="$p\$FORENAME"  # a host name (instead of \h)
-  p="$p:"           # a colon
-  p="$p\w"          # the current directory
-  p="$p\\$"         # '#' if root, otherwise '$'
-  p="$p "           # a whitespace
-  p="$p\[\e[m\]"    # reset renditions
+  p="$p\["               # begin an invisible section
+  p="$p\e[m"             # reset renditions
+  p="$p\e[\${PSCOLOR}m"  # set color
+  p="$p\]"               # end an invisible section
+  p="$p\u"               # a user name
+  p="$p@"                # an at sign
+  p="$p\${FORENAME}"     # a host name (instead of \h)
+  p="$p:"                # a colon
+  p="$p\w"               # the current directory
+  p="$p\\$"              # '#' if root, otherwise '$'
+  p="$p "                # a whitespace
+  p="$p\[\e[m\]"         # reset renditions
   PS1="$p"
 }
 init_prompt

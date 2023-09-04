@@ -109,7 +109,7 @@ alias GG="gg --reflog"
 alias gi="git status"
 
 # sort
-alias sv="sort -V"
+alias so="sort"
 
 # while
 alias wi="while read i"

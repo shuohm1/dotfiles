@@ -42,7 +42,7 @@ case "${TERM}" in
     ;;
 esac
 
-# completion settings
+# complement settings
 #   -U: do not expand aliases during autoload
 #   -z: force zsh format
 # cf. https://medium.com/@rukurx/ad471efd84c3
@@ -53,19 +53,19 @@ else
   compinit -d "${ZCOMPDUMP}"
 fi
 
-if [ -f "${ZSHRCDIR}/.zcomp_sudovim" ]; then
-  source "${ZSHRCDIR}/.zcomp_sudovim"
-elif [ -f "${RSLV_ZSHRCDIR}/.zcomp_sudovim" ]; then
-  source "${RSLV_ZSHRCDIR}/.zcomp_sudovim"
+if [ -f "${ZSHRCDIR}/.zshcomp_sudovim" ]; then
+  source "${ZSHRCDIR}/.zshcomp_sudovim"
+elif [ -f "${RSLV_ZSHRCDIR}/.zshcomp_sudovim" ]; then
+  source "${RSLV_ZSHRCDIR}/.zshcomp_sudovim"
 else
-  echo "NOT FOUND: .zcomp_sudovim" 1>&2
+  echo "NOT FOUND: .zshcomp_sudovim" 1>&2
 fi
 
-# do not beep when completion
+# do not beep when complement
 setopt nolistbeep
 # complement for --foo=bar
 setopt magic_equal_subst
-# disable switching completions
+# disable switching complements
 unsetopt auto_menu
 
 # command histories

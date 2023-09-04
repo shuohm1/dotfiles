@@ -1,6 +1,6 @@
-# .zcomp_sudovim
+# .zshcomp_sudovim
 
-# complementor for sudo.vim
+# a complementor for sudo.vim
 # cf. https://www.yuuan.net/item/736
 function _sudovim() {
   local LAST="${words[$#words[*]]}"

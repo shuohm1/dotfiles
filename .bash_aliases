@@ -1,4 +1,4 @@
-# .unirc_alias.sh
+# .bash_aliases
 
 # delete all aliases in advance
 unalias -a

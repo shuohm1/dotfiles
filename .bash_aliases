@@ -23,7 +23,7 @@ alias lg="ls -g -o"  # do not list owner/group
 alias lh="ls -h -l"  # human readable
 alias ll="ls -l"     # long
 alias ly="ls -l -L"  # follow all symlinks
-alias lt="ls -a -l --time-style='+%F %T.%3N'"
+alias lt="ls -l --time-style='+%F %T.%3N'"
 # more details
 alias laa="la -l"
 alias lff="lf -a"
@@ -31,6 +31,7 @@ alias lgg="lg -a"
 alias lhh="lh -a"
 alias lll="ll -a"
 alias lyy="ly -a"
+alias ltt="lt -a"
 
 # always prompt before overwrite with mv/cp/rm
 alias mv="mv -i"

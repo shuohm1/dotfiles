@@ -20,21 +20,21 @@ fi
 source "${HOME}/.bashrc.env"
 
 # aliases
-if [ -f "${BASHRCDIR}/.unirc_alias.sh" ]; then
-  source "${BASHRCDIR}/.unirc_alias.sh"
-elif [ -f "${RSLV_BASHRCDIR}/.unirc_alias.sh" ]; then
-  source "${RSLV_BASHRCDIR}/.unirc_alias.sh"
+if [ -f "${BASHRCDIR}/.bash_aliases" ]; then
+  source "${BASHRCDIR}/.bash_aliases"
+elif [ -f "${RSLV_BASHRCDIR}/.bash_aliases" ]; then
+  source "${RSLV_BASHRCDIR}/.bash_aliases"
 else
-  echo "NOT FOUND: .unirc_alias.sh" 1>&2
+  echo "NOT FOUND: .bash_aliases" 1>&2
 fi
 
 # functions
-if [ -f "${BASHRCDIR}/.unirc_func.sh" ]; then
-  source "${BASHRCDIR}/.unirc_func.sh"
-elif [ -f "${RSLV_BASHRCDIR}/.unirc_func.sh" ]; then
-  source "${RSLV_BASHRCDIR}/.unirc_func.sh"
+if [ -f "${BASHRCDIR}/.bash_funcs" ]; then
+  source "${BASHRCDIR}/.bash_funcs"
+elif [ -f "${RSLV_BASHRCDIR}/.bash_funcs" ]; then
+  source "${RSLV_BASHRCDIR}/.bash_funcs"
 else
-  echo "NOT FOUND: .unirc_func.sh" 1>&2
+  echo "NOT FOUND: .bash_funcs" 1>&2
 fi
 
 # show a startup message

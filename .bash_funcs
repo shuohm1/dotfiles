@@ -1,4 +1,4 @@
-# .unirc_func.sh
+# .bash_funcs
 
 function ensure_asciichars() {
   printf "$(printf "$1" | LANG=C tr -c '[:cntrl:][:print:]' '[?*]')\n"

@@ -11,8 +11,11 @@ function print_onlyascii() {
 }
 
 function startup_message() {
-  local t="${1:-$(date "+%s")}"
-  t="$(LC_ALL=C date --date="@${t%%.*}" "+%F(%a) %T")"
+  local t="${1%%.*}"
+  if [ -z "$t" ]; then
+    t="$(date "+%s")"
+  fi
+  t="$(LC_ALL=C date --date="@$t" "+%F(%a) %T")"
 
   # NOTE:
   # - \e[1m: bold

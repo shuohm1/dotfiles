@@ -1,7 +1,13 @@
 # .bash_funcs
 
-function ensure_asciichars() {
-  echo -n "${1//[^[:ascii:]]/?}"
+function destroy_nonascii() {
+  retval="${1//[^[:ascii:]]/?}"
+}
+
+function print_onlyascii() {
+  local retval=
+  destroy_nonascii "$1"
+  echo "${retval}"
 }
 
 function startup_message() {
@@ -28,20 +34,26 @@ function send_terminaltitle() {
   esac
 
   # \e]0;${TERMINALTITLE}\a
-  printf "\x1B\x5D\x30\x3B%s\x07" "$(ensure_asciichars "$1")"
+  local retval=
+  destroy_nonascii "$1"
+  printf "\x1B\x5D\x30\x3B%s\x07" "${retval}"
 }
 
 function send_windowtitle() {
   if [[ "${TERM}" = screen* ]]; then
     # \ek${WINDOWTITLE}\e\\
-    printf "\x1B\x6B%s\x1B\x5C" "$(ensure_asciichars "$1")"
+    local retval=
+    destroy_nonascii "$1"
+    printf "\x1B\x6B%s\x1B\x5C" "${retval}"
   fi
 }
 
 function send_hardstatus() {
   if [[ "${TERM}" = screen* ]]; then
     # \e_${HARDSTATUS}\e\\
-    printf "\x1B\x5F%s\x1B\x5C" "$(ensure_asciichars "$1")"
+    local retval=
+    destroy_nonascii "$1"
+    printf "\x1B\x5F%s\x1B\x5C" "${retval}"
   fi
 }
 

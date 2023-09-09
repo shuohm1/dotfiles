@@ -12,6 +12,123 @@
 # *. zshexit:       before this zsh exits
 autoload -Uz add-zsh-hook
 
+# a helper function to retrieve a branch name
+function retrieve_gitbranch() {
+  git rev-parse --abbrev-ref HEAD 2> /dev/null | read retval
+
+  # try to retrieve a commit hash instead of 'HEAD'
+  if [ "${retval}" = "HEAD" ]; then
+    git rev-parse --short HEAD 2> /dev/null | read retval
+    if [ -z "${retval}" ]; then
+      retval="HEAD"
+    fi
+  fi
+}
+
+# a helper function to compose a status list from git status
+function compose_gitstatus_from_message() {
+  local st="$1"
+
+  # retrieve a status message
+  git status 2> /dev/null | read -d '' retval
+  compress_whitespaces "${retval}"
+  # (L) turns the given word into lowercase (cf. man zshexpn)
+  local msg="${(L)retval}"
+
+  local re_cf='unmerged paths'
+  local re_mg='still merging'
+  local re_rb='rebase in progress'
+  local re_ch='changes not staged for commit'
+  local re_st='changes to be committed'
+  local re_cl='working (directory|tree) clean'
+  local re_ut='untracked files'
+
+  if [[ "${msg}" =~ ${re_cf} ]]; then
+    st="${st}${st:+,}conflict"
+  fi
+  if [[ "${msg}" =~ ${re_mg} ]]; then
+    st="${st}${st:+,}merge"
+  fi
+  if [[ "${msg}" =~ ${re_rb} ]]; then
+    st="${st}${st:+,}rebase"
+  fi
+  if [[ "${msg}" =~ ${re_ch} ]]; then
+    st="${st}${st:+,}change"
+  fi
+  if [[ "${msg}" =~ ${re_st} ]]; then
+    st="${st}${st:+,}stage"
+  fi
+  if [[ "${msg}" =~ ${re_cl} ]]; then
+    st="${st}${st:+,}clean"
+  fi
+  if [[ "${msg}" =~ ${re_ut} ]]; then
+    st="${st}${st:+,}untrack"
+  fi
+
+  if [ -n "${st}" ]; then
+    retval="${st}"
+  else
+    retval="unknown"
+  fi
+}
+
+# a helper function to compose a status list from git log
+function compose_gitstatus_from_recentlogs() {
+  local st="$1"
+
+  # retrieve recent logs
+  integer nlog="${NUM_RECENT_GITLOG:-80}"
+  (( nlog = nlog < 0 ? 0 : nlog ))
+  git log -n "${nlog}" --no-decorate --oneline | read -d '' retval
+  # (f) splits words by newlines and make an array (cf. man zshexpn)
+  typeset -a recent=("${(f)retval}")
+
+  nlog=${#recent}
+  integer i=0
+
+  local re_up='^[df]e[[:xdigit:]]+'
+  local re_sq='^[[:xdigit:]]+ (fixup|squash)[!?]'
+
+  # NOTE: zsh uses 1-origin indices
+  for (( i = 1; i < nlog; i++ )) do
+    if [[ "${recent[$i]}" =~ ${re_up} ]]; then
+      st="${st}${st:+,}unprefer"
+      break
+    fi
+  done
+
+  for (( i = 1; i < nlog; i++ )) do
+    if [[ "${recent[$i]}" =~ ${re_sq} ]]; then
+      st="${st}${st:+,}squash"
+      break
+    fi
+  done
+
+  retval="${st}"
+}
+
+# a hook for git status
+function update_gitstatus() {
+  GIT_STATUS=
+  GIT_BRANCH=
+  local retval=
+
+  retrieve_gitbranch
+  local br="${retval}"
+  if [ -z "${br}" ]; then
+    return
+  fi
+
+  retval=
+  compose_gitstatus_from_message "${retval}"
+  compose_gitstatus_from_recentlogs "${retval}"
+  local st="${retval}"
+
+  GIT_STATUS="${st}"
+  GIT_BRANCH="${br}"
+}
+
+# hooks for screen
 function update_prex_windowtitle() {
   if [ "${ENABLE_WINDOWTITLE:-0}" -eq 0 ]; then
     return
@@ -47,6 +164,9 @@ function update_prep_windowtitle() {
     reset_windowtitle
   fi
 }
+
+# register a hook for git status
+add-zsh-hook precmd update_gitstatus
 
 # register hooks for screen
 if [[ "${TERM}" = screen* ]]; then

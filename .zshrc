@@ -116,13 +116,25 @@ else
   echo "NOT FOUND: .zsh_hooks" 1>&2
 fi
 
+# hook switches for git status
+integer EXCLAMATIONMARK_GITRPROMPT=0
+integer QUESTIONMARK_GITRPROMPT=$((0xE2AB1E))
+integer UNPREFERABLEHASH_GITRPROMPT=0
+
+# hook switches for a right prompt
+integer ENABLE_RPROMPT=$((0xE2AB1E))
+integer ENABLE_RPROMPT_GIT=$((0xE2AB1E))
+
 # hook switches for screen
 if [[ "${TERM}" = screen* ]]; then
   integer ENABLE_WINDOWTITLE=$((0xE2AB1E))
 fi
 
-# expand environment variables in the prompt
+# expand environment variables in prompts
 setopt prompt_subst
+# show a right prompt only on the current command line
+setopt transient_rprompt
+
 # prompt
 function() {
   local p=
@@ -144,61 +156,6 @@ function() {
   p="$p%f"            # end a color setting
   PROMPT="$p"
 }
-
-# show the right prompt only on the latest command line
-setopt transient_rprompt
-# right prompt
-function rprompt_gitstatus() {
-  local g="$(command which git 2> /dev/null)"
-  if [ ! -x "$g" ]; then return; fi
-
-  local gstatus="$($g status 2>&1 | tr 'A-Z' 'a-z')"
-  if [[ "${gstatus}" =~ (not a git repository) ]]; then return; fi
-
-  local gbranch="$($g rev-parse --abbrev-ref HEAD 2> /dev/null)"
-  if [[ -z "${gstatus}" || -z "${gbranch}" ]]; then return; fi
-
-  # try to get a commit ID instead of 'HEAD'
-  if [ "${gbranch}" = "HEAD" ]; then
-    gbranch="$($g rev-parse HEAD 2> /dev/null)"
-    gbranch="$(echo "${gbranch}" | command grep -m1 -o -E '^.{,7}')"
-  fi
-
-  # prefix (broken vertical bar)
-  local v="\u00A6"
-  # suffix
-  local u=
-  if [[ "${gstatus}" =~ (untracked files) ]]; then
-    u="?"
-  fi
-
-  local p="$gbranch"
-  if [[ "${gstatus}" =~ (unmerged paths) ]]; then
-    v="%F{red}$v%f"
-    u="%F{red}$u%f"
-    p="$v%F{white}%K{red}$p%k%f$u"
-  elif [[ "${gstatus}" =~ (still merging|rebase in progress) ]]; then
-    v="%F{yellow}$v%f"
-    u="%F{yellow}$u%f"
-    p="$v%F{black}%K{yellow}$p%k%f$u"
-  elif [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
-    p="%F{green}$v$p$u%f"
-  elif [[ "${gstatus}" =~ (changes not staged for commit) ]]; then
-    p="%F{red}$v$p$u%f"
-  elif [[ "${gstatus}" =~ (changes to be committed) ]]; then
-    p="%F{yellow}$v$p$u%f"
-  elif [[ "${gstatus}" =~ (untracked files) ]]; then
-    p="%F{cyan}$v$p$u%f"
-  else
-    # unknown status
-    v="%F{blue}$v%f"
-    u="?"
-    p="$v%F{white}%K{blue}$p$u%k%f"
-  fi
-
-  echo -n " $p"
-}
-RPROMPT="\$(rprompt_gitstatus)"
 
 # disable XON (Ctrl-Q) and XOFF (Ctrl-S) when interactive shells
 # cf. https://linuxfan.info/disable-ctrl-s

@@ -128,6 +128,131 @@ function update_gitstatus() {
   GIT_BRANCH="${br}"
 }
 
+# a helper function for suffix of git status on a right prompt
+function compose_suffix_rpgitstatus() {
+  local x='!'
+  local q='?'
+  retval=
+
+  if [[ "$1" = *unknown* ]]; then
+    retval="$q"
+    return
+  fi
+
+  if [ "${EXCLAMATIONMARK_GITRPROMPT:-0}" -ne 0 ]; then
+    if [[ "$1" = *(squash|unprefer)* ]]; then
+      retval="${retval}$x"
+    fi
+  fi
+
+  if [ "${QUESTIONMARK_GITRPROMPT:-0}" -ne 0 ]; then
+    if [[ "$1" = *untrack* ]]; then
+      retval="${retval}$q"
+    fi
+  fi
+}
+
+# a helper function to compose git status on a right prompt
+function compose_rpgitstatus() {
+  local st="$1"
+  local br="$2"
+  local p="$3"
+  local s="$4"
+
+  # color numbers
+  typeset -A n=([k]=0 [r]=1 [g]=2 [y]=3 [b]=4 [m]=5 [c]=6 [w]=7)
+  if [[ "${TERM}" = *256color* ]]; then
+    n[r]=166  # DarkOrange       #D75F00
+    n[g]=76   # Chartreuse       #5FD700
+    n[y]=185  # Khaki            #D7D75F
+    n[b]=39   # DeepSkyBlue      #00AFFF
+    n[m]=170  # Orchid           #D75FD7
+    n[c]=80   # MediumTurquoise  #5FD7D7
+  fi
+
+  case "${st}" in
+    conflict*)
+      p="%F{${n[r]}}$p%f"
+      s="%F{${n[r]}}$s%f"
+      retval="$p%F{${n[w]}}%K{${n[r]}}${br}%k%f$s"
+      ;;
+    merge*)
+      p="%F{${n[y]}}$p%f"
+      s="%F{${n[y]}}$s%f"
+      retval="$p%F{${n[k]}}%K{${n[y]}}${br}%k%f$s"
+      ;;
+    rebase*)
+      p="%F{${n[c]}}$p%f"
+      s="%F{${n[c]}}$s%f"
+      retval="$p%F{${n[k]}}%K{${n[c]}}${br}%k%f$s"
+      ;;
+    change*)
+      retval="%F{${n[r]}}$p${br}$s%f"
+      ;;
+    stage*)
+      retval="%F{${n[y]}}$p${br}$s%f"
+      ;;
+    *unprefer*)
+      retval="%F{${n[m]}}$p${br}$s%f"
+      ;;
+    *squash*)
+      retval="%F{${n[b]}}$p${br}$s%f"
+      ;;
+    *untrack*)
+      retval="%F{${n[c]}}$p${br}$s%f"
+      ;;
+    clean*)
+      retval="%F{${n[g]}}$p${br}$s%f"
+      ;;
+    *)
+      retval="%B%F{${n[k]}}$p${br}${s}%f%b"
+      ;;
+  esac
+}
+
+# git status on a right prompt
+function update_rpgitstatus() {
+  RPROMPT_GIT=
+  if [ -z "${GIT_BRANCH}" ]; then
+    return
+  fi
+
+  local retval=
+  local st="${GIT_STATUS}"
+  local br="${GIT_BRANCH}"
+
+  # prefix: a broken vertical bar
+  local prefix=$'\u00A6'
+  # suffix
+  compose_suffix_rpgitstatus "${st}"
+  local suffix="${retval}"
+
+  if [ "${UNPREFERABLEHASH_GITRPROMPT:-0}" -eq 0 ]; then
+    st="${st//unprefer}"
+  fi
+
+  compose_rpgitstatus "${st}" "${br}" "${prefix}" "${suffix}"
+  RPROMPT_GIT="${retval}"
+}
+
+# a hook for a right prompt
+function update_rprompt() {
+  if [ "${ENABLE_RPROMPT:-0}" -eq 0 ]; then
+    RPROMPT=
+    return
+  fi
+
+  local p=
+  local t=
+  if [ "${ENABLE_RPROMPT_GIT:-0}" -ne 0 ]; then
+    update_rpgitstatus
+    t="${RPROMPT_GIT}"
+    p="$p$t${t:+ }"
+  fi
+
+  RPROMPT="${p% }"
+}
+
 # hooks for screen
 function update_prex_windowtitle() {
   if [ "${ENABLE_WINDOWTITLE:-0}" -eq 0 ]; then
@@ -165,8 +290,11 @@ function update_prep_windowtitle() {
   fi
 }
 
-# register a hook for git status
+# register hooks
+# - for git status
 add-zsh-hook precmd update_gitstatus
+# - for a right prompt
+add-zsh-hook precmd update_rprompt
 
 # register hooks for screen
 if [[ "${TERM}" = screen* ]]; then

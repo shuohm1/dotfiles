@@ -1,13 +1,16 @@
 # .zshrc
+
+# (%) expands %-escapes in the same way as in prompts (cf. man zshexpn
+#     -> Parameter Expansion Flags)
+# %N  is expanded into the name of script, sourced file, or shell
+#     function which is most recently loaded by zsh (cf. man zshmisc ->
+#     Prompt Expansion -> Shell State)
 ZSHRC="${(%):-%N}"
-# (%) : expand prompt-style %-escapes
-#       (cf. man zshexpn)
-# %N  : the name of a script, sourced file, or shell function
-#       which is most recently loaded by zsh
-#       (cf. man zshmisc)
-ZSHRCDIR="${ZSHRC%/*}"
-RSLV_ZSHRC="$(readlink -e "${ZSHRC}" 2> /dev/null)"
-RSLV_ZSHRCDIR="${RSLV_ZSHRC%/*}"
+# :h works like `dirname` (cf. man zshexpn -> Modifiers)
+ZSHRCDIR="${ZSHRC:h}"
+# :A works like `realpath` (cf. man zshexpn -> Modifiers)
+RSLV_ZSHRC="${ZSHRC:A}"
+RSLV_ZSHRCDIR="${RSLV_ZSHRC:h}"
 
 # aliases
 if [ -f "${ZSHRCDIR}/.bash_aliases" ]; then

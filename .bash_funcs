@@ -8,7 +8,7 @@ function print_onlyascii() {
   local retval=
   destroy_nonascii "$1"
   # avoid interpreting escape sequences
-  printf "%s" "${retval}"
+  printf "%s\n" "${retval}"
 }
 
 function startup_message() {

@@ -1,1 +1,16 @@
 # .zsh_funcs
+
+function compress_whitespaces() {
+  retval="$1"
+  # replace whitespaces
+  retval="${retval//[[:space:]]/ }"
+  # cf. man zshexpn -> Parameter Expansion Flags
+  #   (s: :) splits words by a separator between colons (or any other
+  #          suitable delimiters)
+  #   (j: :) joins words with a separator between colons (or any other
+  #          suitable delimiters)
+  # The `s` flag does not produce empty strings by default. Therefore
+  # compression of whitespaces can be performed by combination of `s`
+  # and `j` flags.
+  retval="${(j: :)${(s: :)retval}}"
+}

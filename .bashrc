@@ -1,6 +1,4 @@
 # .bashrc
-RCEPOCH="$(date "+%s.%N")"
-
 BASHRC="${BASH_SOURCE[0]}"
 BASHRCDIR="${BASHRC%/*}"
 RSLV_BASHRC="$(readlink -e "${BASHRC}" 2> /dev/null)"
@@ -38,7 +36,7 @@ else
 fi
 
 # show a startup message
-startup_message "${RCEPOCH}"
+startup_message
 
 # a terminal title
 case "${TERM}" in

@@ -30,6 +30,14 @@ else
   echo "NOT FOUND: .bash_funcs" 1>&2
 fi
 
+if [ -f "${ZSHRCDIR}/.zsh_funcs" ]; then
+  source "${ZSHRCDIR}/.zsh_funcs"
+elif [ -f "${RSLV_ZSHRCDIR}/.zsh_funcs" ]; then
+  source "${RSLV_ZSHRCDIR}/.zsh_funcs"
+else
+  echo "NOT FOUND: .zsh_funcs" 1>&2
+fi
+
 # show a startup message
 startup_message "${ZSHUNIXTIME}"
 

@@ -14,3 +14,45 @@ function compress_whitespaces() {
   # and `j` flags.
   retval="${(j: :)${(s: :)retval}}"
 }
+
+function format_currentdate() {
+  # %D{fmt} is expanded into date/time like a date command. A '+' before
+  #         `fmt` is not needed. (cf. man zshmisc -> Prompt Expansion ->
+  #         Date and Time)
+  # NOTE: `%.` is available to show seconds after the decimal point,
+  #       instead of `%N`. The default precision is 3 digit.
+  local fmt="%D{${1:-%FT%T.%3.}}"
+  # (%) expands %-escapes in the same way as in prompts (cf. man zshexpn
+  #     -> Parameter Expansion Flags)
+  retval="${(%)fmt}"
+}
+
+function print_currentdate() {
+  local retval=
+  format_currentdate "$@"
+  printf "%s\n" "${retval}"
+}
+
+function format_currentdate_unixtime() {
+  format_currentdate "%s.%9."
+}
+
+function print_currentdate_unixtime() {
+  local retval=
+  format_currentdate_unixtime
+  printf "%s\n" "${retval}"
+}
+
+function format_currentdate_iso8601() {
+  format_currentdate "%FT%T.%3."
+  local t="${retval}"
+  format_currentdate "%z"
+  local z="${retval}"
+  retval="$t${z:0:3}:${z:3}"
+}
+
+function print_currentdate_iso8601() {
+  local retval=
+  format_currentdate_iso8601
+  printf "%s\n" "${retval}"
+}

@@ -11,7 +11,7 @@ if [ -f "/etc/bashrc" ]; then
   source "/etc/bashrc"
 fi
 
-# return if non-interactive shells
+# ensure interactive shells
 if [ -z "${PS1}" ]; then
   return
 fi

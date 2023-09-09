@@ -1,6 +1,4 @@
 # .zshrc
-RCEPOCH="$(date "+%s.%N")"
-
 ZSHRC="${(%):-%N}"
 # (%) : expand prompt-style %-escapes
 #       (cf. man zshexpn)
@@ -30,7 +28,7 @@ else
 fi
 
 # show a startup message
-startup_message "${RCEPOCH}"
+startup_message "${ZSHUNIXTIME}"
 
 # a terminal title
 case "${TERM}" in

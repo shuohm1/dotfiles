@@ -116,6 +116,11 @@ else
   echo "NOT FOUND: .zsh_hooks" 1>&2
 fi
 
+# hook switches for screen
+if [[ "${TERM}" = screen* ]]; then
+  integer ENABLE_WINDOWTITLE=$((0xE2AB1E))
+fi
+
 # expand environment variables in the prompt
 setopt prompt_subst
 # prompt

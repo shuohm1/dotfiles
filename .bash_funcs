@@ -19,10 +19,9 @@ function startup_message() {
     t="$(LC_ALL=C date --date="@$t" "+%F(%a) %T")"
   fi
 
-  # NOTE:
-  # - \e[1m: bold
-  # - \e[4m: underline
-  # - \e[nG: set the cursor position onto the n-th letter (1-origin)
+  # \e[1m : bold
+  # \e[4m : underline
+  # \e[nG : set the cursor position onto the n-th letter (1-origin)
   local pos="$(( ${COLUMNS:-0} - ${#t} ))"
   if [ "${pos}" -le "$(( ${#SHELL} + 2 ))" ]; then
     printf "\e[1m%s\e[m: \e[1;4m%s\e[m\n" "${SHELL}" "$t"

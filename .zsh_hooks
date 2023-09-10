@@ -253,7 +253,116 @@ function update_rprompt() {
   RPROMPT="${p% }"
 }
 
-# hooks for screen
+# a helper function for renditions of hardstatus messages
+function compose_hsrend() {
+  retdict=()
+  local esc=$'\x05'
+  local if_="${esc}?"
+  local fi_="${esc}?"
+  local focus="${esc}F"
+  retdict+=([rend]="${if_}${focus}${esc}{$1}${fi_}")
+  retdict+=([revert]="${if_}${focus}${esc}{-}${fi_}")
+}
+
+# a helper function for a suffix of git status on a caption
+function compose_suffix_capgitstatus() {
+  local x='!'
+  local q='?'
+  retval=
+
+  if [[ "$1" = *unknown* ]]; then
+    retval="$q"
+    return
+  fi
+
+  if [ "${EXCLAMATIONMARK_GITCAPTION:-0}" -ne 0 ]; then
+    if [[ "$1" = *(squash|unprefer)* ]]; then
+      retval="${retval}$x"
+    fi
+  fi
+
+  if [ "${QUESTIONMARK_GITCAPTION:-0}" -ne 0 ]; then
+    if [[ "$1" = *untrack* ]]; then
+      retval="${retval}$q"
+    fi
+  fi
+}
+
+# a helper function for colors of git status on a caption
+function compose_colors_capgitstatus() {
+  local background="Y"
+  local foreground="k"
+  retval="${background}${foreground}"
+
+  case "$1" in
+    conflict*)
+      retval="KR"
+      ;;
+    merge*)
+      retval="KY"
+      ;;
+    rebase*)
+      retval="KC"
+      ;;
+    change*)
+      retval="yr"
+      ;;
+    stage*)
+      retval="yk"
+      ;;
+    *unprefer*)
+      retval="Mk"
+      ;;
+    *squash*untrack*|*untrack*squash*)
+      retval="ck"
+      ;;
+    *untrack*)
+      retval="Ck"
+      ;;
+    clean*squash*)
+      retval="gk"
+      ;;
+    clean*)
+      retval="Gk"
+      ;;
+    *)
+      retval="Kw"
+      ;;
+  esac
+}
+
+# git status on a caption
+function update_capgitstatus() {
+  CAPTION_GIT=
+  if [ -z "${GIT_BRANCH}" ]; then
+    return
+  fi
+
+  local st="${GIT_STATUS}"
+  local br="${GIT_BRANCH}"
+
+  local retval=
+  destroy_nonascii "${br}"
+  br="${retval}"
+
+  compose_suffix_capgitstatus "${st}"
+  local suffix="${retval}"
+
+  if [ "${UNPREFERABLEHASH_GITCAPTION:-0}" -eq 0 ]; then
+    st="${st//unprefer}"
+  fi
+
+  compose_colors_capgitstatus "${st}"
+  local colors="${retval}"
+
+  typeset -A retdict=()
+  compose_hsrend "+ ${colors}"
+  local rend="${retdict[rend]}"
+  local revert="${retdict[revert]}"
+  CAPTION_GIT="${rend}(${br}${suffix})${revert}"
+}
+
+# hooks for a window title of screen
 function update_prex_windowtitle() {
   if [ "${ENABLE_WINDOWTITLE:-0}" -eq 0 ]; then
     return
@@ -290,6 +399,39 @@ function update_prep_windowtitle() {
   fi
 }
 
+# hooks for hardstatus messages of a window
+function update_prex_hardstatus() {
+  if [ -n "${HARDSTATUS}" ]; then
+    return
+  fi
+
+  # update a hardstatus message for a caption
+  local s=
+  local t=
+  if [ "${ENABLE_PREX_GITCAPTION:-0}" -ne 0 ]; then
+    t="${CAPTION_GIT}"
+    s="$s$t${t:+ }"
+  fi
+  send_hardstatus "${s% }"
+}
+
+function update_prep_hardstatus() {
+  if [ -n "${HARDSTATUS}" ]; then
+    send_hardstatus "${HARDSTATUS}"
+    return
+  fi
+
+  # update a hardstatus message for a caption
+  local s=
+  local t=
+  if [ "${ENABLE_PREP_GITCAPTION:-0}" -ne 0 ]; then
+    update_capgitstatus
+    t="${CAPTION_GIT}"
+    s="$s$t${t:+ }"
+  fi
+  send_hardstatus "${s% }"
+}
+
 # register hooks
 # - for git status
 add-zsh-hook precmd update_gitstatus
@@ -299,7 +441,7 @@ add-zsh-hook precmd update_rprompt
 # register hooks for screen
 if [[ "${TERM}" = screen* ]]; then
   add-zsh-hook preexec update_prex_windowtitle
-  add-zsh-hook preexec reset_hardstatus
+  add-zsh-hook preexec update_prex_hardstatus
   add-zsh-hook precmd  update_prep_windowtitle
-  add-zsh-hook precmd  reset_hardstatus
+  add-zsh-hook precmd  update_prep_hardstatus
 fi

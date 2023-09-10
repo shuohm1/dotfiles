@@ -131,7 +131,9 @@ integer ENABLE_RPROMPT_GIT=$((0xCA5E))
 # hook switches for screen
 if [[ "${TERM}" = screen* ]]; then
   integer ENABLE_WINDOWTITLE=$((0xE2AB1E))
+  integer ENABLE_PREX_CLOCKCAPTION=$((0xE2AB1E))
   integer ENABLE_PREX_GITCAPTION=$((0xE2AB1E))
+  integer ENABLE_PREP_CLOCKCAPTION=0
   integer ENABLE_PREP_GITCAPTION=$((0xE2AB1E))
 
   # enable git status on caption only

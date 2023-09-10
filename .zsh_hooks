@@ -270,6 +270,19 @@ function compose_hsrend() {
   retdict+=([revert]="${if_}${focus}${esc}{-}${fi_}")
 }
 
+# a clock tag on a caption
+function update_capclocktag() {
+  local retval=
+  format_currentdate "%T"
+
+  typeset -A retdict=()
+  compose_hsrend "+ .y"
+  local rend="${retdict[rend]}"
+  local revert="${retdict[revert]}"
+
+  CAPTION_CLOCK="${rend}<since ${retval}>${revert}"
+}
+
 # a helper function for a suffix of git status on a caption
 function compose_suffix_capgitstatus() {
   local x='!'
@@ -414,6 +427,11 @@ function update_prex_hardstatus() {
   # update a hardstatus message for a caption
   local s=
   local t=
+  if [ "${ENABLE_PREX_CLOCKCAPTION:-0}" -ne 0 ]; then
+    update_capclocktag
+    t="${CAPTION_CLOCK}"
+    s="$s$t${t:+ }"
+  fi
   if [ "${ENABLE_PREX_GITCAPTION:-0}" -ne 0 ]; then
     t="${CAPTION_GIT}"
     s="$s$t${t:+ }"
@@ -430,6 +448,11 @@ function update_prep_hardstatus() {
   # update a hardstatus message for a caption
   local s=
   local t=
+  if [ "${ENABLE_PREP_CLOCKCAPTION:-0}" -ne 0 ]; then
+    update_capclocktag
+    t="${CAPTION_CLOCK}"
+    s="$s$t${t:+ }"
+  fi
   if [ "${ENABLE_PREP_GITCAPTION:-0}" -ne 0 ]; then
     update_capgitstatus
     t="${CAPTION_GIT}"

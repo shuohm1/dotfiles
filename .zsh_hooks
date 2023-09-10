@@ -437,6 +437,8 @@ function update_prep_hardstatus() {
 add-zsh-hook precmd update_gitstatus
 # - for a right prompt
 add-zsh-hook precmd update_rprompt
+# - to clean up a hardstatus message
+add-zsh-hook zshexit reset_hardstatus
 
 # register hooks for screen
 if [[ "${TERM}" = screen* ]]; then

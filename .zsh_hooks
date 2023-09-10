@@ -111,8 +111,14 @@ function compose_gitstatus_from_recentlogs() {
 function update_gitstatus() {
   GIT_STATUS=
   GIT_BRANCH=
-  local retval=
+  integer sw=0
+  (( sw = sw || ${ENABLE_RPROMPT_GIT:-0} ))
+  (( sw = sw || ${ENABLE_PREP_GITCAPTION:-0} ))
+  if [ ${sw} -eq 0 ]; then
+    return
+  fi
 
+  local retval=
   retrieve_gitbranch
   local br="${retval}"
   if [ -z "${br}" ]; then

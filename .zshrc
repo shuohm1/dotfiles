@@ -126,13 +126,18 @@ integer UNPREFERABLEHASH_GITCAPTION=0
 
 # hook switches for a right prompt
 integer ENABLE_RPROMPT=$((0xE2AB1E))
-integer ENABLE_RPROMPT_GIT=$((0xE2AB1E))
+integer ENABLE_RPROMPT_GIT=$((0xCA5E))
 
 # hook switches for screen
 if [[ "${TERM}" = screen* ]]; then
   integer ENABLE_WINDOWTITLE=$((0xE2AB1E))
   integer ENABLE_PREX_GITCAPTION=$((0xE2AB1E))
   integer ENABLE_PREP_GITCAPTION=$((0xE2AB1E))
+
+  # enable git status on caption only
+  if [ "${ENABLE_PREP_GITCAPTION:-0}" -ne 0 ]; then
+    ENABLE_RPROMPT_GIT=0
+  fi
 fi
 
 # expand environment variables in prompts

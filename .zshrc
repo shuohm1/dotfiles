@@ -81,17 +81,15 @@ unsetopt auto_menu
 # share the history file with bash
 export HISTFILE="${HOME}/.bash_history"
 # the number of histories on RAM
-export HISTSIZE=100000
+export HISTSIZE=$((0x000FFFFF))
 # the number of histories on HISTFILE
-export SAVEHIST=100000
+export SAVEHIST="${HISTSIZE}"
 # appending mode (NOT overwriting)
 setopt append_history
 # ignore duplicate commands
 setopt hist_ignore_dups
 # ignore commands which start with whitespace
 setopt hist_ignore_space
-# ignore a `history` command itself
-setopt hist_no_store
 # remove extra whitespaces
 setopt hist_reduce_blanks
 # save a history immediately

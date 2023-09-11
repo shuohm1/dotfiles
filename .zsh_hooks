@@ -270,6 +270,39 @@ function compose_hsrend() {
   retdict+=([revert]="${if_}${focus}${esc}{-}${fi_}")
 }
 
+# a directory stack on a caption
+function update_capdirstack() {
+  # an empty string
+  local e=
+  # a slash
+  local s='/'
+
+  local retval=
+  builtin dirs -p | read -d '' retval
+  destroy_nonascii "${retval}"
+
+  # cf. man zshexpn -> Modifiers, Parameter Expansion, and Parameter
+  #     Expansion Flags
+  #   <Phase 1>
+  #     (f) splits the given string by newlines and make an array
+  #     (a) specifies that a sort key is indices themselves of an array
+  #     (O) sorts the given array in reversed order
+  #   <Phase 2>
+  #     (@) separates elements of the given array
+  #     :t  works like `basename`
+  #     NOTE: therefore `${(@)array:t}` applies `:t` for each element
+  #           in the given array
+  #   <Phase 3>
+  #     :/foo/bar replaces `foo` by `bar` only if `foo` matches the
+  #               entire string
+  #     NOTE: therefore `${(@)array:/foo/bar}` applies `:/foo/bar` for
+  #           each element in the given array
+  #     NOTE: `:/$e/$s` replaces a blank element with a slash
+  #   <Phase 4>
+  #     (j: :) joins words with the given joint
+  CAPTION_DIRS="${(j'> ')${(@)${(@)${(faO)retval}:t}:/$e/$s}}"
+}
+
 # a clock tag on a caption
 function update_capclocktag() {
   local retval=
@@ -427,6 +460,10 @@ function update_prex_hardstatus() {
   # update a hardstatus message for a caption
   local s=
   local t=
+  if [ "${ENABLE_PREX_DIRSCAPTION:-0}" -ne 0 ]; then
+    t="${CAPTION_DIRS}"
+    s="$s$t${t:+ }"
+  fi
   if [ "${ENABLE_PREX_CLOCKCAPTION:-0}" -ne 0 ]; then
     update_capclocktag
     t="${CAPTION_CLOCK}"
@@ -448,6 +485,10 @@ function update_prep_hardstatus() {
   # update a hardstatus message for a caption
   local s=
   local t=
+  if [ "${ENABLE_PREP_DIRSCAPTION:-0}" -ne 0 ]; then
+    t="${CAPTION_DIRS}"
+    s="$s$t${t:+ }"
+  fi
   if [ "${ENABLE_PREP_CLOCKCAPTION:-0}" -ne 0 ]; then
     update_capclocktag
     t="${CAPTION_CLOCK}"
@@ -471,8 +512,10 @@ add-zsh-hook zshexit reset_hardstatus
 
 # register hooks for screen
 if [[ "${TERM}" = screen* ]]; then
+  update_capdirstack
   add-zsh-hook preexec update_prex_windowtitle
   add-zsh-hook preexec update_prex_hardstatus
+  add-zsh-hook chpwd   update_capdirstack
   add-zsh-hook precmd  update_prep_windowtitle
   add-zsh-hook precmd  update_prep_hardstatus
 fi

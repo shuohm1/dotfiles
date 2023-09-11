@@ -90,8 +90,6 @@ setopt append_history
 setopt hist_ignore_dups
 # ignore commands which start with whitespace
 setopt hist_ignore_space
-# ignore a `history` command itself
-setopt hist_no_store
 # remove extra whitespaces
 setopt hist_reduce_blanks
 # save a history immediately

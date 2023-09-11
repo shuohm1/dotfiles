@@ -163,22 +163,22 @@ setopt prompt_subst
 # prompt
 function() {
   local p=
-  p="$p%("          # if
-  #                 #   %(X.---.---) means if %X then---else---fi
-  p="$p?"           #   %?: the exit status of the previous command
-  p="$p."           # then
-  p="$p%F{green}"   #   start a color setting (green)
-  p="$p."           # else
-  p="$p%F{red}"     #   start a color setting (red)
-  p="$p)"           # fi
-  p="$p%n"          # a user name
-  p="$p@"           # an at sign
-  p="$p\$FORENAME"  # a host name (instead of %m)
-  p="$p:"           # a colon
-  p="$p%~"          # the current directory
-  p="$p%#"          # '#' if root, otherwise '%'
-  p="$p "           # a whitespace
-  p="$p%f"          # end a color setting
+  p="$p%("            # if
+  #                   #   %(X.---.---) means if %X then---else---fi
+  p="$p?"             #   %?: the exit status of the previous command
+  p="$p."             # then
+  p="$p%F{green}"     #   start a color setting (green)
+  p="$p."             # else
+  p="$p%F{red}"       #   start a color setting (red)
+  p="$p)"             # fi
+  p="$p%n"            # a user name
+  p="$p@"             # an at sign
+  p="$p\${FORENAME}"  # a host name (instead of %m)
+  p="$p:"             # a colon
+  p="$p%~"            # the current directory
+  p="$p%#"            # '#' if root, otherwise '%'
+  p="$p "             # a whitespace
+  p="$p%f"            # end a color setting
   PROMPT="$p"
 }
 

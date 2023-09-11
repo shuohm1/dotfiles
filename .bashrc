@@ -64,9 +64,9 @@ PROMPT_COMMAND="dispatch_precmd"
 # command histories
 export HISTFILE="${HOME}/.bash_history"
 # the number of histories on RAM
-export HISTSIZE=100000
+export HISTSIZE=$((0x000FFFFF))
 # the number of histories on HISTFILE
-export HISTFILESIZE=100000
+export HISTFILESIZE="${HISTSIZE}"
 # ignore duplicate commands
 #export HISTCONTROL=ignoredups
 # ignore commands which start with whitespace

@@ -81,9 +81,9 @@ unsetopt auto_menu
 # share the history file with bash
 export HISTFILE="${HOME}/.bash_history"
 # the number of histories on RAM
-export HISTSIZE=100000
+export HISTSIZE=$((0x000FFFFF))
 # the number of histories on HISTFILE
-export SAVEHIST=100000
+export SAVEHIST="${HISTSIZE}"
 # appending mode (NOT overwriting)
 setopt append_history
 # ignore duplicate commands

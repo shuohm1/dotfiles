@@ -149,7 +149,9 @@ fi
 # expand environment variables in prompts
 setopt prompt_subst
 # show a right prompt only on the current command line
-setopt transient_rprompt
+if [[ "${TERM}" != screen* ]]; then
+  setopt transient_rprompt
+fi
 
 # prompt
 function() {

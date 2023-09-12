@@ -12,6 +12,23 @@
 # *. zshexit:       before this zsh exits
 autoload -Uz add-zsh-hook
 
+# hooks for zsh seconds
+float -F6 PREX_ZSHSECONDS PREVX_ZSHSECONDS
+float -F6 PREP_ZSHSECONDS PREVP_ZSHSECONDS
+
+function update_prex_zshseconds() {
+  PREX_ZSHSECONDS="${SECONDS}"
+}
+
+function update_prep_zshseconds() {
+  PREP_ZSHSECONDS="${SECONDS}"
+}
+
+function preserve_prev_zshseconds() {
+  PREVX_ZSHSECONDS="${PREX_ZSHSECONDS}"
+  PREVP_ZSHSECONDS="${PREP_ZSHSECONDS}"
+}
+
 # a helper function to retrieve a branch name
 function retrieve_gitbranch() {
   git rev-parse --abbrev-ref HEAD 2> /dev/null | read retval
@@ -503,6 +520,10 @@ function update_prep_hardstatus() {
 }
 
 # register hooks
+# - for zsh seconds
+add-zsh-hook preexec update_prex_zshseconds
+add-zsh-hook precmd  update_prep_zshseconds
+add-zsh-hook precmd  preserve_prev_zshseconds
 # - for git status
 add-zsh-hook precmd update_gitstatus
 # - for a right prompt

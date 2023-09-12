@@ -29,6 +29,193 @@ function preserve_prev_zshseconds() {
   PREVP_ZSHSECONDS="${PREP_ZSHSECONDS}"
 }
 
+# a chronograph threshold (in seconds)
+float -F9 CHRONO_THRESHOLD=0.033366700
+# a chronograph scale
+integer CHRONO_SCALE=1
+
+# helper functions for chronographs
+function calc_timedelta() {
+  local t=
+  : try; {
+    float -F9 head="${1:-0.0}"
+    float -F9 tail="${2:-0.0}"
+    float -F9 delta=$(( tail - head ))
+    t=${delta}
+  } always {
+    if [ -z "$t" ]; then
+      return 1
+    fi
+  }
+
+  retval="$t"
+}
+
+function print_timedelta() {
+  local retval=
+  calc_timedelta "$@"
+  echo "${retval}"
+}
+
+function format_short_chronograph() {
+  local prefix="$1"
+  float -F9 delta="$2"
+  integer scale="$3"
+
+  float -F6 U=0.000001  # micro
+  float -F3 L=0.001     # milli
+  integer K=1000
+  integer M=1000000
+  integer G=1000000000
+
+  local suffix=
+  if [ $(( delta < U )) -ne 0 ]; then
+    # in nanoseconds
+    suffix="ns"
+    (( delta *= G ))
+  elif [ $(( delta < L )) -ne 0 ]; then
+    # in microseconds
+    suffix="us"
+    (( delta *= M ))
+  elif [ $(( delta < 1.0 )) -ne 0 ]; then
+    # in milliseconds
+    suffix="ms"
+    (( delta *= K ))
+  else
+    # in seconds
+    suffix="s"
+  fi
+
+  integer t=${delta}
+  float -F9 f=$(( delta - t ))
+  local point="${ALTERNATIVE_DECIMALSEPARATOR:-.}"
+
+  local frac=
+  printf -v frac "%.${scale}f" $f
+  local fmt="${prefix}%d%s%s${suffix}"
+  printf -v retval "${fmt}" $t "${point}" "${frac#*.}"
+}
+
+function format_long_chronograph() {
+  local prefix="$1"
+  integer delta="$2"
+  integer scale="$3"
+
+  integer P=60     # pars minuta prima (latin)
+  integer H=3600   # an hour
+  integer D=86400  # a day
+
+  local units="${ALTERNATIVE_TIMEUNITS:-hms}"
+  local J="${units:0:1}"  # ji
+  local F="${units:1:1}"  # fun
+  local B="${units:2:1}"  # byo
+
+  if [ $(( delta < P )) -ne 0 ]; then
+    # in seconds
+    local fmt="${prefix}%d%s"
+    printf -v retval "${fmt}" ${delta} "$B"
+  elif [ $(( delta < H )) -ne 0 ]; then
+    # in minutes
+    integer min=$(( delta / P ))
+    integer sec=$(( delta % P ))
+    local fmt="${prefix}%d%s%02d%s"
+    printf -v retval "${fmt}" ${min} "$F" ${sec} "$B"
+  elif [ $(( delta < D )) -ne 0 ]; then
+    # in hours
+    integer hor=$(( delta / H ))
+    (( delta %= H ))
+    integer min=$(( delta / P ))
+    integer sec=$(( delta % P ))
+    local fmt="${prefix}%d%s%02d%s%02d%s"
+    printf -v retval "${fmt}" ${hor} "$J" ${min} "$F" ${sec} "$B"
+  else
+    # in days
+    local suffix="d"
+
+    float -F9 eta=$(( ${delta}.0 / D ))
+    integer t=${eta}
+    float -F9 f=$(( eta - t ))
+    local point="${ALTERNATIVE_DECIMALSEPARATOR:-.}"
+
+    local frac=
+    printf -v frac "%.${scale}f" $f
+    local fmt="${prefix}%d%s%s${suffix}"
+    printf -v retval "${fmt}" $t "${point}" "${frac#*.}"
+  fi
+}
+
+function format_chronograph() {
+  local delta=
+  local scale=
+  : try; {
+    float -F9 arg_d="${1:-0.0}"
+    integer arg_s="${2:-3}"
+    delta=${arg_d}
+    scale=${arg_s}
+  } always {
+    if [[ -z "${delta}" || -z "${scale}" ]]; then
+      return 1
+    elif [ $(( scale <= 0 )) -ne 0 ]; then
+      return 1
+    fi
+  }
+
+  if [ $(( delta == 0.0 )) -ne 0 ]; then
+    retval=0
+    return
+  fi
+
+  local prefix=
+  if [ $(( delta < 0.0 )) -ne 0 ]; then
+    prefix="-"
+    (( delta = -delta ))
+  fi
+
+  integer min=60
+  if [ $(( delta < min )) -ne 0 ]; then
+    format_short_chronograph "${prefix}" "${delta}" "${scale}"
+  else
+    format_long_chronograph "${prefix}" "${delta}" "${scale}"
+  fi
+}
+
+function print_chronograph() {
+  local retval=
+  format_chronograph "$@"
+  printf "%s\n" "${retval}"
+}
+
+# a hook for chronographs
+function update_chronograph() {
+  : try; {
+    float -F6 head="${PREX_ZSHSECONDS:-0.0}"
+    float -F6 tail="${PREP_ZSHSECONDS:-0.0}"
+  } always {
+    LAST_CHRONO=
+    PREX_ZSHSECONDS=0.0
+    PREP_ZSHSECONDS=0.0
+  }
+
+  if [ $(( head == 0.0 || tail == 0.0 )) -ne 0 ]; then
+    return
+  fi
+
+  local retval=
+  calc_timedelta ${head} ${tail}
+  if [ -z "${retval}" ]; then
+    return
+  fi
+
+  float -F6 delta="${retval}"
+  float -F9 thresh="${CHRONO_THRESHOLD:-0.0}"
+  if [ $(( (delta < 0.0 ? -delta : delta) < thresh )) -ne 0 ]; then
+    return
+  fi
+
+  format_chronograph "${delta}" "${CHRONO_SCALE:-3}"
+  LAST_CHRONO="${retval}"
+}
+
 # a helper function to retrieve a branch name
 function retrieve_gitbranch() {
   git rev-parse --abbrev-ref HEAD 2> /dev/null | read retval
@@ -151,6 +338,16 @@ function update_gitstatus() {
   GIT_BRANCH="${br}"
 }
 
+# a chronograph on a right prompt
+function update_rpchronograph() {
+  local t="${LAST_CHRONO}"
+  if [ -z "$t" ]; then
+    RPROMPT_CHRONO=
+  else
+    RPROMPT_CHRONO="%B%F{black}$t%f%b"
+  fi
+}
+
 # a helper function for suffix of git status on a right prompt
 function compose_suffix_rpgitstatus() {
   local x='!'
@@ -267,6 +464,11 @@ function update_rprompt() {
 
   local p=
   local t=
+  if [ "${ENABLE_RPROMPT_CHRONO:-0}" -ne 0 ]; then
+    update_rpchronograph
+    t="${RPROMPT_CHRONO}"
+    p="$p$t${t:+ }"
+  fi
   if [ "${ENABLE_RPROMPT_GIT:-0}" -ne 0 ]; then
     update_rpgitstatus
     t="${RPROMPT_GIT}"
@@ -524,6 +726,8 @@ function update_prep_hardstatus() {
 add-zsh-hook preexec update_prex_zshseconds
 add-zsh-hook precmd  update_prep_zshseconds
 add-zsh-hook precmd  preserve_prev_zshseconds
+# - for chronographs
+add-zsh-hook precmd update_chronograph
 # - for git status
 add-zsh-hook precmd update_gitstatus
 # - for a right prompt

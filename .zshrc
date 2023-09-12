@@ -126,6 +126,7 @@ integer UNPREFERABLEHASH_GITCAPTION=0
 
 # hook switches for a right prompt
 integer ENABLE_RPROMPT=$((0xE2AB1E))
+integer ENABLE_RPROMPT_CHRONO=$((0xE2AB1E))
 integer ENABLE_RPROMPT_GIT=$((0xCA5E))
 
 # hook switches for screen

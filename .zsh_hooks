@@ -379,6 +379,19 @@ function update_gitstatus() {
   GIT_BRANCH="${br}"
 }
 
+# the last status on a right prompt
+function update_rplaststatus() {
+  RPROMPT_STATUS=
+  integer s="${LAST_STATUS:-0}"
+  if [ $(( s != 0 && s != 1 )) -ne 0 ]; then
+    local color=8  # bright black
+    if [[ "${TERM}" = *256color* ]]; then
+      color=52  # DarkRed  #5F0000
+    fi
+    RPROMPT_STATUS="%F{${color}}($s)%f"
+  fi
+}
+
 # a chronograph on a right prompt
 function update_rpchronograph() {
   local t="${LAST_CHRONO}"
@@ -505,6 +518,11 @@ function update_rprompt() {
 
   local p=
   local t=
+  if [ "${ENABLE_RPROMPT_STATUS:-0}" -ne 0 ]; then
+    update_rplaststatus
+    t="${RPROMPT_STATUS}"
+    p="$p$t${t:+ }"
+  fi
   if [ "${ENABLE_RPROMPT_CHRONO:-0}" -ne 0 ]; then
     update_rpchronograph
     t="${RPROMPT_CHRONO}"

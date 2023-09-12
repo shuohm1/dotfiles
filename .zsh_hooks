@@ -549,8 +549,8 @@ function compose_hsrend() {
   local if_="${esc}?"
   local fi_="${esc}?"
   local focus="${esc}F"
-  retdict+=([rend]="${if_}${focus}${esc}{$1}${fi_}")
-  retdict+=([revert]="${if_}${focus}${esc}{-}${fi_}")
+  retdict[rend]="${if_}${focus}${esc}{$1}${fi_}"
+  retdict[revert]="${if_}${focus}${esc}{-}${fi_}"
 }
 
 # a directory stack on a caption

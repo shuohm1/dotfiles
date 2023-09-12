@@ -193,6 +193,9 @@ function print_chronograph() {
   printf "%s\n" "${retval}"
 }
 
+# a dictionary of chronographs
+typeset -A CHRONOGRAPHS=()
+
 # a hook for chronographs
 function update_chronograph() {
   : try; {
@@ -216,6 +219,12 @@ function update_chronograph() {
 
   float -F6 delta="${retval}"
   float -F9 thresh="${CHRONO_THRESHOLD:-0.0}"
+
+  # save this result
+  integer k=$(( HISTCMD - 1 ))
+  local v="${CHRONOGRAPHS[$k]}"
+  CHRONOGRAPHS[$k]="$v${v:+,}${delta}"
+
   if [ $(( (delta < 0.0 ? -delta : delta) < thresh )) -ne 0 ]; then
     return
   fi

@@ -33,6 +33,14 @@ function preserve_prev_zshseconds() {
 float -F9 CHRONO_THRESHOLD=0.033366700
 # a chronograph scale
 integer CHRONO_SCALE=1
+# an alternative decimal point
+#ALTERNATIVE_DECIMALSEPARATOR=','
+# alternative units for hours, minutes, and seconds
+# - U+FF9F: a half width semi-voiced sound mark (instead of a degree
+#           sign)
+# - 0x27: a single quotation sign
+# - 0x22: a double quotation sign
+ALTERNATIVE_TIMEUNITS=$'\uFF9F\x27\x22'
 
 # helper functions for chronographs
 function calc_timedelta() {

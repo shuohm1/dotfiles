@@ -125,7 +125,7 @@ integer UNPREFERABLEHASH_GITRPROMPT=0
 integer UNPREFERABLEHASH_GITCAPTION=0
 
 # hook switches for a right prompt
-integer ENABLE_RPROMPT=$((0xE2AB1E))
+integer ENABLE_AUTORPROMPT=$((0xE2AB1E))
 integer ENABLE_RPROMPT_STATUS=0
 integer ENABLE_RPROMPT_CHRONO=$((0xE2AB1E))
 integer ENABLE_RPROMPT_GIT=$((0xCA5E))
@@ -171,6 +171,7 @@ function() {
   p="$p "             # a whitespace
   p="$p%f"            # end a color setting
   PROMPT="$p"
+  RPROMPT="\${AUTORPROMPT}"
 }
 
 # disable XON (Ctrl-Q) and XOFF (Ctrl-S) when interactive shells

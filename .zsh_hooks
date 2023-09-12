@@ -511,8 +511,8 @@ function update_rpgitstatus() {
 
 # a hook for a right prompt
 function update_rprompt() {
-  if [ "${ENABLE_RPROMPT:-0}" -eq 0 ]; then
-    RPROMPT=
+  if [ "${ENABLE_AUTORPROMPT:-0}" -eq 0 ]; then
+    AUTORPROMPT=
     return
   fi
 
@@ -534,7 +534,7 @@ function update_rprompt() {
     p="$p$t${t:+ }"
   fi
 
-  RPROMPT="${p% }"
+  AUTORPROMPT="${p% }"
 }
 
 # a helper function for renditions of hardstatus messages

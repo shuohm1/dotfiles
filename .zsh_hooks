@@ -12,6 +12,7 @@
 # *. zshexit:       before this zsh exits
 autoload -Uz add-zsh-hook
 
+# ---- STATUS CODE ----
 # a history event number
 integer HISTCMD_TMP=-1
 # the last command line status
@@ -36,7 +37,7 @@ function preserve_laststatus() {
   }
 }
 
-# hooks for zsh seconds
+# ---- ZSH SECONDS ----
 float -F6 PREX_ZSHSECONDS PREVX_ZSHSECONDS
 float -F6 PREP_ZSHSECONDS PREVP_ZSHSECONDS
 
@@ -53,6 +54,7 @@ function preserve_prev_zshseconds() {
   PREVP_ZSHSECONDS="${PREP_ZSHSECONDS}"
 }
 
+# ---- CHRONOGRAPH ----
 # a chronograph threshold (in seconds)
 float -F9 CHRONO_THRESHOLD=0.033366700
 # a chronograph scale
@@ -257,6 +259,7 @@ function update_chronograph() {
   LAST_CHRONO="${retval}"
 }
 
+# ---- GIT STATUS ----
 # a helper function to retrieve a branch name
 function retrieve_gitbranch() {
   git rev-parse --abbrev-ref HEAD 2> /dev/null | read retval
@@ -379,6 +382,7 @@ function update_gitstatus() {
   GIT_BRANCH="${br}"
 }
 
+# ---- RIGHT PROMPT ----
 # the last status on a right prompt
 function update_rplaststatus() {
   RPROMPT_STATUS=
@@ -537,6 +541,7 @@ function update_rprompt() {
   AUTORPROMPT="${p% }"
 }
 
+# ---- SCREEN ----
 # a helper function for renditions of hardstatus messages
 function compose_hsrend() {
   retdict=()
@@ -780,6 +785,7 @@ function update_prep_hardstatus() {
   send_hardstatus "${s% }"
 }
 
+# ---- ADDITIONAL FUNCTION ----
 # a helper function to retrieve histories
 function retrieve_histories() {
   integer head="$1"
@@ -916,24 +922,23 @@ function chronograph-history() {
   done
 }
 
-# register hooks
-# - for history and status
+# ---- HOOK REGISTRATION ----
+# for history and status
 add-zsh-hook preexec preserve_historykey
 add-zsh-hook precmd  preserve_laststatus
-# - for zsh seconds
+# for zsh seconds
 add-zsh-hook preexec update_prex_zshseconds
 add-zsh-hook precmd  update_prep_zshseconds
 add-zsh-hook precmd  preserve_prev_zshseconds
-# - for chronographs
+# for chronographs
 add-zsh-hook precmd update_chronograph
-# - for git status
+# for git status
 add-zsh-hook precmd update_gitstatus
-# - for a right prompt
+# for a right prompt
 add-zsh-hook precmd update_rprompt
-# - to clean up a hardstatus message
+# to clean up a hardstatus message
 add-zsh-hook zshexit reset_hardstatus
-
-# register hooks for screen
+# for screen
 if [[ "${TERM}" = screen* ]]; then
   update_capdirstack
   add-zsh-hook preexec update_prex_windowtitle

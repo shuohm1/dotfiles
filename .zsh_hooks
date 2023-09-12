@@ -780,6 +780,142 @@ function update_prep_hardstatus() {
   send_hardstatus "${s% }"
 }
 
+# a helper function to retrieve histories
+function retrieve_histories() {
+  integer head="$1"
+  integer tail="$2"
+  if [ $(( head == 0 || tail == 0 || tail < head )) -ne 0 ]; then
+    retval=
+    return 1
+  fi
+
+  # separators
+  local US=$'\x1F'
+  local RS=$'\x1E'
+  # a time format
+  local fmt="${US}${3:-%b %_d %R}${US}"
+  # regexes
+  local A='^'
+  local Z='$'
+  local u=$'[\x1F]'
+  local gr1='[[:digit:]]+'
+  local gr2='[[:print:]]*'
+  local gr3='.*'
+  local re="$A *(${gr1}) +$u(${gr2})$u +(${gr3})$Z"
+
+  local line=
+  integer n=0
+  local ts=
+  local cmd=
+  retval=
+  {
+    builtin history -t "${fmt}" ${head} ${tail} |
+    while read line; do
+      if [[ "${line}" =~ ${re} ]]; then
+        n="${match[1]}"
+        ts="${match[2]}"
+        cmd="${match[3]}"
+        retval="${retval}$n${US}${ts}${US}${cmd}${RS}"
+      fi
+    done
+  }
+
+  retval="${retval%${RS}}"
+}
+
+# show a list of status codes
+function statuscode-history() {
+  local fmt="${1:-%b %_d %R}"
+  # cf. man zshexpn -> Parameter Expansion Flags
+  #   (k)    returns keys of the given dictionary
+  #   (s: :) splits words by a separator between colons (or any other
+  #          suitable delimiters)
+  #   (n)    sorts the given array in numeric order
+  local keys=("${(kns: :)STATUSCODES}")
+  # NOTE: zsh uses 1-origin indices
+  integer head="${keys[1]}"
+  integer tail="${HISTCMD}"
+  if [ $(( head == 0 || tail == 0 || tail < head )) -ne 0 ]; then
+    return 1
+  fi
+
+  local retval=
+  retrieve_histories ${head} ${tail} "${fmt}"
+  # (p) enables escape sequences for `(s: :)` (cf. man zshexpn)
+  # therefore, (ps:\x1E:) splits words by a Record Separator $'\x1E'
+  local hists=("${(ps:\x1E:)retval}")
+
+  local record=()
+  integer n=0
+  local ts=
+  integer code=0
+  local cmd=
+  local fmt="%${#tail}d  %s  (%3d)  %s\n"
+
+  integer i=0
+  integer nhists=${#hists}
+  for (( i = 1; i <= nhists; i++ )) do
+    # (ps:\x1F:) splits words by a Unit Separator $'\x1F'
+    record=("${(ps:\x1F:)${hists[$i]}}")
+    n="${record[1]}"
+    ts="${record[2]}"
+    code="${STATUSCODES[$n]}"
+    cmd="${record[3]}"
+    printf "${fmt}" $n "${ts}" "${code}" "${cmd}"
+  done
+}
+
+# show a list of chronographs
+function chronograph-history() {
+  local fmt="${1:-%b %_d %R}"
+  local keys=("${(kns: :)CHRONOGRAPHS}")  # NOTE: see above
+  integer head="${keys[1]}"
+  integer tail="${keys[${#CHRONOGRAPHS}]}"
+  if [ $(( head == 0 || tail == 0 || tail < head )) -ne 0 ]; then
+    return 1
+  fi
+
+  local retval=
+  retrieve_histories ${head} ${tail} "${fmt}"
+  local hists=("${(ps:\x1E:)retval}")  # NOTE: see above
+
+  local record=()
+  integer n=0
+  local ts=
+  local cmd=
+  local deltas=()
+  float -F9 delta=0.0
+  local dummy=
+  integer dummylen=0
+  integer scale="${CHRONO_SCALE:-3}"
+  integer deltawidth=$(( 8 < 6 + scale ? 6 + scale : 8 ))
+  local fmt="%${#tail}d  %s  %${deltawidth}s  %s\n"
+
+  integer i=0
+  integer j=0
+  integer nhists=${#hists}
+  integer ndeltas=0
+  for (( i = 1; i <= nhists; i++ )) do
+    record=("${(ps:\x1F:)${hists[$i]}}")  # NOTE: see above
+    n="${record[1]}"
+    ts="${record[2]}"
+    cmd="${record[3]}"
+    deltas=("${(s:,:)${CHRONOGRAPHS[$n]}}")
+    ndeltas=${#deltas}
+    for (( j = 1; j <= ndeltas; j++ )) do
+      delta="${deltas[$j]}"
+      format_chronograph "${delta}" "${scale}"
+      if [ $j -eq ${ndeltas} ]; then
+        printf "${fmt}" $n "${ts}" "${retval}" "${cmd}"
+      else
+        dummylen=${#ts}
+        printf -v dummy "-%.0s" {1..$(( 1 < dummylen ? dummylen : 1 ))}
+        printf "${fmt}" $n "${dummy}" "${retval}" "${cmd}"
+      fi
+    done
+  done
+}
+
 # register hooks
 # - for history and status
 add-zsh-hook preexec preserve_historykey

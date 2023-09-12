@@ -1,0 +1,949 @@
+# .zsh_hooks
+
+# hook functions
+# 1. zshaddhistory: before the input command is added to histories
+# 2. preexec:       before the input command is executed
+# 3. -------------- the input command is executed
+# 4. chpwd:         after the current working directory is changed
+# 5. precmd:        before the prompt is shown (i.e. after the previous
+#                   command exited)
+# 6. periodic:      before the prompt is shown, but only if $PERIOD
+#                   seconds have passed since the previous `periodic`
+# *. zshexit:       before this zsh exits
+autoload -Uz add-zsh-hook
+
+# ---- STATUS CODE ----
+# a history event number
+integer HISTCMD_TMP=-1
+# the last command line status
+integer LAST_STATUS=0
+# a dictionary of status codes
+typeset -A STATUSCODES=()
+
+# a hook for the current history event number
+function preserve_historykey() {
+  HISTCMD_TMP=${HISTCMD}
+}
+
+# a hook for the last command line status
+function preserve_laststatus() {
+  LAST_STATUS=$?
+  : try; {
+    if [[ ${HISTCMD_TMP:-0} -gt 0 && ${LAST_STATUS} -ne 0 ]]; then
+      STATUSCODES+=([${HISTCMD_TMP}]=${LAST_STATUS})
+    fi
+  } always {
+    HISTCMD_TMP=-1
+  }
+}
+
+# ---- ZSH SECONDS ----
+float -F6 PREX_ZSHSECONDS PREVX_ZSHSECONDS
+float -F6 PREP_ZSHSECONDS PREVP_ZSHSECONDS
+
+function update_prex_zshseconds() {
+  PREX_ZSHSECONDS="${SECONDS}"
+}
+
+function update_prep_zshseconds() {
+  PREP_ZSHSECONDS="${SECONDS}"
+}
+
+function preserve_prev_zshseconds() {
+  PREVX_ZSHSECONDS="${PREX_ZSHSECONDS}"
+  PREVP_ZSHSECONDS="${PREP_ZSHSECONDS}"
+}
+
+# ---- CHRONOGRAPH ----
+# a chronograph threshold (in seconds)
+float -F9 CHRONO_THRESHOLD=0.033366700
+# a chronograph scale
+integer CHRONO_SCALE=1
+# an alternative decimal point
+#ALTERNATIVE_DECIMALSEPARATOR=','
+# alternative units for hours, minutes, and seconds
+# - U+FF9F: a half width semi-voiced sound mark (instead of a degree
+#           sign)
+# - 0x27: a single quotation sign
+# - 0x22: a double quotation sign
+ALTERNATIVE_TIMEUNITS=$'\uFF9F\x27\x22'
+
+# helper functions for chronographs
+function calc_timedelta() {
+  local t=
+  : try; {
+    float -F9 head="${1:-0.0}"
+    float -F9 tail="${2:-0.0}"
+    float -F9 delta=$(( tail - head ))
+    t=${delta}
+  } always {
+    if [ -z "$t" ]; then
+      return 1
+    fi
+  }
+
+  retval="$t"
+}
+
+function print_timedelta() {
+  local retval=
+  calc_timedelta "$@"
+  echo "${retval}"
+}
+
+function format_short_chronograph() {
+  local prefix="$1"
+  float -F9 delta="$2"
+  integer scale="$3"
+
+  float -F6 U=0.000001  # micro
+  float -F3 L=0.001     # milli
+  integer K=1000
+  integer M=1000000
+  integer G=1000000000
+
+  local suffix=
+  if [ $(( delta < U )) -ne 0 ]; then
+    # in nanoseconds
+    suffix="ns"
+    (( delta *= G ))
+  elif [ $(( delta < L )) -ne 0 ]; then
+    # in microseconds
+    suffix="us"
+    (( delta *= M ))
+  elif [ $(( delta < 1.0 )) -ne 0 ]; then
+    # in milliseconds
+    suffix="ms"
+    (( delta *= K ))
+  else
+    # in seconds
+    suffix="s"
+  fi
+
+  integer t=${delta}
+  float -F9 f=$(( delta - t ))
+  local point="${ALTERNATIVE_DECIMALSEPARATOR:-.}"
+
+  local frac=
+  printf -v frac "%.${scale}f" $f
+  local fmt="${prefix}%d%s%s${suffix}"
+  printf -v retval "${fmt}" $t "${point}" "${frac#*.}"
+}
+
+function format_long_chronograph() {
+  local prefix="$1"
+  integer delta="$2"
+  integer scale="$3"
+
+  integer P=60     # pars minuta prima (latin)
+  integer H=3600   # an hour
+  integer D=86400  # a day
+
+  local units="${ALTERNATIVE_TIMEUNITS:-hms}"
+  local J="${units:0:1}"  # ji
+  local F="${units:1:1}"  # fun
+  local B="${units:2:1}"  # byo
+
+  if [ $(( delta < P )) -ne 0 ]; then
+    # in seconds
+    local fmt="${prefix}%d%s"
+    printf -v retval "${fmt}" ${delta} "$B"
+  elif [ $(( delta < H )) -ne 0 ]; then
+    # in minutes
+    integer min=$(( delta / P ))
+    integer sec=$(( delta % P ))
+    local fmt="${prefix}%d%s%02d%s"
+    printf -v retval "${fmt}" ${min} "$F" ${sec} "$B"
+  elif [ $(( delta < D )) -ne 0 ]; then
+    # in hours
+    integer hor=$(( delta / H ))
+    (( delta %= H ))
+    integer min=$(( delta / P ))
+    integer sec=$(( delta % P ))
+    local fmt="${prefix}%d%s%02d%s%02d%s"
+    printf -v retval "${fmt}" ${hor} "$J" ${min} "$F" ${sec} "$B"
+  else
+    # in days
+    local suffix="d"
+
+    float -F9 eta=$(( ${delta}.0 / D ))
+    integer t=${eta}
+    float -F9 f=$(( eta - t ))
+    local point="${ALTERNATIVE_DECIMALSEPARATOR:-.}"
+
+    local frac=
+    printf -v frac "%.${scale}f" $f
+    local fmt="${prefix}%d%s%s${suffix}"
+    printf -v retval "${fmt}" $t "${point}" "${frac#*.}"
+  fi
+}
+
+function format_chronograph() {
+  local delta=
+  local scale=
+  : try; {
+    float -F9 arg_d="${1:-0.0}"
+    integer arg_s="${2:-3}"
+    delta=${arg_d}
+    scale=${arg_s}
+  } always {
+    if [[ -z "${delta}" || -z "${scale}" ]]; then
+      return 1
+    elif [ $(( scale <= 0 )) -ne 0 ]; then
+      return 1
+    fi
+  }
+
+  if [ $(( delta == 0.0 )) -ne 0 ]; then
+    retval=0
+    return
+  fi
+
+  local prefix=
+  if [ $(( delta < 0.0 )) -ne 0 ]; then
+    prefix="-"
+    (( delta = -delta ))
+  fi
+
+  integer min=60
+  if [ $(( delta < min )) -ne 0 ]; then
+    format_short_chronograph "${prefix}" "${delta}" "${scale}"
+  else
+    format_long_chronograph "${prefix}" "${delta}" "${scale}"
+  fi
+}
+
+function print_chronograph() {
+  local retval=
+  format_chronograph "$@"
+  printf "%s\n" "${retval}"
+}
+
+# a dictionary of chronographs
+typeset -A CHRONOGRAPHS=()
+
+# a hook for chronographs
+function update_chronograph() {
+  : try; {
+    float -F6 head="${PREX_ZSHSECONDS:-0.0}"
+    float -F6 tail="${PREP_ZSHSECONDS:-0.0}"
+  } always {
+    LAST_CHRONO=
+    PREX_ZSHSECONDS=0.0
+    PREP_ZSHSECONDS=0.0
+  }
+
+  if [ $(( head == 0.0 || tail == 0.0 )) -ne 0 ]; then
+    return
+  fi
+
+  local retval=
+  calc_timedelta ${head} ${tail}
+  if [ -z "${retval}" ]; then
+    return
+  fi
+
+  float -F6 delta="${retval}"
+  float -F9 thresh="${CHRONO_THRESHOLD:-0.0}"
+
+  # save this result
+  integer k=$(( HISTCMD - 1 ))
+  local v="${CHRONOGRAPHS[$k]}"
+  CHRONOGRAPHS[$k]="$v${v:+,}${delta}"
+
+  if [ $(( (delta < 0.0 ? -delta : delta) < thresh )) -ne 0 ]; then
+    return
+  fi
+
+  format_chronograph "${delta}" "${CHRONO_SCALE:-3}"
+  LAST_CHRONO="${retval}"
+}
+
+# ---- GIT STATUS ----
+# a helper function to retrieve a branch name
+function retrieve_gitbranch() {
+  git rev-parse --abbrev-ref HEAD 2> /dev/null | read retval
+
+  # try to retrieve a commit hash instead of 'HEAD'
+  if [ "${retval}" = "HEAD" ]; then
+    git rev-parse --short HEAD 2> /dev/null | read retval
+    if [ -z "${retval}" ]; then
+      retval="HEAD"
+    fi
+  fi
+}
+
+# a helper function to compose a status list from git status
+function compose_gitstatus_from_message() {
+  local st="$1"
+
+  # retrieve a status message
+  git status 2> /dev/null | read -d '' retval
+  compress_whitespaces "${retval}"
+  # (L) turns the given word into lowercase (cf. man zshexpn)
+  local msg="${(L)retval}"
+
+  local re_cf='unmerged paths'
+  local re_mg='still merging'
+  local re_rb='rebase in progress'
+  local re_ch='changes not staged for commit'
+  local re_st='changes to be committed'
+  local re_cl='working (directory|tree) clean'
+  local re_ut='untracked files'
+
+  if [[ "${msg}" =~ ${re_cf} ]]; then
+    st="${st}${st:+,}conflict"
+  fi
+  if [[ "${msg}" =~ ${re_mg} ]]; then
+    st="${st}${st:+,}merge"
+  fi
+  if [[ "${msg}" =~ ${re_rb} ]]; then
+    st="${st}${st:+,}rebase"
+  fi
+  if [[ "${msg}" =~ ${re_ch} ]]; then
+    st="${st}${st:+,}change"
+  fi
+  if [[ "${msg}" =~ ${re_st} ]]; then
+    st="${st}${st:+,}stage"
+  fi
+  if [[ "${msg}" =~ ${re_cl} ]]; then
+    st="${st}${st:+,}clean"
+  fi
+  if [[ "${msg}" =~ ${re_ut} ]]; then
+    st="${st}${st:+,}untrack"
+  fi
+
+  if [ -n "${st}" ]; then
+    retval="${st}"
+  else
+    retval="unknown"
+  fi
+}
+
+# a helper function to compose a status list from git log
+function compose_gitstatus_from_recentlogs() {
+  local st="$1"
+
+  # retrieve recent logs
+  integer nlog="${NUM_RECENT_GITLOG:-80}"
+  (( nlog = nlog < 0 ? 0 : nlog ))
+  git log -n "${nlog}" --no-decorate --oneline | read -d '' retval
+  # (f) splits words by newlines and make an array (cf. man zshexpn)
+  typeset -a recent=("${(f)retval}")
+
+  nlog=${#recent}
+  integer i=0
+
+  local re_up='^[df]e[[:xdigit:]]+'
+  local re_sq='^[[:xdigit:]]+ (fixup|squash)[!?]'
+
+  # NOTE: zsh uses 1-origin indices
+  for (( i = 1; i < nlog; i++ )) do
+    if [[ "${recent[$i]}" =~ ${re_up} ]]; then
+      st="${st}${st:+,}unprefer"
+      break
+    fi
+  done
+
+  for (( i = 1; i < nlog; i++ )) do
+    if [[ "${recent[$i]}" =~ ${re_sq} ]]; then
+      st="${st}${st:+,}squash"
+      break
+    fi
+  done
+
+  retval="${st}"
+}
+
+# a hook for git status
+function update_gitstatus() {
+  GIT_STATUS=
+  GIT_BRANCH=
+  integer sw=0
+  (( sw = sw || ${ENABLE_RPROMPT_GIT:-0} ))
+  (( sw = sw || ${ENABLE_PREP_GITCAPTION:-0} ))
+  if [ ${sw} -eq 0 ]; then
+    return
+  fi
+
+  local retval=
+  retrieve_gitbranch
+  local br="${retval}"
+  if [ -z "${br}" ]; then
+    return
+  fi
+
+  retval=
+  compose_gitstatus_from_message "${retval}"
+  compose_gitstatus_from_recentlogs "${retval}"
+  local st="${retval}"
+
+  GIT_STATUS="${st}"
+  GIT_BRANCH="${br}"
+}
+
+# ---- RIGHT PROMPT ----
+# the last status on a right prompt
+function update_rplaststatus() {
+  RPROMPT_STATUS=
+  integer s="${LAST_STATUS:-0}"
+  if [ $(( s != 0 && s != 1 )) -ne 0 ]; then
+    local color=8  # bright black
+    if [[ "${TERM}" = *256color* ]]; then
+      color=52  # DarkRed  #5F0000
+    fi
+    RPROMPT_STATUS="%F{${color}}($s)%f"
+  fi
+}
+
+# a chronograph on a right prompt
+function update_rpchronograph() {
+  local t="${LAST_CHRONO}"
+  if [ -z "$t" ]; then
+    RPROMPT_CHRONO=
+  else
+    RPROMPT_CHRONO="%B%F{black}$t%f%b"
+  fi
+}
+
+# a helper function for suffix of git status on a right prompt
+function compose_suffix_rpgitstatus() {
+  local x='!'
+  local q='?'
+  retval=
+
+  if [[ "$1" = *unknown* ]]; then
+    retval="$q"
+    return
+  fi
+
+  if [ "${EXCLAMATIONMARK_GITRPROMPT:-0}" -ne 0 ]; then
+    if [[ "$1" = *(squash|unprefer)* ]]; then
+      retval="${retval}$x"
+    fi
+  fi
+
+  if [ "${QUESTIONMARK_GITRPROMPT:-0}" -ne 0 ]; then
+    if [[ "$1" = *untrack* ]]; then
+      retval="${retval}$q"
+    fi
+  fi
+}
+
+# a helper function to compose git status on a right prompt
+function compose_rpgitstatus() {
+  local st="$1"
+  local br="$2"
+  local p="$3"
+  local s="$4"
+
+  # color numbers
+  typeset -A n=([k]=0 [r]=1 [g]=2 [y]=3 [b]=4 [m]=5 [c]=6 [w]=7)
+  if [[ "${TERM}" = *256color* ]]; then
+    n[r]=166  # DarkOrange       #D75F00
+    n[g]=76   # Chartreuse       #5FD700
+    n[y]=185  # Khaki            #D7D75F
+    n[b]=39   # DeepSkyBlue      #00AFFF
+    n[m]=170  # Orchid           #D75FD7
+    n[c]=80   # MediumTurquoise  #5FD7D7
+  fi
+
+  case "${st}" in
+    conflict*)
+      p="%F{${n[r]}}$p%f"
+      s="%F{${n[r]}}$s%f"
+      retval="$p%F{${n[w]}}%K{${n[r]}}${br}%k%f$s"
+      ;;
+    merge*)
+      p="%F{${n[y]}}$p%f"
+      s="%F{${n[y]}}$s%f"
+      retval="$p%F{${n[k]}}%K{${n[y]}}${br}%k%f$s"
+      ;;
+    rebase*)
+      p="%F{${n[c]}}$p%f"
+      s="%F{${n[c]}}$s%f"
+      retval="$p%F{${n[k]}}%K{${n[c]}}${br}%k%f$s"
+      ;;
+    change*)
+      retval="%F{${n[r]}}$p${br}$s%f"
+      ;;
+    stage*)
+      retval="%F{${n[y]}}$p${br}$s%f"
+      ;;
+    *unprefer*)
+      retval="%F{${n[m]}}$p${br}$s%f"
+      ;;
+    *squash*)
+      retval="%F{${n[b]}}$p${br}$s%f"
+      ;;
+    *untrack*)
+      retval="%F{${n[c]}}$p${br}$s%f"
+      ;;
+    clean*)
+      retval="%F{${n[g]}}$p${br}$s%f"
+      ;;
+    *)
+      retval="%B%F{${n[k]}}$p${br}${s}%f%b"
+      ;;
+  esac
+}
+
+# git status on a right prompt
+function update_rpgitstatus() {
+  RPROMPT_GIT=
+  if [ -z "${GIT_BRANCH}" ]; then
+    return
+  fi
+
+  local retval=
+  local st="${GIT_STATUS}"
+  local br="${GIT_BRANCH}"
+
+  # prefix: a broken vertical bar
+  local prefix=$'\u00A6'
+  # suffix
+  compose_suffix_rpgitstatus "${st}"
+  local suffix="${retval}"
+
+  if [ "${UNPREFERABLEHASH_GITRPROMPT:-0}" -eq 0 ]; then
+    st="${st//unprefer}"
+  fi
+
+  compose_rpgitstatus "${st}" "${br}" "${prefix}" "${suffix}"
+  RPROMPT_GIT="${retval}"
+}
+
+# a hook for a right prompt
+function update_rprompt() {
+  if [ "${ENABLE_AUTORPROMPT:-0}" -eq 0 ]; then
+    AUTORPROMPT=
+    return
+  fi
+
+  local p=
+  local t=
+  if [ "${ENABLE_RPROMPT_STATUS:-0}" -ne 0 ]; then
+    update_rplaststatus
+    t="${RPROMPT_STATUS}"
+    p="$p$t${t:+ }"
+  fi
+  if [ "${ENABLE_RPROMPT_CHRONO:-0}" -ne 0 ]; then
+    update_rpchronograph
+    t="${RPROMPT_CHRONO}"
+    p="$p$t${t:+ }"
+  fi
+  if [ "${ENABLE_RPROMPT_GIT:-0}" -ne 0 ]; then
+    update_rpgitstatus
+    t="${RPROMPT_GIT}"
+    p="$p$t${t:+ }"
+  fi
+
+  AUTORPROMPT="${p% }"
+}
+
+# ---- SCREEN ----
+# a helper function for renditions of hardstatus messages
+function compose_hsrend() {
+  retdict=()
+  local esc=$'\x05'
+  local if_="${esc}?"
+  local fi_="${esc}?"
+  local focus="${esc}F"
+  retdict+=([rend]="${if_}${focus}${esc}{$1}${fi_}")
+  retdict+=([revert]="${if_}${focus}${esc}{-}${fi_}")
+}
+
+# a directory stack on a caption
+function update_capdirstack() {
+  # an empty string
+  local e=
+  # a slash
+  local s='/'
+
+  local retval=
+  builtin dirs -p | read -d '' retval
+  destroy_nonascii "${retval}"
+
+  # cf. man zshexpn -> Modifiers, Parameter Expansion, and Parameter
+  #     Expansion Flags
+  #   <Phase 1>
+  #     (f) splits the given string by newlines and make an array
+  #     (a) specifies that a sort key is indices themselves of an array
+  #     (O) sorts the given array in reversed order
+  #   <Phase 2>
+  #     (@) separates elements of the given array
+  #     :t  works like `basename`
+  #     NOTE: therefore `${(@)array:t}` applies `:t` for each element
+  #           in the given array
+  #   <Phase 3>
+  #     :/foo/bar replaces `foo` by `bar` only if `foo` matches the
+  #               entire string
+  #     NOTE: therefore `${(@)array:/foo/bar}` applies `:/foo/bar` for
+  #           each element in the given array
+  #     NOTE: `:/$e/$s` replaces a blank element with a slash
+  #   <Phase 4>
+  #     (j: :) joins words with the given joint
+  CAPTION_DIRS="${(j'> ')${(@)${(@)${(faO)retval}:t}:/$e/$s}}"
+}
+
+# a clock tag on a caption
+function update_capclocktag() {
+  local retval=
+  format_currentdate "%T"
+
+  typeset -A retdict=()
+  compose_hsrend "+ .y"
+  local rend="${retdict[rend]}"
+  local revert="${retdict[revert]}"
+
+  CAPTION_CLOCK="${rend}<since ${retval}>${revert}"
+}
+
+# a helper function for a suffix of git status on a caption
+function compose_suffix_capgitstatus() {
+  local x='!'
+  local q='?'
+  retval=
+
+  if [[ "$1" = *unknown* ]]; then
+    retval="$q"
+    return
+  fi
+
+  if [ "${EXCLAMATIONMARK_GITCAPTION:-0}" -ne 0 ]; then
+    if [[ "$1" = *(squash|unprefer)* ]]; then
+      retval="${retval}$x"
+    fi
+  fi
+
+  if [ "${QUESTIONMARK_GITCAPTION:-0}" -ne 0 ]; then
+    if [[ "$1" = *untrack* ]]; then
+      retval="${retval}$q"
+    fi
+  fi
+}
+
+# a helper function for colors of git status on a caption
+function compose_colors_capgitstatus() {
+  local background="Y"
+  local foreground="k"
+  retval="${background}${foreground}"
+
+  case "$1" in
+    conflict*)
+      retval="KR"
+      ;;
+    merge*)
+      retval="KY"
+      ;;
+    rebase*)
+      retval="KC"
+      ;;
+    change*)
+      retval="yr"
+      ;;
+    stage*)
+      retval="yk"
+      ;;
+    *unprefer*)
+      retval="Mk"
+      ;;
+    *squash*untrack*|*untrack*squash*)
+      retval="ck"
+      ;;
+    *untrack*)
+      retval="Ck"
+      ;;
+    clean*squash*)
+      retval="gk"
+      ;;
+    clean*)
+      retval="Gk"
+      ;;
+    *)
+      retval="Kw"
+      ;;
+  esac
+}
+
+# git status on a caption
+function update_capgitstatus() {
+  CAPTION_GIT=
+  if [ -z "${GIT_BRANCH}" ]; then
+    return
+  fi
+
+  local st="${GIT_STATUS}"
+  local br="${GIT_BRANCH}"
+
+  local retval=
+  destroy_nonascii "${br}"
+  br="${retval}"
+
+  compose_suffix_capgitstatus "${st}"
+  local suffix="${retval}"
+
+  if [ "${UNPREFERABLEHASH_GITCAPTION:-0}" -eq 0 ]; then
+    st="${st//unprefer}"
+  fi
+
+  compose_colors_capgitstatus "${st}"
+  local colors="${retval}"
+
+  typeset -A retdict=()
+  compose_hsrend "+ ${colors}"
+  local rend="${retdict[rend]}"
+  local revert="${retdict[revert]}"
+  CAPTION_GIT="${rend}(${br}${suffix})${revert}"
+}
+
+# hooks for a window title of screen
+function update_prex_windowtitle() {
+  if [ "${ENABLE_WINDOWTITLE:-0}" -eq 0 ]; then
+    return
+  elif [ -n "${WINDOWTITLE}" ]; then
+    return
+  fi
+
+  # delete control characters, just in case
+  local t="${1//[[:cntrl:]]}"
+  # (z) splits words in a manner of shell parsing (cf. man zshexpn ->
+  #     Parameter Expansion Flags)
+  typeset -a args=("${(z)t}")
+  # the entire command string for a sentinel
+  t="${args[*]}"
+
+  # find the 0th argument of the given command
+  local s=
+  local re='^([(){}]|[[:print:]]+[=])'
+  for s in "${args[@]}"; do
+    # - `s` does not start with parentheses nor braces
+    # - `s` is not a setting of an environment variable
+    if [[ ! ( "$s" =~ ${re} ) ]]; then
+      t="$s"
+      break
+    fi
+  done
+
+  send_windowtitle "$t"
+}
+
+function update_prep_windowtitle() {
+  if [ "${ENABLE_WINDOWTITLE:-0}" -ne 0 ]; then
+    reset_windowtitle
+  fi
+}
+
+# hooks for hardstatus messages of a window
+function update_prex_hardstatus() {
+  if [ -n "${HARDSTATUS}" ]; then
+    return
+  fi
+
+  # update a hardstatus message for a caption
+  local s=
+  local t=
+  if [ "${ENABLE_PREX_DIRSCAPTION:-0}" -ne 0 ]; then
+    t="${CAPTION_DIRS}"
+    s="$s$t${t:+ }"
+  fi
+  if [ "${ENABLE_PREX_CLOCKCAPTION:-0}" -ne 0 ]; then
+    update_capclocktag
+    t="${CAPTION_CLOCK}"
+    s="$s$t${t:+ }"
+  fi
+  if [ "${ENABLE_PREX_GITCAPTION:-0}" -ne 0 ]; then
+    t="${CAPTION_GIT}"
+    s="$s$t${t:+ }"
+  fi
+  send_hardstatus "${s% }"
+}
+
+function update_prep_hardstatus() {
+  if [ -n "${HARDSTATUS}" ]; then
+    send_hardstatus "${HARDSTATUS}"
+    return
+  fi
+
+  # update a hardstatus message for a caption
+  local s=
+  local t=
+  if [ "${ENABLE_PREP_DIRSCAPTION:-0}" -ne 0 ]; then
+    t="${CAPTION_DIRS}"
+    s="$s$t${t:+ }"
+  fi
+  if [ "${ENABLE_PREP_CLOCKCAPTION:-0}" -ne 0 ]; then
+    update_capclocktag
+    t="${CAPTION_CLOCK}"
+    s="$s$t${t:+ }"
+  fi
+  if [ "${ENABLE_PREP_GITCAPTION:-0}" -ne 0 ]; then
+    update_capgitstatus
+    t="${CAPTION_GIT}"
+    s="$s$t${t:+ }"
+  fi
+  send_hardstatus "${s% }"
+}
+
+# ---- ADDITIONAL FUNCTION ----
+# a helper function to retrieve histories
+function retrieve_histories() {
+  integer head="$1"
+  integer tail="$2"
+  if [ $(( head == 0 || tail == 0 || tail < head )) -ne 0 ]; then
+    retval=
+    return 1
+  fi
+
+  # separators
+  local US=$'\x1F'
+  local RS=$'\x1E'
+  # a time format
+  local fmt="${US}${3:-%b %_d %R}${US}"
+  # regexes
+  local A='^'
+  local Z='$'
+  local u=$'[\x1F]'
+  local gr1='[[:digit:]]+'
+  local gr2='[[:print:]]*'
+  local gr3='.*'
+  local re="$A *(${gr1}) +$u(${gr2})$u +(${gr3})$Z"
+
+  local line=
+  integer n=0
+  local ts=
+  local cmd=
+  retval=
+  {
+    builtin history -t "${fmt}" ${head} ${tail} |
+    while read line; do
+      if [[ "${line}" =~ ${re} ]]; then
+        n="${match[1]}"
+        ts="${match[2]}"
+        cmd="${match[3]}"
+        retval="${retval}$n${US}${ts}${US}${cmd}${RS}"
+      fi
+    done
+  }
+
+  retval="${retval%${RS}}"
+}
+
+# show a list of status codes
+function statuscode-history() {
+  local fmt="${1:-%b %_d %R}"
+  # cf. man zshexpn -> Parameter Expansion Flags
+  #   (k)    returns keys of the given dictionary
+  #   (s: :) splits words by a separator between colons (or any other
+  #          suitable delimiters)
+  #   (n)    sorts the given array in numeric order
+  local keys=("${(kns: :)STATUSCODES}")
+  # NOTE: zsh uses 1-origin indices
+  integer head="${keys[1]}"
+  integer tail="${HISTCMD}"
+  if [ $(( head == 0 || tail == 0 || tail < head )) -ne 0 ]; then
+    return 1
+  fi
+
+  local retval=
+  retrieve_histories ${head} ${tail} "${fmt}"
+  # (p) enables escape sequences for `(s: :)` (cf. man zshexpn)
+  # therefore, (ps:\x1E:) splits words by a Record Separator $'\x1E'
+  local hists=("${(ps:\x1E:)retval}")
+
+  local record=()
+  integer n=0
+  local ts=
+  integer code=0
+  local cmd=
+  local fmt="%${#tail}d  %s  (%3d)  %s\n"
+
+  integer i=0
+  integer nhists=${#hists}
+  for (( i = 1; i <= nhists; i++ )) do
+    # (ps:\x1F:) splits words by a Unit Separator $'\x1F'
+    record=("${(ps:\x1F:)${hists[$i]}}")
+    n="${record[1]}"
+    ts="${record[2]}"
+    code="${STATUSCODES[$n]}"
+    cmd="${record[3]}"
+    printf "${fmt}" $n "${ts}" "${code}" "${cmd}"
+  done
+}
+
+# show a list of chronographs
+function chronograph-history() {
+  local fmt="${1:-%b %_d %R}"
+  local keys=("${(kns: :)CHRONOGRAPHS}")  # NOTE: see above
+  integer head="${keys[1]}"
+  integer tail="${keys[${#CHRONOGRAPHS}]}"
+  if [ $(( head == 0 || tail == 0 || tail < head )) -ne 0 ]; then
+    return 1
+  fi
+
+  local retval=
+  retrieve_histories ${head} ${tail} "${fmt}"
+  local hists=("${(ps:\x1E:)retval}")  # NOTE: see above
+
+  local record=()
+  integer n=0
+  local ts=
+  local cmd=
+  local deltas=()
+  float -F9 delta=0.0
+  local dummy=
+  integer dummylen=0
+  integer scale="${CHRONO_SCALE:-3}"
+  integer deltawidth=$(( 8 < 6 + scale ? 6 + scale : 8 ))
+  local fmt="%${#tail}d  %s  %${deltawidth}s  %s\n"
+
+  integer i=0
+  integer j=0
+  integer nhists=${#hists}
+  integer ndeltas=0
+  for (( i = 1; i <= nhists; i++ )) do
+    record=("${(ps:\x1F:)${hists[$i]}}")  # NOTE: see above
+    n="${record[1]}"
+    ts="${record[2]}"
+    cmd="${record[3]}"
+    deltas=("${(s:,:)${CHRONOGRAPHS[$n]}}")
+    ndeltas=${#deltas}
+    for (( j = 1; j <= ndeltas; j++ )) do
+      delta="${deltas[$j]}"
+      format_chronograph "${delta}" "${scale}"
+      if [ $j -eq ${ndeltas} ]; then
+        printf "${fmt}" $n "${ts}" "${retval}" "${cmd}"
+      else
+        dummylen=${#ts}
+        printf -v dummy "-%.0s" {1..$(( 1 < dummylen ? dummylen : 1 ))}
+        printf "${fmt}" $n "${dummy}" "${retval}" "${cmd}"
+      fi
+    done
+  done
+}
+
+# ---- HOOK REGISTRATION ----
+# for history and status
+add-zsh-hook preexec preserve_historykey
+add-zsh-hook precmd  preserve_laststatus
+# for zsh seconds
+add-zsh-hook preexec update_prex_zshseconds
+add-zsh-hook precmd  update_prep_zshseconds
+add-zsh-hook precmd  preserve_prev_zshseconds
+# for chronographs
+add-zsh-hook precmd update_chronograph
+# for git status
+add-zsh-hook precmd update_gitstatus
+# for a right prompt
+add-zsh-hook precmd update_rprompt
+# to clean up a hardstatus message
+add-zsh-hook zshexit reset_hardstatus
+# for screen
+if [[ "${TERM}" = screen* ]]; then
+  update_capdirstack
+  add-zsh-hook preexec update_prex_windowtitle
+  add-zsh-hook preexec update_prex_hardstatus
+  add-zsh-hook chpwd   update_capdirstack
+  add-zsh-hook precmd  update_prep_windowtitle
+  add-zsh-hook precmd  update_prep_hardstatus
+fi

@@ -107,59 +107,52 @@ bindkey '^]'   vi-find-next-char   # Ctrl-]
 bindkey '^[^]' vi-find-prev-char   # Meta-Ctrl-]
 bindkey '^[%'  vi-match-bracket    # Meta-Shift-5 (or Meta-%)
 
-# for screen
-# - WINDOWTITLE: \ekWINDOWTITLE\e\\
-# -  HARDSTATUS: \e_HARDSTATUS\e\\
-function update_windowtitle_preexec() {
-  if [ -n "${WINDOWTITLE}" ]; then return; fi
+# hooks
+if [ -f "${ZSHRCDIR}/.zsh_hooks" ]; then
+  source "${ZSHRCDIR}/.zsh_hooks"
+elif [ -f "${RSLV_ZSHRCDIR}/.zsh_hooks" ]; then
+  source "${RSLV_ZSHRCDIR}/.zsh_hooks"
+else
+  echo "NOT FOUND: .zsh_hooks" 1>&2
+fi
 
-  # NOTE: never mind if these substitutions make wrong messages
-  local p="$1"
-  # remove leading/trailing braces, parentheses, and spaces
-  p="$(echo "$p" | command sed -E 's/^[{( ]+//; s/[ )}]+$//')"
-  # remove assignments of environment variables
-  # \x22: a double quotetion sign
-  # \x27: a single quotation sign
-  p="$(echo "$p" | command sed -E 's/^([_a-zA-Z0-9]+=([^ ]*|\x22[^\x22]*\x22|\x27[^\x27]*\x27) +)+//')"
+# hook switches for git status
+integer EXCLAMATIONMARK_GITRPROMPT=0
+integer EXCLAMATIONMARK_GITCAPTION=0
+integer QUESTIONMARK_GITRPROMPT=$((0xE2AB1E))
+integer QUESTIONMARK_GITCAPTION=0
+integer UNPREFERABLEHASH_GITRPROMPT=0
+integer UNPREFERABLEHASH_GITCAPTION=0
 
-  # set a window title
-  echo -ne "\ek${p%% *}\e\\"
+# hook switches for a right prompt
+integer ENABLE_AUTORPROMPT=$((0xE2AB1E))
+integer ENABLE_RPROMPT_STATUS=0
+integer ENABLE_RPROMPT_CHRONO=$((0xE2AB1E))
+integer ENABLE_RPROMPT_GIT=$((0xCA5E))
 
-  if [ "$p" = "${p#* }" ]; then return; fi
-  p="${p#* }"
+# hook switches for screen
+if [[ "${TERM}" = screen* ]]; then
+  integer ENABLE_WINDOWTITLE=$((0xE2AB1E))
+  integer ENABLE_PREX_DIRSCAPTION=0
+  integer ENABLE_PREX_CLOCKCAPTION=$((0xE2AB1E))
+  integer ENABLE_PREX_GITCAPTION=$((0xE2AB1E))
+  integer ENABLE_PREP_DIRSCAPTION=$((0xE2AB1E))
+  integer ENABLE_PREP_CLOCKCAPTION=0
+  integer ENABLE_PREP_GITCAPTION=$((0xE2AB1E))
 
-  # remove control characters
-  p="$(echo "$p" | tr -d '[:cntrl:]')"
-  # truncate in 256 bytes
-  p="$(echo "$p" | cut --bytes=-256)"
-  # reverse colors (string escapes of screen)
-  # \x05  : an escape sequence
-  # %{+r} : exchange foreground and background color
-  # %{-}  : revert colors
-  p="$(echo "$p" | LC_ALL=C command sed -E 's/([\x80-\xFF]+)/\x05{+r}\1\x05{-}/g')"
-  # replace non-ascii characters with '?'
-  p="$(echo "$p" | LC_ALL=C command sed -E 's/[\x80-\xFF]/?/g')"
+  # enable git status on caption only
+  if [ "${ENABLE_PREP_GITCAPTION:-0}" -ne 0 ]; then
+    ENABLE_RPROMPT_GIT=0
+  fi
+fi
 
-  # set a hardstatus
-  echo -ne "\e_$p\e\\"
-}
-
-case "${TERM}" in
-  screen*)
-    # just before the command is executed
-    preexec() {
-      update_windowtitle_preexec "$1"
-    }
-    # just before the prompt shows
-    precmd() {
-      reset_windowtitle
-      reset_hardstatus
-    }
-    ;;
-esac
-
-# expand environment variables in the prompt
+# expand environment variables in prompts
 setopt prompt_subst
+# show a right prompt only on the current command line
+if [[ "${TERM}" != screen* ]]; then
+  setopt transient_rprompt
+fi
+
 # prompt
 function() {
   local p=
@@ -180,62 +173,8 @@ function() {
   p="$p "             # a whitespace
   p="$p%f"            # end a color setting
   PROMPT="$p"
+  RPROMPT="\${AUTORPROMPT}"
 }
-
-# show the right prompt only on the latest command line
-setopt transient_rprompt
-# right prompt
-function rprompt_gitstatus() {
-  local g="$(command which git 2> /dev/null)"
-  if [ ! -x "$g" ]; then return; fi
-
-  local gstatus="$($g status 2>&1 | tr 'A-Z' 'a-z')"
-  if [[ "${gstatus}" =~ (not a git repository) ]]; then return; fi
-
-  local gbranch="$($g rev-parse --abbrev-ref HEAD 2> /dev/null)"
-  if [[ -z "${gstatus}" || -z "${gbranch}" ]]; then return; fi
-
-  # try to get a commit ID instead of 'HEAD'
-  if [ "${gbranch}" = "HEAD" ]; then
-    gbranch="$($g rev-parse HEAD 2> /dev/null)"
-    gbranch="$(echo "${gbranch}" | command grep -m1 -o -E '^.{,7}')"
-  fi
-
-  # prefix (broken vertical bar)
-  local v="\u00A6"
-  # suffix
-  local u=
-  if [[ "${gstatus}" =~ (untracked files) ]]; then
-    u="?"
-  fi
-
-  local p="$gbranch"
-  if [[ "${gstatus}" =~ (unmerged paths) ]]; then
-    v="%F{red}$v%f"
-    u="%F{red}$u%f"
-    p="$v%F{white}%K{red}$p%k%f$u"
-  elif [[ "${gstatus}" =~ (still merging|rebase in progress) ]]; then
-    v="%F{yellow}$v%f"
-    u="%F{yellow}$u%f"
-    p="$v%F{black}%K{yellow}$p%k%f$u"
-  elif [[ "${gstatus}" =~ (working (directory|tree) clean) ]]; then
-    p="%F{green}$v$p$u%f"
-  elif [[ "${gstatus}" =~ (changes not staged for commit) ]]; then
-    p="%F{red}$v$p$u%f"
-  elif [[ "${gstatus}" =~ (changes to be committed) ]]; then
-    p="%F{yellow}$v$p$u%f"
-  elif [[ "${gstatus}" =~ (untracked files) ]]; then
-    p="%F{cyan}$v$p$u%f"
-  else
-    # unknown status
-    v="%F{blue}$v%f"
-    u="?"
-    p="$v%F{white}%K{blue}$p$u%k%f"
-  fi
-
-  echo -n " $p"
-}
-RPROMPT="\$(rprompt_gitstatus)"
 
 # disable XON (Ctrl-Q) and XOFF (Ctrl-S) when interactive shells
 # cf. https://linuxfan.info/disable-ctrl-s

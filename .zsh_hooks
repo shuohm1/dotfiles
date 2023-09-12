@@ -12,6 +12,30 @@
 # *. zshexit:       before this zsh exits
 autoload -Uz add-zsh-hook
 
+# a history event number
+integer HISTCMD_TMP=-1
+# the last command line status
+integer LAST_STATUS=0
+# a dictionary of status codes
+typeset -A STATUSCODES=()
+
+# a hook for the current history event number
+function preserve_historykey() {
+  HISTCMD_TMP=${HISTCMD}
+}
+
+# a hook for the last command line status
+function preserve_laststatus() {
+  LAST_STATUS=$?
+  : try; {
+    if [[ ${HISTCMD_TMP:-0} -gt 0 && ${LAST_STATUS} -ne 0 ]]; then
+      STATUSCODES+=([${HISTCMD_TMP}]=${LAST_STATUS})
+    fi
+  } always {
+    HISTCMD_TMP=-1
+  }
+}
+
 # hooks for zsh seconds
 float -F6 PREX_ZSHSECONDS PREVX_ZSHSECONDS
 float -F6 PREP_ZSHSECONDS PREVP_ZSHSECONDS
@@ -739,6 +763,9 @@ function update_prep_hardstatus() {
 }
 
 # register hooks
+# - for history and status
+add-zsh-hook preexec preserve_historykey
+add-zsh-hook precmd  preserve_laststatus
 # - for zsh seconds
 add-zsh-hook preexec update_prex_zshseconds
 add-zsh-hook precmd  update_prep_zshseconds

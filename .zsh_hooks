@@ -383,6 +383,27 @@ function update_gitstatus() {
 }
 
 # ---- RIGHT PROMPT ----
+# alternative 8 color numbers
+typeset -A ALTERNATIVE_COLORS=()
+function() {
+  # basic colors
+  integer i=0
+  local keys="krgybmcw"
+  for (( i = 0; i < ${#keys}; i++ )) do
+    ALTERNATIVE_COLORS[${keys:$i:1}]=$i
+  done
+
+  # alternative colors
+  if [[ "${TERM}" = *256color* ]]; then
+    ALTERNATIVE_COLORS[r]=166  # DarkOrange       #D75F00
+    ALTERNATIVE_COLORS[g]=76   # Chartreuse       #5FD700
+    ALTERNATIVE_COLORS[y]=185  # Khaki            #D7D75F
+    ALTERNATIVE_COLORS[b]=39   # DeepSkyBlue      #00AFFF
+    ALTERNATIVE_COLORS[m]=170  # Orchid           #D75FD7
+    ALTERNATIVE_COLORS[c]=80   # MediumTurquoise  #5FD7D7
+  fi
+}
+
 # the last status on a right prompt
 function update_rplaststatus() {
   RPROMPT_STATUS=
@@ -434,56 +455,51 @@ function compose_suffix_rpgitstatus() {
 function compose_rpgitstatus() {
   local st="$1"
   local br="$2"
-  local p="$3"
-  local s="$4"
+  local pf="$3"
+  local sf="$4"
 
   # color numbers
-  typeset -A n=([k]=0 [r]=1 [g]=2 [y]=3 [b]=4 [m]=5 [c]=6 [w]=7)
-  if [[ "${TERM}" = *256color* ]]; then
-    n[r]=166  # DarkOrange       #D75F00
-    n[g]=76   # Chartreuse       #5FD700
-    n[y]=185  # Khaki            #D7D75F
-    n[b]=39   # DeepSkyBlue      #00AFFF
-    n[m]=170  # Orchid           #D75FD7
-    n[c]=80   # MediumTurquoise  #5FD7D7
-  fi
+  local key=
+  for key in {'k','r','g','y','b','m','c','w'}; do
+    eval "integer ${key}=${ALTERNATIVE_COLORS[${key}]}"
+  done
 
   case "${st}" in
     conflict*)
-      p="%F{${n[r]}}$p%f"
-      s="%F{${n[r]}}$s%f"
-      retval="$p%F{${n[w]}}%K{${n[r]}}${br}%k%f$s"
+      pf="%F{$r}${pf}%f"
+      sf="%F{$r}${sf}%f"
+      retval="${pf}%F{$w}%K{$r}${br}%k%f${sf}"
       ;;
     merge*)
-      p="%F{${n[y]}}$p%f"
-      s="%F{${n[y]}}$s%f"
-      retval="$p%F{${n[k]}}%K{${n[y]}}${br}%k%f$s"
+      pf="%F{$y}${pf}%f"
+      sf="%F{$y}${sf}%f"
+      retval="${pf}%F{$k}%K{$y}${br}%k%f${sf}"
       ;;
     rebase*)
-      p="%F{${n[c]}}$p%f"
-      s="%F{${n[c]}}$s%f"
-      retval="$p%F{${n[k]}}%K{${n[c]}}${br}%k%f$s"
+      pf="%F{$c}${pf}%f"
+      sf="%F{$c}${sf}%f"
+      retval="${pf}%F{$k}%K{$c}${br}%k%f${sf}"
       ;;
     change*)
-      retval="%F{${n[r]}}$p${br}$s%f"
+      retval="%F{$r}${pf}${br}${sf}%f"
       ;;
     stage*)
-      retval="%F{${n[y]}}$p${br}$s%f"
+      retval="%F{$y}${pf}${br}${sf}%f"
       ;;
     *unprefer*)
-      retval="%F{${n[m]}}$p${br}$s%f"
+      retval="%F{$m}${pf}${br}${sf}%f"
       ;;
     *squash*)
-      retval="%F{${n[b]}}$p${br}$s%f"
+      retval="%F{$b}${pf}${br}${sf}%f"
       ;;
     *untrack*)
-      retval="%F{${n[c]}}$p${br}$s%f"
+      retval="%F{$c}${pf}${br}${sf}%f"
       ;;
     clean*)
-      retval="%F{${n[g]}}$p${br}$s%f"
+      retval="%F{$g}${pf}${br}${sf}%f"
       ;;
     *)
-      retval="%B%F{${n[k]}}$p${br}${s}%f%b"
+      retval="%B%F{$k}${pf}${br}${sf}%f%b"
       ;;
   esac
 }
@@ -549,8 +565,8 @@ function compose_hsrend() {
   local if_="${esc}?"
   local fi_="${esc}?"
   local focus="${esc}F"
-  retdict+=([rend]="${if_}${focus}${esc}{$1}${fi_}")
-  retdict+=([revert]="${if_}${focus}${esc}{-}${fi_}")
+  retdict[rend]="${if_}${focus}${esc}{$1}${fi_}"
+  retdict[revert]="${if_}${focus}${esc}{-}${fi_}"
 }
 
 # a directory stack on a caption

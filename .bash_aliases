@@ -106,9 +106,6 @@ alias gll="gl --pretty=fuller"
 alias GL="gl --reflog"
 alias GG="gg --reflog"
 
-# TODO: remove this alias
-alias gi="git status"
-
 # sort
 alias so="sort"
 

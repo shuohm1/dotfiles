@@ -94,7 +94,6 @@ alias gk="git commit --verbose"
 alias gx="git fixup-helper"
 alias gq="git squash-helper"
 alias gka="git commit --amend --verbose"
-alias gke="git commit --allow-empty --verbose"
 # git diff
 alias gd="git diff-helper"
 alias g@="git diff-helper --cached"

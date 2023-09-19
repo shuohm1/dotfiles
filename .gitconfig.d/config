@@ -7,7 +7,7 @@
 	br = branch
 	co = checkout
 	ci = commit
-	ca = commit --amend
+	ca = commit --allow-empty --amend
 	df = diff
 	gr = grep
 	mg = merge

@@ -82,6 +82,12 @@ autoload -Uz run-help-openssl
 autoload -Uz run-help-sudo
 autoload -Uz run-help-svn
 
+# which-command
+if [ ${+aliases[which-command]} -ne 0 ]; then
+  unalias which-command
+fi
+alias which-command=whence
+
 # do not beep when complement
 setopt nolistbeep
 # complement for --foo=bar

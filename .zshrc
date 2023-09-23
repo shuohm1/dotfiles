@@ -70,6 +70,18 @@ else
   echo "NOT FOUND: .zshcomp_sudovim" 1>&2
 fi
 
+# run-help
+autoload -Uz run-help
+if [ ${+aliases[run-help]} -ne 0 ]; then
+  unalias run-help
+fi
+
+autoload -Uz run-help-git
+autoload -Uz run-help-ip
+autoload -Uz run-help-openssl
+autoload -Uz run-help-sudo
+autoload -Uz run-help-svn
+
 # do not beep when complement
 setopt nolistbeep
 # complement for --foo=bar

@@ -30,7 +30,7 @@ function preserve_laststatus() {
   LAST_STATUS=$?
   : try; {
     if [[ ${HISTCMD_TMP:-0} -gt 0 && ${LAST_STATUS} -ne 0 ]]; then
-      STATUSCODES+=([${HISTCMD_TMP}]=${LAST_STATUS})
+      STATUSCODES[${HISTCMD_TMP}]=${LAST_STATUS}
     fi
   } always {
     HISTCMD_TMP=-1

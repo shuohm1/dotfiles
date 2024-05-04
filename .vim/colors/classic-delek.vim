@@ -5,7 +5,7 @@
 " First remove all existing highlighting.
 hi clear
 
-let colors_name = "delek"
+let colors_name = "classic-delek"
 
 hi Normal guifg=Black guibg=white
 

@@ -9,7 +9,7 @@ set background=dark
 if exists("syntax_on")
   syntax reset
 endif
-let g:colors_name = "murphy"
+let g:colors_name = "classic-murphy"
 
 hi Normal		ctermbg=Black  ctermfg=lightgreen guibg=Black		 guifg=lightgreen
 hi Comment		term=bold	   ctermfg=LightRed   guifg=Orange

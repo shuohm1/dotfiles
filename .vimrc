@@ -5,7 +5,7 @@ scriptencoding utf-8
 set ambiwidth=double
 
 " colors
-colorscheme elflord
+colorscheme classic-elflord
 " syntax highlight
 syntax enable
 " syntax highlight for markdown files

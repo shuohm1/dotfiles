@@ -1,8 +1,8 @@
 " encoding
 set encoding=utf-8
 scriptencoding utf-8
-" cjkwidth
-set ambiwidth=double
+" ambiguous width: single/double
+set ambiwidth=single
 
 " colors
 colorscheme classic-elflord

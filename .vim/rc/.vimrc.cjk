@@ -1,0 +1,4 @@
+" .vim/rc/.vimrc.cjk
+" e.g.: $ VIMINIT="source $HOME/.vim/rc/.vimrc.cjk" vim file.txt
+source $HOME/.vim/rc/.vimrc
+set ambiwidth=double
